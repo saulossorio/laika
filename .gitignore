@@ -1,1 +1,9 @@
 .DS_Store
+
+# Relatórios e exportações com dados reais nunca entram no repositório (RN-LGP-009).
+# Só os arquivos fictícios de tests/dados/ são versionados.
+*.xls
+*.xlsx
+*.csv
+!tests/dados/*.xls
+!tests/dados/*.csv
