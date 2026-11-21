@@ -2744,7 +2744,11 @@ if (document.readyState === 'loading') document.addEventListener('DOMContentLoad
 .start .dropzone { padding: 24px; } /* a tela inicial cabe numa janela de notebook sem rolar */
 .start-in { width: min(680px, 100%); display: flex; flex-direction: column; gap: 16px; }
 .start:has(.app-footer) { padding-bottom: 0; } /* assinatura no fim da janela quando o conteúdo é curto, como no Grin */
-.start-in > .app-footer { padding-bottom: 20px; }
+.start-in > .app-footer { padding-bottom: 20px; margin-top: 0; }
+/* o conteúdo fica no centro vertical do espaço livre; a assinatura, no fim da janela */
+.start-body { display: flex; flex-direction: column; gap: 16px; margin-block: auto; }
+.start:has(.app-footer) { padding-top: 0; } /* espaço igual acima e abaixo do conteúdo */
+.start-in:has(> .start-body) { gap: 0; }
 .resume { flex-direction: row; align-items: center; gap: 12px; padding: 16px; }
 
 /* Mapeamento */
@@ -3739,7 +3743,7 @@ let D = null;  // tabela em uso, P.t[S.ent]: { k, modelo, cols, rows, naoDup, oc
 let A = null;  // análise da tabela em uso (seção 7)
 /* Cada linha: { id, t (tabela), linha (no arquivo), v (valores), o (originais do que foi editado), del, mesclada,
    emp (pessoa: id da empresa), var (empresa: outras escritas no arquivo), ok (empresa: escritas já conferidas) } */
-const VERSAO = '0.3.3'; // igual à última versão do CHANGELOG.md
+const VERSAO = '0.3.4'; // igual à última versão do CHANGELOG.md
 let tema = lerLS('laika-tema') || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
 document.documentElement.dataset.theme = tema;
 /* Painel Aparência do Grin: o tema e a densidade escolhidos ali passam a ser os do Laika, e os botões do Laika
@@ -4144,12 +4148,13 @@ const btnExportar = () => `<button type="button" class="btn primary" data-a="exp
 
 function htmlInicio() {
   const s = S.sessao;
-  return `<div class="start"><div class="start-in">
+  return `<div class="start"><div class="start-in"><div class="start-body">
     <div><h1>Limpar uma tabela</h1><p class="lead" style="margin-top:8px">Importe uma planilha para conferir, corrigir e exportar os dados. Relatórios do Sirius viram duas tabelas ligadas, pessoas e empresas, no formato do Canis.</p></div>
     ${s ? `<div class="card resume">${ic('arquivo', 20)}<div style="flex:1;min-width:0"><b>${esc(s.nome)}</b><div class="sub">${esc(s.resumo)}</div><div class="sub">Salva em ${dataHora(s.salvoEm)}</div></div><button type="button" class="btn" data-a="descartarSessao">Descartar</button><button type="button" class="btn primary" data-a="continuarSessao">Continuar</button></div>` : ''}
     <div class="dropzone${S.arrastando ? ' over' : ''}">${ic('importar', 24)}<b>Arraste um arquivo CSV ou XLSX para cá ou</b><button type="button" class="btn${s ? '' : ' primary'}" data-a="escolherArquivo">Escolher arquivo</button><small>CSV, TXT, XLSX ou o .xls do Sirius. O .xls do Excel 97-2003 precisa ser salvo como .xlsx antes.</small></div>
     <div class="alert">${ic('info')}<div class="alert-body">Os dados ficam só neste navegador e nada é enviado pela internet. <b>Fechar tabela</b> apaga a cópia guardada.</div></div>
     <div><button type="button" class="link" data-a="exemplo">Experimentar com dados de exemplo (fictícios)</button></div>
+    </div>
     <footer class="app-footer"><span><b>Laika ${VERSAO}</b> · por Saúl Ossorio</span><span>Feito com <a href="https://saulossorio.github.io/grin/">Grin 2.25</a></span></footer>
   </div></div>`; // assinatura só na tela inicial, no fim do conteúdo
 }

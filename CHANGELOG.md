@@ -2,6 +2,11 @@
 
 Formato baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/). Versionamento semântico.
 
+## [0.3.4] - 2026-11-21
+
+### Alterado
+- Tela inicial: o conteúdo fica centralizado na vertical, com o mesmo espaço acima e abaixo, e a assinatura no fim da janela.
+
 ## [0.3.3] - 2026-11-21
 
 ### Alterado
