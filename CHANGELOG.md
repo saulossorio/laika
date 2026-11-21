@@ -2,6 +2,14 @@
 
 Formato baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/). Versionamento semântico.
 
+## [0.3.3] - 2026-11-21
+
+### Alterado
+- Tela inicial cabe numa janela de notebook (1346 × 734) sem rolar, com ou sem sessão guardada.
+- Sem barra superior na tela inicial, onde não há tabela aberta.
+- Com uma sessão guardada, "Continuar" é o botão principal e "Escolher arquivo" passa a secundário. "Continuar de onde parei" virou "Continuar", e a data da sessão fica numa linha própria.
+- Textos mais curtos na apresentação, na área de arrastar e no aviso sobre os dados.
+
 ## [0.3.2] - 2026-11-21
 
 ### Alterado

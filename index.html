@@ -2740,8 +2740,9 @@ if (document.readyState === 'loading') document.addEventListener('DOMContentLoad
 .list-toolbar { gap: 8px; padding-bottom: 12px; }
 
 /* Início */
-.start { flex: 1 1 auto; overflow: auto; display: flex; justify-content: center; padding: 48px 24px; }
-.start-in { width: min(680px, 100%); display: flex; flex-direction: column; gap: 20px; }
+.start { flex: 1 1 auto; overflow: auto; display: flex; justify-content: center; padding: 32px 24px; }
+.start .dropzone { padding: 24px; } /* a tela inicial cabe numa janela de notebook sem rolar */
+.start-in { width: min(680px, 100%); display: flex; flex-direction: column; gap: 16px; }
 .start:has(.app-footer) { padding-bottom: 0; } /* assinatura no fim da janela quando o conteúdo é curto, como no Grin */
 .start-in > .app-footer { padding-bottom: 20px; }
 .resume { flex-direction: row; align-items: center; gap: 12px; padding: 16px; }
@@ -3738,7 +3739,7 @@ let D = null;  // tabela em uso, P.t[S.ent]: { k, modelo, cols, rows, naoDup, oc
 let A = null;  // análise da tabela em uso (seção 7)
 /* Cada linha: { id, t (tabela), linha (no arquivo), v (valores), o (originais do que foi editado), del, mesclada,
    emp (pessoa: id da empresa), var (empresa: outras escritas no arquivo), ok (empresa: escritas já conferidas) } */
-const VERSAO = '0.3.2'; // igual à última versão do CHANGELOG.md
+const VERSAO = '0.3.3'; // igual à última versão do CHANGELOG.md
 let tema = lerLS('laika-tema') || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
 document.documentElement.dataset.theme = tema;
 /* Painel Aparência do Grin: o tema e a densidade escolhidos ali passam a ser os do Laika, e os botões do Laika
@@ -4126,10 +4127,10 @@ function htmlLateral() {
   } else itens = `<button type="button" class="nav-item" aria-current="page" data-a="ir" data-tela="${S.tela}"${rot(S.tela === 'mapear' ? 'Mapear colunas' : 'Importar')}>${ic('importar')}<span class="label">${S.tela === 'mapear' ? 'Mapear colunas' : 'Importar'}</span></button>`;
   const temaRot = tema === 'dark' ? 'Tema claro' : 'Tema escuro', lateralRot = min ? 'Expandir barra lateral' : 'Recolher barra lateral';
   const marca = '<svg class="laika-mark" viewBox="0 0 102 58.89" aria-hidden="true" focusable="false"><polygon points="0,29.44 34,29.44 17,0"/><polygon points="68,29.44 102,29.44 85,0"/><polygon points="34,29.44 68,29.44 51,58.89"/></svg>'; // três triângulos iguais: orelhas e rosto
-  return `<nav class="sidebar${min ? ' collapsed' : ''}${menuAberto ? ' open' : ''}" id="lateral" aria-label="Navegação principal"><div class="app-logo">${marca}<span>Laika</span><span class="tag">${VERSAO}</span></div>${itens}<div class="sidebar-footer">${pe}${topoRecolhido ? `<button type="button" class="nav-item small" id="b-topo" data-a="topo"${rot('Mostrar barra superior')}>${ic('baixo')}<span class="label">Mostrar barra superior</span></button>` : ''}<button type="button" class="nav-item small" data-a="tema"${rot(temaRot)}>${ic(tema === 'dark' ? 'sol' : 'lua')}<span class="label">${temaRot}</span></button><button type="button" class="nav-item small" data-popover="aparencia" aria-expanded="false"${rot('Aparência')}>${ic('ajustes')}<span class="label">Aparência</span></button></div></nav><button type="button" class="sidebar-toggle" id="b-lateral" data-a="lateral" aria-controls="lateral" aria-expanded="${!min}" aria-label="${lateralRot}" data-tooltip="${lateralRot}">${ic('esq', 16)}</button>`;
+  return `<nav class="sidebar${min ? ' collapsed' : ''}${menuAberto ? ' open' : ''}" id="lateral" aria-label="Navegação principal"><div class="app-logo">${marca}<span>Laika</span><span class="tag">${VERSAO}</span></div>${itens}<div class="sidebar-footer">${pe}${topoRecolhido && S.tela !== 'inicio' ? `<button type="button" class="nav-item small" id="b-topo" data-a="topo"${rot('Mostrar barra superior')}>${ic('baixo')}<span class="label">Mostrar barra superior</span></button>` : ''}<button type="button" class="nav-item small" data-a="tema"${rot(temaRot)}>${ic(tema === 'dark' ? 'sol' : 'lua')}<span class="label">${temaRot}</span></button><button type="button" class="nav-item small" data-popover="aparencia" aria-expanded="false"${rot('Aparência')}>${ic('ajustes')}<span class="label">Aparência</span></button></div></nav><button type="button" class="sidebar-toggle" id="b-lateral" data-a="lateral" aria-controls="lateral" aria-expanded="${!min}" aria-label="${lateralRot}" data-tooltip="${lateralRot}">${ic('esq', 16)}</button>`;
 }
 function htmlTopo() {
-  if (topoRecolhido) return '';
+  if (topoRecolhido || S.tela === 'inicio') return ''; // na tela inicial não há tabela aberta: sem barra superior
   let esq = '<span class="sub">Nenhuma tabela aberta</span>', dir = '';
   if (S.tela === 'mapear' && S.imp) esq = `<span class="filechip">${ic('arquivo')}<b>${esc(S.imp.nome)}</b></span>`;
   else if (P) {
@@ -4144,10 +4145,10 @@ const btnExportar = () => `<button type="button" class="btn primary" data-a="exp
 function htmlInicio() {
   const s = S.sessao;
   return `<div class="start"><div class="start-in">
-    <div><h1>Limpar uma tabela</h1><p class="lead" style="margin-top:8px">Importe uma planilha para analisar, filtrar e corrigir os dados. Relatórios com pessoas e empresas juntas, como o do Sirius, viram duas tabelas ligadas, no formato do Canis. Problemas e possíveis duplicados aparecem sinalizados; a mescla é sempre manual. No fim, exporte com as suas edições.</p></div>
-    ${s ? `<div class="card resume">${ic('arquivo', 20)}<div style="flex:1;min-width:0"><b>${esc(s.nome)}</b><div class="sub">${esc(s.resumo)} · salva em ${dataHora(s.salvoEm)}</div></div><button type="button" class="btn" data-a="descartarSessao">Descartar</button><button type="button" class="btn primary" data-a="continuarSessao">Continuar de onde parei</button></div>` : ''}
-    <div class="dropzone${S.arrastando ? ' over' : ''}">${ic('importar', 24)}<b>Arraste um arquivo CSV ou XLSX para cá</b><small>ou</small><button type="button" class="btn primary" data-a="escolherArquivo">Escolher arquivo</button><small>CSV, TXT, XLSX ou o .xls exportado pelo Sirius. O .xls do Excel 97-2003 precisa ser salvo como .xlsx antes.</small></div>
-    <div class="alert">${ic('info')}<div class="alert-body">Os dados ficam só neste computador, dentro do navegador. Nada é enviado pela internet. Ao terminar, use <b>Fechar tabela</b> para apagar a cópia guardada no navegador.</div></div>
+    <div><h1>Limpar uma tabela</h1><p class="lead" style="margin-top:8px">Importe uma planilha para conferir, corrigir e exportar os dados. Relatórios do Sirius viram duas tabelas ligadas, pessoas e empresas, no formato do Canis.</p></div>
+    ${s ? `<div class="card resume">${ic('arquivo', 20)}<div style="flex:1;min-width:0"><b>${esc(s.nome)}</b><div class="sub">${esc(s.resumo)}</div><div class="sub">Salva em ${dataHora(s.salvoEm)}</div></div><button type="button" class="btn" data-a="descartarSessao">Descartar</button><button type="button" class="btn primary" data-a="continuarSessao">Continuar</button></div>` : ''}
+    <div class="dropzone${S.arrastando ? ' over' : ''}">${ic('importar', 24)}<b>Arraste um arquivo CSV ou XLSX para cá ou</b><button type="button" class="btn${s ? '' : ' primary'}" data-a="escolherArquivo">Escolher arquivo</button><small>CSV, TXT, XLSX ou o .xls do Sirius. O .xls do Excel 97-2003 precisa ser salvo como .xlsx antes.</small></div>
+    <div class="alert">${ic('info')}<div class="alert-body">Os dados ficam só neste navegador e nada é enviado pela internet. <b>Fechar tabela</b> apaga a cópia guardada.</div></div>
     <div><button type="button" class="link" data-a="exemplo">Experimentar com dados de exemplo (fictícios)</button></div>
     <footer class="app-footer"><span><b>Laika ${VERSAO}</b> · por Saúl Ossorio</span><span>Feito com <a href="https://saulossorio.github.io/grin/">Grin 2.25</a></span></footer>
   </div></div>`; // assinatura só na tela inicial, no fim do conteúdo
