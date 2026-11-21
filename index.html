@@ -9,12 +9,12 @@
   Laika: ferramenta para analisar, limpar e exportar tabelas importadas.
   Um único arquivo. Abra no Chrome, Edge, Firefox ou Safari recentes. Funciona sem internet.
   Os dados ficam só neste computador, no armazenamento do navegador, até você fechar a tabela.
-  Visual: Grin 2.25, copiado de https://github.com/saulossorio/grin/releases/tag/v2.25 (dist/grin.inline.css e dist/grin.js).
+  Visual: Grin 2.26, copiado de https://github.com/saulossorio/grin/releases/tag/v2.26 (dist/grin.inline.css e dist/grin.js).
   Regras e listas: as do Canis (docs/regras.md).
 -->
-<!-- Grin 2.25, copiado de https://github.com/saulossorio/grin/releases/tag/v2.25 -->
+<!-- Grin 2.26, copiado de https://github.com/saulossorio/grin/releases/tag/v2.26 -->
 <style>
-/* Grin 2.25 · CSS com as fontes dentro (Geist e Geist Mono, licença SIL OFL 1.1) · https://github.com/saulossorio/grin
+/* Grin 2.26 · CSS com as fontes dentro (Geist e Geist Mono, licença SIL OFL 1.1) · https://github.com/saulossorio/grin
    Gerado por tools/bundle.mjs a partir dos arquivos do repositório. Não edite à mão. */
 /* ---------- styles/fonts.css ---------- */
 /* Grin: fonts. Geist and Geist Mono, variable weight 100 to 900, from the official release
@@ -76,6 +76,7 @@
   --size-avatar: 40px;
   --size-screen: 1200px;
   --size-content: 1440px;
+  --size-start: 680px;
   --size-prose: 72ch;
   --font-sans: 'Geist', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
   --font-mono: 'Geist Mono', ui-monospace, 'SF Mono', Menlo, monospace;
@@ -1810,13 +1811,28 @@ a.tab { text-decoration: none; }
 .app-footer > :last-child { margin-left: auto; }
 .app-footer a { color: inherit; }
 .app-footer a:hover { color: var(--foreground); }
+
+/* ---------- components/start/start.css ---------- */
+/* Grin start screen (also: tela inicial, home, welcome, primeira tela). The first screen of a tool, before there is data
+   to work on: title, short description, the main actions and the signature. One centered column (--size-start),
+   centered vertically in the window, with the signature at the bottom of the window in the same width.
+   Markup: <main class="page-content start-screen"><div class="start-screen-body">…</div><footer class="app-footer">…</footer></main>
+   Working screens (lists, forms, analyses) use the normal page layout, never this one. */
+.start-screen { align-items: center; padding-top: 0; }
+.start-screen > * { width: min(var(--size-start), 100%); }
+.start-screen-body { display: flex; flex-direction: column; gap: var(--space-4); margin-block: auto; padding-top: 32px; }
+.start-screen-body h1 { font-size: var(--text-3xl); }
+.start-screen-body > .lead, .start-screen-body > header > .lead { margin-top: -8px; }
+.start-screen > .app-footer { margin-top: 32px; }
+.start-screen .action-cards { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+@media (max-width: 560px) { .start-screen .action-cards { grid-template-columns: 1fr; } }
 </style>
 <script>
-/* Grin 2.25 · comportamentos em JavaScript; inclua com <script src="grin.js" defer> · https://github.com/saulossorio/grin
+/* Grin 2.26 · comportamentos em JavaScript; inclua com <script src="grin.js" defer> · https://github.com/saulossorio/grin
    Gerado por tools/bundle.mjs a partir dos arquivos do repositório. Não edite à mão. */
 'use strict';
 const Grin = (window.Grin = window.Grin || {});
-Grin.version = '2.25';
+Grin.version = '2.26';
 
 // ---------- scripts/utils.js ----------
 {
@@ -2742,10 +2758,10 @@ if (document.readyState === 'loading') document.addEventListener('DOMContentLoad
 /* Início */
 .start { flex: 1 1 auto; overflow: auto; display: flex; justify-content: center; padding: 32px 24px; }
 .start .dropzone { padding: 24px; } /* a tela inicial cabe numa janela de notebook sem rolar */
-.start-in { width: min(680px, 100%); display: flex; flex-direction: column; gap: 16px; }
+.start-in { width: min(var(--size-start), 100%); display: flex; flex-direction: column; gap: 16px; }
 .start:has(.app-footer) { padding-bottom: 0; } /* assinatura no fim da janela quando o conteúdo é curto, como no Grin */
 .start-in > .app-footer { padding-bottom: 20px; margin-top: 0; }
-/* o conteúdo fica no centro vertical do espaço livre; a assinatura, no fim da janela */
+/* padrão Tela inicial do Grin: coluna de --size-start, conteúdo no centro vertical, assinatura no fim da janela */
 .start-body { display: flex; flex-direction: column; gap: 16px; margin-block: auto; }
 .start:has(.app-footer) { padding-top: 0; } /* espaço igual acima e abaixo do conteúdo */
 .start-in:has(> .start-body) { gap: 0; }
@@ -3743,7 +3759,7 @@ let D = null;  // tabela em uso, P.t[S.ent]: { k, modelo, cols, rows, naoDup, oc
 let A = null;  // análise da tabela em uso (seção 7)
 /* Cada linha: { id, t (tabela), linha (no arquivo), v (valores), o (originais do que foi editado), del, mesclada,
    emp (pessoa: id da empresa), var (empresa: outras escritas no arquivo), ok (empresa: escritas já conferidas) } */
-const VERSAO = '1.0.0'; // igual à última versão do CHANGELOG.md
+const VERSAO = '1.0.1'; // igual à última versão do CHANGELOG.md
 let tema = lerLS('laika-tema') || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
 document.documentElement.dataset.theme = tema;
 /* Painel Aparência do Grin: o tema e a densidade escolhidos ali passam a ser os do Laika, e os botões do Laika
@@ -4155,7 +4171,7 @@ function htmlInicio() {
     <div class="alert">${ic('info')}<div class="alert-body">Os dados ficam só neste navegador e nada é enviado pela internet. <b>Fechar tabela</b> apaga a cópia guardada.</div></div>
     <div><button type="button" class="link" data-a="exemplo">Experimentar com dados de exemplo (fictícios)</button></div>
     </div>
-    <footer class="app-footer"><span><b>Laika ${VERSAO}</b> · por Saúl Ossorio</span><span>Feito com <a href="https://saulossorio.github.io/grin/">Grin 2.25</a></span></footer>
+    <footer class="app-footer"><span><b>Laika ${VERSAO}</b> · por Saúl Ossorio</span><span>Feito com <a href="https://saulossorio.github.io/grin/">Grin 2.26</a></span></footer>
   </div></div>`; // assinatura só na tela inicial, no fim do conteúdo
 }
 

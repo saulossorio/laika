@@ -2,6 +2,11 @@
 
 Formato baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/). Versionamento semântico.
 
+## [1.0.1] - 2026-11-21
+
+### Alterado
+- Grin 2.26. A tela inicial usa a largura do padrão Tela inicial do Grin (`--size-start`, 680 px), a mesma do Vezen. Visualmente não muda.
+
 ## [1.0.0] - 2026-11-21
 
 Primeira versão estável do Laika, aprovada pelo dono do produto em 21/11/2026. Não há mudança de funcionamento em relação à 0.3.4.
