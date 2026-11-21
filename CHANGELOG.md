@@ -2,6 +2,12 @@
 
 Formato baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/). Versionamento semântico.
 
+## [1.0.0] - 2026-11-21
+
+Primeira versão estável do Laika, aprovada pelo dono do produto em 21/11/2026. Não há mudança de funcionamento em relação à 0.3.4.
+- Visual e partes obrigatórias do Grin 2.25: barra lateral do Grin, versão no logo, tema claro e escuro com sol e lua, painel Aparência e assinatura na tela inicial.
+- Regras de detecção, importação, mapeamento, duplicados com mescla manual, histórico e exportação no formato do Canis, conferidas por `tests/regras.test.cjs`.
+
 ## [0.3.4] - 2026-11-21
 
 ### Alterado
