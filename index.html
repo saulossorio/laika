@@ -9,12 +9,12 @@
   Laika: ferramenta para analisar, limpar e exportar tabelas importadas.
   Um único arquivo. Abra no Chrome, Edge, Firefox ou Safari recentes. Funciona sem internet.
   Os dados ficam só neste computador, no armazenamento do navegador, até você fechar a tabela.
-  Visual: Grin 2.19, copiado de https://github.com/saulossorio/grin/releases/tag/v2.19 (dist/grin.inline.css e dist/grin.js).
+  Visual: Grin 2.22, copiado de https://github.com/saulossorio/grin/releases/tag/v2.22 (dist/grin.inline.css e dist/grin.js).
   Regras e listas: as do Canis (docs/regras.md).
 -->
-<!-- Grin 2.19, copiado de https://github.com/saulossorio/grin/releases/tag/v2.19 -->
+<!-- Grin 2.22, copiado de https://github.com/saulossorio/grin/releases/tag/v2.22 -->
 <style>
-/* Grin 2.19 · CSS com as fontes dentro (Geist e Geist Mono, licença SIL OFL 1.1) · https://github.com/saulossorio/grin
+/* Grin 2.22 · CSS com as fontes dentro (Geist e Geist Mono, licença SIL OFL 1.1) · https://github.com/saulossorio/grin
    Gerado por tools/bundle.mjs a partir dos arquivos do repositório. Não edite à mão. */
 /* ---------- styles/fonts.css ---------- */
 /* Grin: fonts. Geist and Geist Mono, variable weight 100 to 900, from the official release
@@ -65,6 +65,7 @@
   --radius-pill: 999px;
   --size-control-compact: 36px;
   --size-control-comfortable: 44px;
+  --size-control-sm: 40px;
   --size-control-xs: 32px;
   --size-nav-item: 40px;
   --size-topbar: 64px;
@@ -809,6 +810,8 @@ input:focus-visible, select:focus-visible, textarea:focus-visible { outline: 2px
 .btn.dashed { border-style: dashed; box-shadow: none; }
 .btn.xs { height: var(--size-control-xs); padding: 0 10px; gap: 6px; border-radius: var(--radius-sm); font-size: var(--text-sm); }
 .btn.xs svg { width: 16px; height: 16px; }
+.btn.sm { height: var(--size-control-sm); padding: 0 14px; font-size: var(--text-sm); }
+.btn.icon.sm { width: var(--size-control-sm); padding: 0; }
 .btn.lg { height: calc(var(--control-h) + 4px); padding: 0 20px; font-size: var(--text-base); }
 .btn.icon { width: var(--control-h); padding: 0; }
 .btn.icon.xs { width: var(--size-control-xs); }
@@ -847,6 +850,9 @@ input:focus-visible, select:focus-visible, textarea:focus-visible { outline: 2px
 }
 .input:hover, .select:hover, .textarea:hover { border-color: var(--muted-foreground); }
 .input:focus-visible, .select:focus-visible, .textarea:focus-visible { outline: 0; border-color: var(--ring); box-shadow: 0 0 0 4px var(--highlight); }
+.input.sm, .select.sm { height: var(--size-control-sm); font-size: var(--text-sm); }
+.input-group.sm .input, .search.sm .input { height: calc(var(--size-control-sm) - 2px); font-size: var(--text-sm); }
+.search.sm .input { height: var(--size-control-sm); }
 .textarea { height: auto; min-height: 112px; padding: 10px 14px; line-height: var(--leading-body); resize: vertical; }
 .select {
   appearance: none; -webkit-appearance: none; padding-right: 40px; cursor: pointer; text-overflow: ellipsis;
@@ -855,6 +861,8 @@ input:focus-visible, select:focus-visible, textarea:focus-visible { outline: 2px
 }
 .input:disabled, .select:disabled, .textarea:disabled { background: var(--muted); color: var(--muted-foreground); cursor: not-allowed; box-shadow: none; }
 .input[aria-invalid="true"], .select[aria-invalid="true"], .textarea[aria-invalid="true"] { border-color: var(--crit-fg); }
+.input[data-state="missing"], .select[data-state="missing"], .textarea[data-state="missing"], .input-group[data-state="missing"] { border-style: dashed; border-color: var(--warn-solid); background: var(--warn-bg); }
+.field:has([data-state="missing"]) .field-label::after { content: ''; display: inline-block; width: 6px; height: 6px; margin-left: 6px; border-radius: var(--radius-pill); background: var(--warn-solid); vertical-align: middle; }
 .input[aria-invalid="true"]:focus-visible, .select[aria-invalid="true"]:focus-visible, .textarea[aria-invalid="true"]:focus-visible { box-shadow: 0 0 0 4px var(--crit-bg); }
 
 /* Field: label on top, control, then hint or message. The label is always visible and tied to the control (for/id). */
@@ -1057,6 +1065,7 @@ input[type="checkbox"]:disabled, input[type="radio"]:disabled { opacity: 0.5; cu
 .alert.warn { border-color: var(--warn-border); background: var(--warn-bg); } .alert.warn > svg { color: var(--warn-fg); }
 .alert.crit { border-color: var(--crit-border); background: var(--crit-bg); } .alert.crit > svg { color: var(--crit-fg); }
 .alert.ok { border-color: var(--ok-border); background: var(--ok-bg); } .alert.ok > svg { color: var(--ok-fg); }
+.alert.brand { border-color: var(--brand-border); background: var(--brand-bg); } .alert.brand > svg { color: var(--brand-fg); }
 .alert.neutral { border-color: var(--border); background: var(--muted); } .alert.neutral > svg { color: var(--muted-foreground); }
 
 /* Banner: a message about the whole app or page (data saved only in this browser, maintenance, a new version).
@@ -1067,6 +1076,7 @@ input[type="checkbox"]:disabled, input[type="radio"]:disabled { opacity: 0.5; cu
 .banner.warn { border-color: var(--warn-border); background: var(--warn-bg); } .banner.warn > svg { color: var(--warn-fg); }
 .banner.crit { border-color: var(--crit-border); background: var(--crit-bg); } .banner.crit > svg { color: var(--crit-fg); }
 .banner.ok { border-color: var(--ok-border); background: var(--ok-bg); } .banner.ok > svg { color: var(--ok-fg); }
+.banner.brand { border-color: var(--brand-border); background: var(--brand-bg); } .banner.brand > svg { color: var(--brand-fg); }
 
 /* ---------- components/card/card.css ---------- */
 /* Grin card: sets an object apart from the background, with a soft shadow and round corners.
@@ -1243,11 +1253,12 @@ a.card:hover { border-color: var(--border-strong); box-shadow: var(--shadow-md);
 .tabs { position: relative; display: flex; flex-wrap: wrap; gap: 4px; width: fit-content; max-width: 100%; padding: 4px; border: 1px solid var(--border); border-radius: var(--radius-lg); background: var(--sidebar); }
 .tab { position: relative; z-index: 1; display: inline-flex; align-items: center; gap: 8px; height: calc(var(--control-h) - 4px); padding: 0 14px; border: 0; border-radius: var(--radius-sm); background: transparent; color: var(--muted-foreground); font-size: var(--control-text); font-weight: var(--weight-semibold); white-space: nowrap; transition: color var(--dur) var(--ease); }
 .tab:hover { color: var(--foreground); }
-.tab[aria-selected="true"] { color: var(--foreground); }
-.tabs:not(.tabs-ready) .tab[aria-selected="true"] { background: var(--surface); box-shadow: var(--shadow-sm); }
+.tab[aria-selected="true"], .tab[aria-current="page"] { color: var(--foreground); }
+a.tab { text-decoration: none; }
+.tabs:not(.tabs-ready) .tab[aria-current="page"], .tabs:not(.tabs-ready) .tab[aria-selected="true"] { background: var(--surface); box-shadow: var(--shadow-sm); }
 .tab:focus-visible { outline-offset: -2px; }
 .tab .nav-count { padding: 0 8px; border-radius: var(--radius-pill); background: var(--accent); font-size: var(--text-sm); transition: background-color var(--dur), color var(--dur); }
-.tab[aria-selected="true"] .nav-count { background: var(--brand-bg); color: var(--brand-fg); }
+.tab[aria-current="page"] .nav-count, .tab[aria-selected="true"] .nav-count { background: var(--brand-bg); color: var(--brand-fg); }
 .tabs-indicator { position: absolute; z-index: 0; top: 0; left: 0; border-radius: var(--radius-sm); background: var(--surface); box-shadow: var(--shadow-sm); transition: transform var(--dur-slow) var(--ease-spring), width var(--dur-slow) var(--ease-spring), height var(--dur-slow) var(--ease-spring); pointer-events: none; }
 .tab-panel { padding-top: 20px; animation: grin-fade var(--dur) var(--ease); }
 @media (max-width: 640px) {
@@ -1259,6 +1270,8 @@ a.card:hover { border-color: var(--border-strong); box-shadow: var(--shadow-md);
 /* Grin menu: actions on an item, column choices, user menu. Positioned by the page (absolute or fixed).
    Opens with a short scale from its corner. */
 .menu { z-index: 90; display: flex; flex-direction: column; gap: 2px; min-width: 220px; padding: 6px; border: 1px solid var(--border); border-radius: var(--radius-lg); background: var(--popover); box-shadow: var(--shadow-md); transform-origin: top left; animation: grin-scale-in var(--dur) var(--ease); }
+/* Exit: add .closing, remove the menu when the animation ends (closeMenu() in animations.js does it) */
+.menu.closing { animation: grin-scale-in var(--dur-fast) var(--ease) reverse forwards; pointer-events: none; }
 .menu-header { padding: 8px 10px 4px; font-size: var(--text-sm); font-weight: var(--weight-medium); color: var(--muted-foreground); }
 .menu-item { display: flex; align-items: center; gap: 10px; width: 100%; min-height: 40px; padding: 0 10px; border: 0; border-radius: var(--radius-sm); background: transparent; color: var(--foreground); font-size: var(--control-text); font-weight: var(--weight-medium); text-align: left; text-decoration: none; transition: background-color var(--dur-fast); }
 .menu-item svg { width: 18px; height: 18px; color: var(--muted-foreground); }
@@ -1340,6 +1353,14 @@ a.card:hover { border-color: var(--border-strong); box-shadow: var(--shadow-md);
 .progress { position: relative; height: 8px; overflow: hidden; border-radius: var(--radius-pill); background: var(--muted); box-shadow: inset 0 0 0 1px var(--border-soft); }
 .progress > i { display: block; height: 100%; width: 0; border-radius: inherit; background: var(--primary); transition: width var(--dur-slow) var(--ease); }
 .progress.sm { height: 4px; }
+/* Bar in parts: each <i> is a part with its own width and tone (done and pending, real and estimated).
+   The parts add up from the left; say what each one is in the label or a legend. */
+.progress.stacked { display: flex; }
+.progress.stacked > i { flex: none; border-radius: 0; }
+.progress.stacked > i:first-child { border-radius: var(--radius-pill) 0 0 var(--radius-pill); }
+.progress.stacked > i:last-child { border-radius: 0 var(--radius-pill) var(--radius-pill) 0; }
+.progress > i.warn { background: var(--warn-solid); } .progress > i.crit { background: var(--crit-solid); } .progress > i.info { background: var(--info-fg); } .progress > i.ok { background: var(--ok-solid); }
+.progress > i.light { background: var(--chart-band); }
 .progress.indeterminate > i { width: 40%; animation: grin-progress 1.4s var(--ease-in-out) infinite; }
 @keyframes grin-progress { from { transform: translateX(-100%); } to { transform: translateX(250%); } }
 .progress-field { display: flex; flex-direction: column; gap: 8px; }
@@ -1373,6 +1394,7 @@ a.card:hover { border-color: var(--border-strong); box-shadow: var(--shadow-md);
 .popover { position: fixed; z-index: 95; display: flex; flex-direction: column; gap: 8px; width: max-content; max-width: min(360px, calc(100vw - 24px)); margin: 0; padding: 16px 18px; border: 1px solid var(--border); border-radius: var(--radius-lg); background: var(--popover); color: var(--foreground); box-shadow: var(--shadow-md); font-size: var(--text-sm); line-height: var(--leading-body); }
 .popover:not(.open) { display: none; }
 .popover.open { animation: grin-scale-in var(--dur) var(--ease); }
+.popover.closing { display: flex; animation: grin-scale-in var(--dur-fast) var(--ease) reverse forwards; pointer-events: none; }
 .popover-title { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; font-size: var(--text-base); font-weight: var(--weight-semibold); line-height: var(--leading-tight); }
 .popover-title small { display: block; margin-top: 2px; font-size: var(--text-sm); font-weight: var(--weight-regular); color: var(--muted-foreground); }
 .popover p { margin: 0; color: var(--muted-foreground); }
@@ -1433,7 +1455,7 @@ a.card:hover { border-color: var(--border-strong); box-shadow: var(--shadow-md);
 /* Horizontal: a short process seen at a glance (3 to 5 steps), e.g. at the top of a wizard */
 .steps.horizontal { flex-direction: row; gap: 8px; }
 .steps.horizontal .step { flex: 1 1 0; grid-template-columns: 32px minmax(0, 1fr); padding-bottom: 0; }
-.steps.horizontal .step:not(:last-child)::after { left: 44px; right: 8px; top: 15px; bottom: auto; width: auto; height: 2px; }
+.steps.horizontal .step:not(:last-child)::after { left: 48px; right: 8px; top: 15px; bottom: auto; width: auto; height: 2px; }
 .steps.horizontal .step-title { position: relative; z-index: 1; padding-right: 8px; background: var(--background); font-size: var(--text-sm); justify-self: start; }
 .steps.horizontal .step-body { display: none; }
 @media (max-width: 640px) { .steps.horizontal .step-title { display: none; } .steps.horizontal .step { flex: 0 1 auto; } .steps.horizontal .step:not(:last-child)::after { display: none; } }
@@ -1767,14 +1789,30 @@ a.card:hover { border-color: var(--border-strong); box-shadow: var(--shadow-md);
   .page-title h1 { font-size: var(--text-2xl); }
   .page-description { font-size: var(--text-base); }
 }
-}
+
+/* ---------- components/appearance/appearance.css ---------- */
+/* Grin appearance panel: theme, high contrast, density and font size. Filled by appearance.js. */
+.appearance { width: max-content; min-width: 288px; gap: 16px; }
+.appearance .select { width: 100%; }
+.appearance .segmented { width: 100%; flex-wrap: nowrap; }
+.appearance .segmented label { flex: 1 1 0; }
+.appearance .segmented span { width: 100%; justify-content: center; padding: 0 8px; }
+.appearance .slider-end.small { font-size: 12px; }
+.appearance .slider-end.large { font-size: 18px; }
+
+/* Signature at the end of every page of a tool: name, version and author, and the Grin version it uses */
+.app-footer { display: flex; align-items: center; flex-wrap: wrap; gap: 8px 24px; margin-top: auto; padding-top: 20px; border-top: 1px solid var(--border-soft); color: var(--muted-foreground); font-size: var(--text-sm); }
+.app-footer b { color: var(--foreground); font-weight: var(--weight-semibold); }
+.app-footer > :last-child { margin-left: auto; }
+.app-footer a { color: inherit; }
+.app-footer a:hover { color: var(--foreground); }
 </style>
 <script>
-/* Grin 2.19 · comportamentos em JavaScript; inclua com <script src="grin.js" defer> · https://github.com/saulossorio/grin
+/* Grin 2.22 · comportamentos em JavaScript; inclua com <script src="grin.js" defer> · https://github.com/saulossorio/grin
    Gerado por tools/bundle.mjs a partir dos arquivos do repositório. Não edite à mão. */
 'use strict';
 const Grin = (window.Grin = window.Grin || {});
-Grin.version = '2.19';
+Grin.version = '2.22';
 
 // ---------- scripts/utils.js ----------
 {
@@ -1910,7 +1948,7 @@ Object.assign(Grin, { ICONS, icon, paintIcons, parseColor, contrast, toHex, toke
 // Markup hooks (no extra JS needed):
 //   <select data-theme-select>               options: system, light, dark
 //   <button data-set-theme="dark">           sets a theme
-//   <button data-theme-toggle>               toggles light/dark; updates its .label text
+//   <button data-theme-toggle>               toggles light/dark; shows a sun ("Tema claro") in the dark theme and a moon ("Tema escuro") in the light theme
 //   <button data-contrast-toggle>            turns high contrast on/off; aria-pressed shows the state (or a checkbox switch: checked)
 //   <input type="radio" data-set-density value="comfortable|compact">
 //   <input type="radio" data-set-scale value="100|112|125">  or  <input type="range" class="slider" data-set-scale min="100" max="125" data-stops="100,112.5,125">
@@ -1918,6 +1956,7 @@ Object.assign(Grin, { ICONS, icon, paintIcons, parseColor, contrast, toHex, toke
 // ?theme=dark and ?contrast=more in the URL set them on load (handy to share a preview). ?theme=hc = high contrast.
 // To avoid a flash of the wrong theme, also put the inline snippet from README.md in <head>.
 
+const { icon } = Grin;
 const KEY = 'grin';
 const read = (k, fallback) => { try { return localStorage.getItem(`${KEY}-${k}`) ?? fallback; } catch { return fallback; } };
 const write = (k, v) => { try { localStorage.setItem(`${KEY}-${k}`, v); } catch { /* private mode: lasts for this visit */ } };
@@ -1969,7 +2008,13 @@ function sync() {
     // 'input' only repaints the slider; a 'change' here would call setScale again, in a loop
     if (el.type === 'range') { el.value = s === '112' ? '112.5' : s; el.dispatchEvent(new Event('input', { bubbles: true })); } else el.checked = el.value === s;
   });
-  document.querySelectorAll('[data-theme-toggle] .label').forEach((el) => { el.textContent = effectiveTheme() === 'dark' ? 'Tema claro' : 'Tema escuro'; });
+  const dark = effectiveTheme() === 'dark';
+  document.querySelectorAll('[data-theme-toggle]').forEach((el) => {
+    const label = dark ? 'Tema claro' : 'Tema escuro';
+    const text = el.querySelector('.label'); if (text) text.textContent = label; else el.setAttribute('aria-label', label);
+    const ic = el.querySelector('svg, i[data-icon]');
+    if (ic) { const size = +(ic.getAttribute('width') || ic.dataset.size || 16); ic.outerHTML = icon(dark ? 'sun' : 'moon', size); }
+  });
 }
 
 // Apply on load. The old 'hc' theme value becomes light + high contrast.
@@ -1978,7 +2023,9 @@ const fromUrl = params.get('theme');
 if (fromUrl === 'hc') { write('theme', 'light'); write('contrast', 'more'); } else if (['light', 'dark', 'system'].includes(fromUrl)) write('theme', fromUrl);
 if (['more', 'normal', 'system'].includes(params.get('contrast'))) write('contrast', params.get('contrast'));
 if (getTheme() === 'hc') { write('theme', 'light'); write('contrast', 'more'); }
-const t0 = getTheme(); if (t0 !== 'system') root.setAttribute('data-theme', t0); else root.removeAttribute('data-theme');
+// Only applies a saved choice. With no choice it leaves data-theme as it is, so a tool that set its own theme
+// before this script ran keeps it.
+const t0 = getTheme(); if (t0 !== 'system') root.setAttribute('data-theme', t0);
 const c0 = getContrast(); if (c0 !== 'system') root.setAttribute('data-contrast', c0);
 if (read('density', 'comfortable') === 'compact') root.setAttribute('data-density', 'compact');
 const s0 = read('scale', '100'); if (s0 !== '100') root.setAttribute('data-scale', s0);
@@ -1991,9 +2038,9 @@ document.addEventListener('change', (e) => {
   else if (el.matches('input[data-set-scale]')) setScale(String(Math.floor(+el.value)));
 });
 document.addEventListener('click', (e) => {
-  const c = e.target.closest('[data-contrast-toggle]');
+  const c = e.target.closest?.('[data-contrast-toggle]');
   if (c) { setContrast(effectiveContrast() === 'more' ? 'normal' : 'more'); return; }
-  const el = e.target.closest('button[data-set-theme], [data-theme-toggle]');
+  const el = e.target.closest?.('button[data-set-theme], [data-theme-toggle]');
   if (!el) return;
   setTheme(el.hasAttribute('data-theme-toggle') ? (effectiveTheme() === 'dark' ? 'light' : 'dark') : el.dataset.setTheme);
 });
@@ -2028,7 +2075,17 @@ function enter(el, { y = 6 } = {}) {
 function scrollToElement(el) {
   el?.scrollIntoView({ behavior: reducedMotion() ? 'auto' : 'smooth', block: 'start' });
 }
-Object.assign(Grin, { reducedMotion, flash, enter, scrollToElement });
+
+// Closes a menu or any floating layer with the exit animation, then hides or removes it.
+// closeMenu(el) hides it (el.hidden = true); closeMenu(el, { remove: true }) takes it out of the page.
+function closeMenu(el, { remove = false } = {}) {
+  if (!el) return;
+  const done = () => { el.classList.remove('closing'); if (remove) el.remove(); else el.hidden = true; };
+  if (reducedMotion()) { done(); return; }
+  el.classList.add('closing');
+  setTimeout(done, 140);
+}
+Object.assign(Grin, { reducedMotion, flash, enter, scrollToElement, closeMenu });
 }
 
 // ---------- components/popover/popover.js ----------
@@ -2056,21 +2113,24 @@ function showTip(target) {
   tip.classList.add('show');
 }
 const hideTip = () => tip?.classList.remove('show');
-document.addEventListener('pointerover', (e) => { const t = e.target.closest('[data-tooltip]'); if (t) showTip(t); });
-document.addEventListener('pointerout', (e) => { if (e.target.closest('[data-tooltip]')) hideTip(); });
-document.addEventListener('focusin', (e) => { const t = e.target.closest('[data-tooltip]'); if (t && t.matches(':focus-visible')) showTip(t); });
+document.addEventListener('pointerover', (e) => { const t = e.target.closest?.('[data-tooltip]'); if (t) showTip(t); });
+document.addEventListener('pointerout', (e) => { if (e.target.closest?.('[data-tooltip]')) hideTip(); });
+document.addEventListener('focusin', (e) => { const t = e.target.closest?.('[data-tooltip]'); if (t && t.matches(':focus-visible')) showTip(t); });
 document.addEventListener('focusout', hideTip);
 
 let open = null;
 function close(returnFocus = false) {
   if (!open) return;
-  open.panel.classList.remove('open');
+  // fades out before hiding (instant with reduced motion)
+  const panel = open.panel;
+  if (!matchMedia('(prefers-reduced-motion: reduce)').matches) { panel.classList.add('closing'); setTimeout(() => panel.classList.remove('closing'), 140); }
+  panel.classList.remove('open');
   open.button.setAttribute('aria-expanded', 'false');
   if (returnFocus) open.button.focus();
   open = null;
 }
 document.addEventListener('click', (e) => {
-  const button = e.target.closest('[data-popover]');
+  const button = e.target.closest?.('[data-popover]');
   if (button) {
     const panel = document.getElementById(button.dataset.popover);
     const same = open?.button === button;
@@ -2182,7 +2242,7 @@ function apply(sidebar, wanted) {
   });
 }
 
-// Pages that build their sidebar with a script (the documentation) call initSidebar() after building it
+// Pages that build their sidebar with a script call initSidebar() after building it
 let started = false;
 function initSidebar() {
   const sidebar = document.querySelector('.app > .sidebar');
@@ -2207,7 +2267,7 @@ function initSidebar() {
   const saved = read();
   apply(sidebar, saved ? saved === 'collapsed' : matchMedia('(max-width: 1100px)').matches);
   document.addEventListener('click', (e) => {
-    if (!e.target.closest('.sidebar-toggle, [data-sidebar-toggle]')) return;
+    if (!e.target.closest?.('.sidebar-toggle, [data-sidebar-toggle]')) return;
     const collapsed = !sidebar.classList.contains('collapsed');
     write(collapsed ? 'collapsed' : 'expanded');
     apply(sidebar, collapsed);
@@ -2215,7 +2275,8 @@ function initSidebar() {
   matchMedia('(max-width: 1100px)').addEventListener('change', (m) => { if (!read()) apply(sidebar, m.matches); });
   matchMedia('(max-width: 760px)').addEventListener('change', () => apply(sidebar, read() ? read() === 'collapsed' : matchMedia('(max-width: 1100px)').matches));
 }
-const auto = () => { if (!document.querySelector('[data-docs-nav]')) initSidebar(); };
+// data-sidebar="manual" on the sidebar turns off the automatic start: the page calls initSidebar() (Grin.initSidebar() in dist/grin.js) when it is ready
+const auto = () => { if (!document.querySelector('[data-docs-nav], .sidebar[data-sidebar="manual"]')) initSidebar(); };
 if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', auto, { once: true }); else auto();
 Object.assign(Grin, { initSidebar });
 }
@@ -2225,9 +2286,9 @@ Object.assign(Grin, { initSidebar });
 // Grin dialog and drawer behavior, for any <dialog class="dialog|drawer">.
 // [data-open="id"] opens it as modal, [data-close] closes the dialog it is in. Esc and a click on the backdrop also close.
 document.addEventListener('click', (e) => {
-  const opener = e.target.closest('[data-open]');
+  const opener = e.target.closest?.('[data-open]');
   if (opener) { document.getElementById(opener.dataset.open)?.showModal(); return; }
-  const closer = e.target.closest('[data-close]');
+  const closer = e.target.closest?.('[data-close]');
   if (closer) { closer.closest('dialog')?.close(); return; }
   if (e.target.tagName === 'DIALOG') e.target.close(); // click on the backdrop
 });
@@ -2237,9 +2298,11 @@ document.addEventListener('click', (e) => {
 {
 // Grin tabs. Markup: [role=tablist] > button[role=tab][aria-controls=id]; panels [role=tabpanel][id].
 // Click or Left/Right/Home/End selects a tab and shows its panel. A white piece (.tabs-indicator) slides to the chosen tab.
-document.addEventListener('click', (e) => { const tab = e.target.closest('[role="tab"]'); if (tab) select(tab); });
+// Tabs as links (navigation between pages): <nav class="tabs"><a class="tab" href="…" aria-current="page">. No role, no panels;
+// the indicator marks the current page.
+document.addEventListener('click', (e) => { const tab = e.target.closest?.('[role="tab"]'); if (tab) select(tab); });
 document.addEventListener('keydown', (e) => {
-  const tab = e.target.closest('[role="tab"]');
+  const tab = e.target.closest?.('[role="tab"]');
   if (!tab || !['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(e.key)) return;
   const tabs = [...tab.closest('[role="tablist"]').querySelectorAll('[role="tab"]')];
   const i = tabs.indexOf(tab);
@@ -2257,14 +2320,14 @@ function select(tab) {
   place(list);
 }
 function place(list) {
-  const on = list.querySelector('[role="tab"][aria-selected="true"]');
+  const on = list.querySelector('[role="tab"][aria-selected="true"], a.tab[aria-current="page"]');
   let bar = list.querySelector('.tabs-indicator');
   if (!on || !list.classList.contains('tabs')) return;
   if (!bar) { bar = document.createElement('span'); bar.className = 'tabs-indicator'; bar.setAttribute('aria-hidden', 'true'); list.prepend(bar); list.classList.add('tabs-ready'); }
   bar.style.width = `${on.offsetWidth}px`; bar.style.height = `${on.offsetHeight}px`;
   bar.style.transform = `translate(${on.offsetLeft}px, ${on.offsetTop}px)`;
 }
-const placeAll = () => document.querySelectorAll('.tabs[role="tablist"]').forEach(place);
+const placeAll = () => document.querySelectorAll('.tabs').forEach(place);
 if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', placeAll, { once: true }); else placeAll();
 addEventListener('resize', placeAll);
 document.fonts?.ready.then(placeAll);
@@ -2341,7 +2404,7 @@ function animate(details, open) {
 }
 
 document.addEventListener('click', (e) => {
-  const summary = e.target.closest('.accordion summary, details.disclosure > summary');
+  const summary = e.target.closest?.('.accordion summary, details.disclosure > summary');
   if (!summary) return;
   const details = summary.parentElement;
   e.preventDefault();
@@ -2355,6 +2418,41 @@ document.addEventListener('click', (e) => {
   }
   animate(details, opening);
 });
+}
+
+// ---------- components/appearance/appearance.js ----------
+{
+// Grin appearance panel (also: acessibilidade, preferências de tela, settings). The same four controls in every tool:
+// theme, high contrast, density and font size. Markup: an empty <div class="popover appearance" id="…" data-appearance>
+// opened by a button with data-popover="…" (popover.js). This script fills it; theme.js and slider.js make it work.
+// Every tool built with Grin has this panel, in the top bar or in the sidebar footer next to the theme button.
+const { paintSliders } = Grin;
+const { sync } = Grin;
+let n = 0;
+function mountAppearance(root = document) {
+  root.querySelectorAll('[data-appearance]:not([data-ready])').forEach((panel) => {
+    const k = `grin-ap${n++}`;
+    panel.setAttribute('role', 'dialog');
+    panel.setAttribute('aria-label', 'Aparência');
+    panel.innerHTML = `<span class="popover-title">Aparência</span>
+      <div class="field"><label class="field-label" for="${k}-theme">Tema</label><select class="select" id="${k}-theme" data-theme-select><option value="system">Do sistema</option><option value="light">Claro</option><option value="dark">Escuro</option></select></div>
+      <label class="switch"><input type="checkbox" role="switch" data-contrast-toggle>Alto contraste</label>
+      <div class="field"><span class="field-label" id="${k}-dl">Densidade</span><div class="segmented" role="radiogroup" aria-labelledby="${k}-dl">
+        <label><input type="radio" name="${k}-density" value="comfortable" data-set-density><span>Confortável</span></label>
+        <label><input type="radio" name="${k}-density" value="compact" data-set-density><span>Compacta</span></label>
+      </div></div>
+      <div class="slider-field">
+        <div class="slider-head"><label class="field-label" for="${k}-scale">Tamanho da fonte</label><output for="${k}-scale" data-format="percent">100%</output></div>
+        <div class="slider-row"><span class="slider-end small" aria-hidden="true">A</span><input class="slider" type="range" id="${k}-scale" min="100" max="125" step="any" data-stops="100,112.5,125" value="100" data-set-scale><span class="slider-end large" aria-hidden="true">A</span></div>
+        <div class="slider-ticks" aria-hidden="true"><span data-value="100">100%</span><span data-value="112.5">112,5%</span><span data-value="125">125%</span></div>
+      </div>`;
+    panel.dataset.ready = '';
+  });
+  sync();
+  paintSliders(root);
+}
+if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', () => mountAppearance(), { once: true }); else mountAppearance();
+Object.assign(Grin, { mountAppearance });
 }
 
 // ---------- components/combobox/combobox.js ----------
@@ -2457,9 +2555,9 @@ function setup(box) {
     else if (e.key === 'Backspace' && multiple && !input.value) { const last = chosen().at(-1); if (last) removeTag(last); }
     else if (readonly && (e.key === ' ' || (e.key === 'Enter' && !box.classList.contains('open')))) { e.preventDefault(); open(true); move(Math.max(0, visible().indexOf(chosen()[0])), true); }
   });
-  list.addEventListener('mousedown', (e) => { const o = e.target.closest('.combobox-option'); if (o) { e.preventDefault(); pick(o); } });
+  list.addEventListener('mousedown', (e) => { const o = e.target.closest?.('.combobox-option'); if (o) { e.preventDefault(); pick(o); } });
   control.addEventListener('click', (e) => {
-    const rm = e.target.closest('.combobox-tag button');
+    const rm = e.target.closest?.('.combobox-tag button');
     if (rm) { const o = options.find((x) => x.dataset.value === rm.parentElement.dataset.value); if (o) removeTag(o); return; }
     if (!readonly) input.focus();
   });
@@ -2601,7 +2699,7 @@ function startTour(steps, { onEnd } = {}) {
     else if (e.key === 'ArrowLeft') go(-1);
   }
   root.addEventListener('click', (e) => {
-    const b = e.target.closest('[data-tour]'); if (!b) return;
+    const b = e.target.closest?.('[data-tour]'); if (!b) return;
     ({ end, prev: () => go(-1), next: () => go(1) })[b.dataset.tour]();
   });
   addEventListener('keydown', keys); addEventListener('resize', position); addEventListener('scroll', position, true);
@@ -2621,6 +2719,7 @@ if (document.readyState === 'loading') document.addEventListener('DOMContentLoad
 /* Estrutura: a página ocupa a tela; cada área rola por conta própria */
 .app { height: 100vh; min-height: 0; }
 .app-main { height: 100vh; }
+.app-main > .app-footer { flex: none; margin: 0; padding: 8px 24px; } /* assinatura do Grin, numa linha embaixo de cada tela */
 .app-logo { align-items: center; }
 .laika-mark { width: 34px; height: 20px; flex-shrink: 0; fill: var(--primary); }
 .sidebar.collapsed .app-logo > .laika-mark { display: block; }
@@ -2740,6 +2839,7 @@ if (document.readyState === 'loading') document.addEventListener('DOMContentLoad
 </head>
 <body>
 <div id="app"></div>
+<div class="popover appearance" id="aparencia" data-appearance></div>
 <input type="file" id="arquivo" accept=".csv,.txt,.tsv,.xlsx,.xls,.htm,.html,text/csv" hidden>
 <script id="regras">
 'use strict';
@@ -3232,6 +3332,7 @@ if (typeof module === 'object' && module.exports) module.exports = {
 /* ---------- 1. Ícones e utilidades ---------- */
 /* Ícones Lucide (licença ISC), só os usados aqui */
 const ICONES = {
+  ajustes: '<path d="M21 4h-7"/><path d="M10 4H3"/><path d="M21 12h-9"/><path d="M8 12H3"/><path d="M21 20h-5"/><path d="M12 20H3"/><path d="M14 2v4"/><path d="M8 10v4"/><path d="M16 18v4"/>', // do Grin (sliders)
   tabela: '<path d="M9 3H5a2 2 0 0 0-2 2v4m6-6h10a2 2 0 0 1 2 2v4M9 3v18m0 0h10a2 2 0 0 0 2-2V9M9 21H5a2 2 0 0 1-2-2V9m0 0h18"/>',
   revisao: '<rect width="8" height="4" x="8" y="2" rx="1" ry="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="m9 14 2 2 4-4"/>',
   duplicados: '<rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/>',
@@ -3632,8 +3733,21 @@ let D = null;  // tabela em uso, P.t[S.ent]: { k, modelo, cols, rows, naoDup, oc
 let A = null;  // análise da tabela em uso (seção 7)
 /* Cada linha: { id, t (tabela), linha (no arquivo), v (valores), o (originais do que foi editado), del, mesclada,
    emp (pessoa: id da empresa), var (empresa: outras escritas no arquivo), ok (empresa: escritas já conferidas) } */
+const VERSAO = '0.3.0'; // igual à última versão do CHANGELOG.md
 let tema = lerLS('laika-tema') || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
 document.documentElement.dataset.theme = tema;
+/* Painel Aparência do Grin: o tema e a densidade escolhidos ali passam a ser os do Laika, e os botões do Laika
+   avisam o Grin. Ao abrir, o Grin recebe as escolhas guardadas do Laika, para os dois ficarem iguais. */
+document.documentElement.addEventListener('grin:theme', () => {
+  const t = Grin.effectiveTheme(); if (t === tema) return;
+  tema = t; document.documentElement.dataset.theme = tema; gravarLS('laika-tema', tema); render();
+});
+document.addEventListener('change', (e) => {
+  if (!e.target.matches?.('[data-set-density]')) return;
+  const d = e.target.value === 'compact' ? 'compacta' : 'conforto'; if (d === S.densidade) return;
+  S.densidade = d; gravarLS('laika-densidade', d); render();
+});
+document.addEventListener('DOMContentLoaded', () => { Grin.setTheme(tema); Grin.setDensity(S.densidade === 'compacta' ? 'compact' : 'comfortable'); });
 // Barras recolhidas, lembradas pelo navegador (pedido do dono do produto em 21/10/2026)
 let lateralRecolhida = lerLS('laika-lateral') === 'recolhida', topoRecolhido = lerLS('laika-topo') === 'recolhido', menuAberto = false;
 const recolhida = () => lateralRecolhida && !matchMedia('(max-width: 760px)').matches; // no celular a barra lateral é uma gaveta, nunca só ícones
@@ -3989,7 +4103,7 @@ function draw() {
 }
 function htmlApp() {
   const telas = { inicio: htmlInicio, mapear: htmlMapear, tabela: htmlLista, revisao: htmlLista, duplicados: htmlDuplicados, historico: htmlHistorico };
-  return `<div class="app${recolhida() ? ' sidebar-collapsed' : ''}"><button type="button" class="sidebar-menu-button" data-a="menuLateral" aria-controls="lateral" aria-expanded="${menuAberto}" aria-label="${menuAberto ? 'Fechar menu' : 'Abrir menu'}">${ic('painel', 20)}</button>${htmlLateral()}<div class="app-main">${htmlTopo()}<main class="main" id="principal">${telas[S.tela]()}</main></div></div>${htmlGaveta()}${htmlDialogo()}${htmlPop()}${htmlAvisos()}${S.carregando ? `<div class="loading-overlay" role="status"><div class="loading-overlay-card"><span class="spinner" aria-hidden="true"></span>${esc(S.carregando)}</div></div>` : ''}`;
+  return `<div class="app${recolhida() ? ' sidebar-collapsed' : ''}"><button type="button" class="sidebar-menu-button" data-a="menuLateral" aria-controls="lateral" aria-expanded="${menuAberto}" aria-label="${menuAberto ? 'Fechar menu' : 'Abrir menu'}">${ic('painel', 20)}</button>${htmlLateral()}<div class="app-main">${htmlTopo()}<main class="main" id="principal">${telas[S.tela]()}</main><footer class="app-footer"><span><b>Laika ${VERSAO}</b> · por Saúl Ossorio</span><span>Feito com <a href="https://saulossorio.github.io/grin/">Grin 2.22</a></span></footer></div></div>${htmlGaveta()}${htmlDialogo()}${htmlPop()}${htmlAvisos()}${S.carregando ? `<div class="loading-overlay" role="status"><div class="loading-overlay-card"><span class="spinner" aria-hidden="true"></span>${esc(S.carregando)}</div></div>` : ''}`;
 }
 function htmlLateral() {
   const min = recolhida(), rot = r => min ? ` data-tooltip="${r}" aria-label="${r}"` : '';
@@ -4007,7 +4121,7 @@ function htmlLateral() {
   } else itens = `<button type="button" class="nav-item" aria-current="page" data-a="ir" data-tela="${S.tela}"${rot(S.tela === 'mapear' ? 'Mapear colunas' : 'Importar')}>${ic('importar')}<span class="label">${S.tela === 'mapear' ? 'Mapear colunas' : 'Importar'}</span></button>`;
   const temaRot = tema === 'dark' ? 'Tema claro' : 'Tema escuro', lateralRot = min ? 'Expandir barra lateral' : 'Recolher barra lateral';
   const marca = '<svg class="laika-mark" viewBox="0 0 102 58.89" aria-hidden="true" focusable="false"><polygon points="0,29.44 34,29.44 17,0"/><polygon points="68,29.44 102,29.44 85,0"/><polygon points="34,29.44 68,29.44 51,58.89"/></svg>'; // três triângulos iguais: orelhas e rosto
-  return `<nav class="sidebar${min ? ' collapsed' : ''}${menuAberto ? ' open' : ''}" id="lateral" aria-label="Navegação principal"><div class="app-logo">${marca}<span>Laika</span></div>${itens}<div class="sidebar-footer">${pe}${topoRecolhido ? `<button type="button" class="nav-item small" id="b-topo" data-a="topo"${rot('Mostrar barra superior')}>${ic('baixo')}<span class="label">Mostrar barra superior</span></button>` : ''}<button type="button" class="nav-item small" data-a="tema"${rot(temaRot)}>${ic(tema === 'dark' ? 'sol' : 'lua')}<span class="label">${temaRot}</span></button></div></nav><button type="button" class="sidebar-toggle" id="b-lateral" data-a="lateral" aria-controls="lateral" aria-expanded="${!min}" aria-label="${lateralRot}" data-tooltip="${lateralRot}">${ic('esq', 16)}</button>`;
+  return `<nav class="sidebar${min ? ' collapsed' : ''}${menuAberto ? ' open' : ''}" id="lateral" aria-label="Navegação principal"><div class="app-logo">${marca}<span>Laika</span><span class="tag">${VERSAO}</span></div>${itens}<div class="sidebar-footer">${pe}${topoRecolhido ? `<button type="button" class="nav-item small" id="b-topo" data-a="topo"${rot('Mostrar barra superior')}>${ic('baixo')}<span class="label">Mostrar barra superior</span></button>` : ''}<button type="button" class="nav-item small" data-a="tema"${rot(temaRot)}>${ic(tema === 'dark' ? 'sol' : 'lua')}<span class="label">${temaRot}</span></button><button type="button" class="nav-item small" data-popover="aparencia" aria-expanded="false"${rot('Aparência')}>${ic('ajustes')}<span class="label">Aparência</span></button></div></nav><button type="button" class="sidebar-toggle" id="b-lateral" data-a="lateral" aria-controls="lateral" aria-expanded="${!min}" aria-label="${lateralRot}" data-tooltip="${lateralRot}">${ic('esq', 16)}</button>`;
 }
 function htmlTopo() {
   if (topoRecolhido) return '';
@@ -5030,7 +5144,7 @@ const AC = { // cliques: data-a="nome"
   cancelarTroca: () => { S.trocando = null; render(); },
   semEmpresa: () => { S.trocando = null; ligar(linhaPorId(S.gaveta), null); render(); },
   usarVariante: el => { const r = linhaPorId(S.gaveta), k = el.dataset.k; mudar('Escolher a escrita de ' + rotuloCol(k) + ' na linha ' + r.linha, [[r, k, r.var[k][+el.dataset.i]], [r, '$ok:' + k, true]]); },
-  tema: () => { tema = tema === 'dark' ? 'light' : 'dark'; document.documentElement.dataset.theme = tema; gravarLS('laika-tema', tema); render(); },
+  tema: () => { tema = tema === 'dark' ? 'light' : 'dark'; document.documentElement.dataset.theme = tema; gravarLS('laika-tema', tema); window.Grin?.setTheme?.(tema); render(); },
   menuLateral: () => { menuAberto = !menuAberto; render(); },
   lateral: () => { lateralRecolhida = !lateralRecolhida; gravarLS('laika-lateral', lateralRecolhida ? 'recolhida' : ''); S.foco = 'b-lateral'; render(); },
   topo: () => { topoRecolhido = !topoRecolhido; gravarLS('laika-topo', topoRecolhido ? 'recolhido' : ''); S.foco = 'b-topo'; render(); },
@@ -5102,7 +5216,7 @@ const AC = { // cliques: data-a="nome"
     else if (cur) { if (cur.dir === 'asc') cur.dir = 'desc'; else S.ord = S.ord.filter(o => o !== cur); } else S.ord.push({ key: k, dir: 'asc' });
     mudouVista();
   },
-  densidade: () => { S.densidade = S.densidade === 'compacta' ? 'conforto' : 'compacta'; gravarLS('laika-densidade', S.densidade); render(); },
+  densidade: () => { S.densidade = S.densidade === 'compacta' ? 'conforto' : 'compacta'; gravarLS('laika-densidade', S.densidade); window.Grin?.setDensity?.(S.densidade === 'compacta' ? 'compact' : 'comfortable'); render(); },
   colunas: el => abrirPop(el, { tipo: 'colunas' }),
   pcTodas: () => { D.ocultas.clear(); salvarDepois(); render(); },
   addCampo: el => { adicionarCampo(el.dataset.k); S.pop = null; aviso('Coluna ' + rotuloCol(el.dataset.k) + ' adicionada, vazia.', 'ok'); },

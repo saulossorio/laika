@@ -2,6 +2,19 @@
 
 Formato baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/). Versionamento semântico.
 
+## [0.3.0] - 2026-11-21
+
+### Adicionado
+- Versão ao lado do nome, no logo da barra lateral.
+- **Painel Aparência do Grin** no pé da barra lateral, logo abaixo do botão de tema, com tema, alto contraste, densidade e tamanho da fonte. O tema e a densidade escolhidos ali e os dos botões do Laika ficam sempre iguais.
+- **Assinatura** embaixo de cada tela: "Laika 0.3.0 · por Saúl Ossorio", com a versão do Grin usada.
+
+### Alterado
+- Grin 2.22 (https://github.com/saulossorio/grin/releases/tag/v2.22).
+
+### Não mudou
+- Regras de detecção, importação, mapeamento, duplicados, histórico e exportação.
+
 ## [0.2.0] - 2026-11-21
 
 ### Alterado
