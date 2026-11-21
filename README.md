@@ -34,12 +34,13 @@ Cada problema tem um nível de severidade. A lista completa, com exemplos e a fu
 
 | Caminho | O que é |
 |---|---|
-| `index.html` | O Laika inteiro: estilos, regras (`<script id="regras">`) e a tela |
+| `index.html` | O Laika inteiro: o Grin 2.19 (estilos e scripts), as regras (`<script id="regras">`) e a tela |
 | `docs/regras.md` | Todas as regras, agrupadas por severidade |
 | `docs/formato-sirius.md` | Como é o relatório do Sirius e como o Laika o lê |
 | `docs/decisoes.md` | Por que o Laika é assim, e de onde vêm os IDs (`RN-*`, `D-*`) |
 | `tests/` | Testes das regras e dados fictícios. Veja [tests/README.md](tests/README.md) |
 | `assets/laika-logo.svg` | Logo |
+| `assets/OFL.txt` | Licença das fontes Geist e Geist Mono, que vêm com o Grin |
 | `CHANGELOG.md` | Histórico de versões |
 
 ## Testes

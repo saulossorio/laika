@@ -2,6 +2,15 @@
 
 Formato baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/). Versionamento semântico.
 
+## [0.2.0] - 2026-11-21
+
+### Alterado
+- Visual do Laika trocado pelo Grin 2.19 (https://github.com/saulossorio/grin/releases/tag/v2.19). O `index.html` traz `dist/grin.inline.css` e `dist/grin.js` copiados dessa versão.
+- Fontes Geist e Geist Mono no lugar de Public Sans e JetBrains Mono. A licença SIL OFL 1.1 das fontes está em `assets/OFL.txt`.
+- Barra lateral, cabeçalho, botões, tabela, gaveta, diálogos, menus, avisos, filtros e campos usam as classes do Grin. O CSS próprio do Laika ficou só com o que é desta ferramenta (tabela de largura fixa, mapeamento, duplicados, histórico), sempre com tokens do Grin.
+- A densidade Compacta e Confortável muda também a altura dos controles, como no Grin.
+- No celular, a barra lateral abre pelo botão de menu no canto superior esquerdo.
+
 ## [0.1.0] - 2026-10-29
 
 Primeira versão como projeto próprio. Parte do Canis Lite de 23/10/2026.
