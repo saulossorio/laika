@@ -2,6 +2,11 @@
 
 Formato baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/). Versionamento semântico.
 
+## [0.3.2] - 2026-11-21
+
+### Alterado
+- Grin 2.25. Na tela inicial, a assinatura fica no fim da janela, com 20 px de espaço embaixo, como no Vezen.
+
 ## [0.3.1] - 2026-11-21
 
 ### Alterado
