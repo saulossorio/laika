@@ -10,6 +10,7 @@ Formato baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/). 
 - Barra lateral, cabeçalho, botões, tabela, gaveta, diálogos, menus, avisos, filtros e campos usam as classes do Grin. O CSS próprio do Laika ficou só com o que é desta ferramenta (tabela de largura fixa, mapeamento, duplicados, histórico), sempre com tokens do Grin.
 - A densidade Compacta e Confortável muda também a altura dos controles, como no Grin.
 - No celular, a barra lateral abre pelo botão de menu no canto superior esquerdo.
+- Logo novo: três triângulos equiláteros verdes do mesmo tamanho, duas orelhas e o rosto, na barra lateral, no favicon e em `assets/laika-logo.svg`.
 
 ## [0.1.0] - 2026-10-29
 
