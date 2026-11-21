@@ -2,6 +2,12 @@
 
 Formato baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/). Versionamento semântico.
 
+## [1.0.2] - 2026-11-21
+
+### Alterado
+- Grin 2.27. A tela inicial tem a mesma estrutura das outras telas: barra superior, cabeçalho no mesmo lugar e conteúdo na largura da página, com a assinatura no fim da janela. A coluna centralizada mudava a posição do título ao abrir uma tabela.
+- Margem lateral de 32 px em todas as telas, a mesma do Grin e do Vezen (antes 24 px). No celular, 16 px.
+
 ## [1.0.1] - 2026-11-21
 
 ### Alterado

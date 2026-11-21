@@ -9,12 +9,12 @@
   Laika: ferramenta para analisar, limpar e exportar tabelas importadas.
   Um único arquivo. Abra no Chrome, Edge, Firefox ou Safari recentes. Funciona sem internet.
   Os dados ficam só neste computador, no armazenamento do navegador, até você fechar a tabela.
-  Visual: Grin 2.26, copiado de https://github.com/saulossorio/grin/releases/tag/v2.26 (dist/grin.inline.css e dist/grin.js).
+  Visual: Grin 2.27, copiado de https://github.com/saulossorio/grin/releases/tag/v2.27 (dist/grin.inline.css e dist/grin.js).
   Regras e listas: as do Canis (docs/regras.md).
 -->
-<!-- Grin 2.26, copiado de https://github.com/saulossorio/grin/releases/tag/v2.26 -->
+<!-- Grin 2.27, copiado de https://github.com/saulossorio/grin/releases/tag/v2.27 -->
 <style>
-/* Grin 2.26 · CSS com as fontes dentro (Geist e Geist Mono, licença SIL OFL 1.1) · https://github.com/saulossorio/grin
+/* Grin 2.27 · CSS com as fontes dentro (Geist e Geist Mono, licença SIL OFL 1.1) · https://github.com/saulossorio/grin
    Gerado por tools/bundle.mjs a partir dos arquivos do repositório. Não edite à mão. */
 /* ---------- styles/fonts.css ---------- */
 /* Grin: fonts. Geist and Geist Mono, variable weight 100 to 900, from the official release
@@ -76,7 +76,6 @@
   --size-avatar: 40px;
   --size-screen: 1200px;
   --size-content: 1440px;
-  --size-start: 680px;
   --size-prose: 72ch;
   --font-sans: 'Geist', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
   --font-mono: 'Geist Mono', ui-monospace, 'SF Mono', Menlo, monospace;
@@ -1814,25 +1813,21 @@ a.tab { text-decoration: none; }
 
 /* ---------- components/start/start.css ---------- */
 /* Grin start screen (also: tela inicial, home, welcome, primeira tela). The first screen of a tool, before there is data
-   to work on: title, short description, the main actions and the signature. One centered column (--size-start),
-   centered vertically in the window, with the signature at the bottom of the window in the same width.
-   Markup: <main class="page-content start-screen"><div class="start-screen-body">…</div><footer class="app-footer">…</footer></main>
-   Working screens (lists, forms, analyses) use the normal page layout, never this one. */
-.start-screen { align-items: center; padding-top: 0; }
-.start-screen > * { width: min(var(--size-start), 100%); }
-.start-screen-body { display: flex; flex-direction: column; gap: var(--space-4); margin-block: auto; padding-top: 32px; }
-.start-screen-body h1 { font-size: var(--text-3xl); }
-.start-screen-body > .lead, .start-screen-body > header > .lead { margin-top: -8px; }
-.start-screen > .app-footer { margin-top: 32px; }
-.start-screen .action-cards { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-@media (max-width: 560px) { .start-screen .action-cards { grid-template-columns: 1fr; } }
+   to work on. It uses the same structure as every other screen: the page header (.page-header) in the same place and
+   size, the content below it with the page width, and the signature at the bottom of the window. Only the description
+   is limited to --size-prose, for line length. Nothing is centered in a narrow column, so the title and the content do
+   not jump when the person moves to another screen.
+   Markup: <div class="page-header">…h1, p.page-description…</div>
+           <main class="page-content start-screen"><div class="start-screen-body">…</div><footer class="app-footer">…</footer></main> */
+.start-screen-body { display: flex; flex-direction: column; gap: var(--space-4); }
+.page-header .page-description, .start-screen-body .lead { max-width: var(--size-prose); }
 </style>
 <script>
-/* Grin 2.26 · comportamentos em JavaScript; inclua com <script src="grin.js" defer> · https://github.com/saulossorio/grin
+/* Grin 2.27 · comportamentos em JavaScript; inclua com <script src="grin.js" defer> · https://github.com/saulossorio/grin
    Gerado por tools/bundle.mjs a partir dos arquivos do repositório. Não edite à mão. */
 'use strict';
 const Grin = (window.Grin = window.Grin || {});
-Grin.version = '2.26';
+Grin.version = '2.27';
 
 // ---------- scripts/utils.js ----------
 {
@@ -2737,39 +2732,36 @@ if (document.readyState === 'loading') document.addEventListener('DOMContentLoad
 /* ---------- Laika: só o que é próprio desta ferramenta. Cores, medidas e componentes vêm do Grin, acima. ---------- */
 
 /* Estrutura: a página ocupa a tela; cada área rola por conta própria */
-.app { height: 100vh; min-height: 0; }
+.app { height: 100vh; min-height: 0; --gutter: 32px; } /* margem lateral das telas, a do .page-header do Grin */
+@media (max-width: 760px) { .app { --gutter: 16px; } }
 .app-main { height: 100vh; }
 .app-logo { align-items: center; }
 .laika-mark { width: 24px; height: 24px; flex-shrink: 0; fill: var(--primary); } /* cabe num quadrado de 24 px, como o logo do Grin e o do Vezen; o desenho mais largo fica centralizado */
 .sidebar.collapsed .app-logo > .laika-mark { display: block; }
-.topbar { padding: 0 24px; }
+.topbar { padding: 0 var(--gutter); }
 .filechip { display: inline-flex; align-items: center; gap: 8px; min-width: 0; font-size: var(--text-sm); color: var(--muted-foreground); }
 .filechip svg { width: 18px; height: 18px; }
 .filechip b { color: var(--foreground); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 36vw; }
 .salvo { display: inline-flex; align-items: center; gap: 6px; margin-left: 12px; font-size: var(--text-xs); color: var(--muted-foreground); white-space: nowrap; }
 .main { flex: 1 1 auto; min-height: 0; display: flex; flex-direction: column; position: relative; }
-.main > .page-header { max-width: none; gap: 16px; padding: 24px 24px 0; }
+.main > .page-header { max-width: none; gap: 16px; padding-inline: var(--gutter); }
 .sub { color: var(--muted-foreground); font-size: var(--text-sm); font-variant-numeric: tabular-nums; }
 .small { font-size: var(--text-xs); }
 .overline.sec-t { margin: 0 0 8px; }
 .types { display: flex; gap: 8px; flex-wrap: wrap; }
 .list-toolbar { gap: 8px; padding-bottom: 12px; }
 
-/* Início */
-.start { flex: 1 1 auto; overflow: auto; display: flex; justify-content: center; padding: 32px 24px; }
-.start .dropzone { padding: 24px; } /* a tela inicial cabe numa janela de notebook sem rolar */
-.start-in { width: min(var(--size-start), 100%); display: flex; flex-direction: column; gap: 16px; }
-.start:has(.app-footer) { padding-bottom: 0; } /* assinatura no fim da janela quando o conteúdo é curto, como no Grin */
-.start-in > .app-footer { padding-bottom: 20px; margin-top: 0; }
-/* padrão Tela inicial do Grin: coluna de --size-start, conteúdo no centro vertical, assinatura no fim da janela */
-.start-body { display: flex; flex-direction: column; gap: 16px; margin-block: auto; }
-.start:has(.app-footer) { padding-top: 0; } /* espaço igual acima e abaixo do conteúdo */
-.start-in:has(> .start-body) { gap: 0; }
+/* Início: padrão Tela inicial do Grin */
+.page.start { display: flex; flex-direction: column; padding-bottom: 0; }
+.main > .page-header .page-title-row { align-items: flex-start; }
+.page-title:has(> .page-description) { flex-direction: column; align-items: flex-start; gap: 0; } /* descrição logo embaixo do título, como no Vezen */ /* título no mesmo lugar com ou sem botões ao lado */
+.start .dropzone { padding: 24px; }
+.start > .app-footer { margin: auto var(--gutter) 0; padding-bottom: 20px; }
 .resume { flex-direction: row; align-items: center; gap: 12px; padding: 16px; }
 
 /* Mapeamento */
 .page { flex: 1 1 auto; min-height: 0; overflow: auto; padding: 20px 0 24px; }
-.secao { padding: 0 24px 24px; }
+.secao { padding: 0 var(--gutter) 24px; }
 .ctl { display: inline-flex; align-items: center; gap: 8px; font-size: var(--text-sm); font-weight: var(--weight-medium); }
 .ctl .select { width: auto; }
 .mtbl td.ex { max-width: 380px; overflow: hidden; text-overflow: ellipsis; }
@@ -2793,12 +2785,12 @@ if (document.readyState === 'loading') document.addEventListener('DOMContentLoad
 .hcount { height: 20px; padding: 0 7px; cursor: pointer; }
 .conf { display: inline-flex; vertical-align: -2px; margin-right: 4px; color: var(--ok-fg); }
 .conf svg { width: 14px; height: 14px; }
-.laika-empty { margin: 24px; }
-.main > .pagination { padding: 8px 24px; border-top: 1px solid var(--border); }
+.laika-empty { margin: 24px var(--gutter); }
+.main > .pagination { padding: 8px var(--gutter); border-top: 1px solid var(--border); }
 .main > .bulk-bar { position: absolute; left: 0; right: 0; bottom: 72px; z-index: 12; margin-inline: auto; max-width: calc(100% - 32px); }
 
 /* Duplicados e histórico */
-.dups { flex: 1 1 auto; min-height: 0; overflow: auto; display: flex; flex-direction: column; gap: 12px; padding: 4px 24px 24px; }
+.dups { flex: 1 1 auto; min-height: 0; overflow: auto; display: flex; flex-direction: column; gap: 12px; padding: 4px var(--gutter) 24px; }
 .dcard { flex: 0 0 auto; overflow: hidden; }
 .dcard-h { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; padding: 12px 16px; border-bottom: 1px solid var(--border); background: var(--table-head); }
 .dcard-b { overflow-x: auto; }
@@ -3759,7 +3751,7 @@ let D = null;  // tabela em uso, P.t[S.ent]: { k, modelo, cols, rows, naoDup, oc
 let A = null;  // análise da tabela em uso (seção 7)
 /* Cada linha: { id, t (tabela), linha (no arquivo), v (valores), o (originais do que foi editado), del, mesclada,
    emp (pessoa: id da empresa), var (empresa: outras escritas no arquivo), ok (empresa: escritas já conferidas) } */
-const VERSAO = '1.0.1'; // igual à última versão do CHANGELOG.md
+const VERSAO = '1.0.2'; // igual à última versão do CHANGELOG.md
 let tema = lerLS('laika-tema') || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
 document.documentElement.dataset.theme = tema;
 /* Painel Aparência do Grin: o tema e a densidade escolhidos ali passam a ser os do Laika, e os botões do Laika
@@ -4147,10 +4139,10 @@ function htmlLateral() {
   } else itens = `<button type="button" class="nav-item" aria-current="page" data-a="ir" data-tela="${S.tela}"${rot(S.tela === 'mapear' ? 'Mapear colunas' : 'Importar')}>${ic('importar')}<span class="label">${S.tela === 'mapear' ? 'Mapear colunas' : 'Importar'}</span></button>`;
   const temaRot = tema === 'dark' ? 'Tema claro' : 'Tema escuro', lateralRot = min ? 'Expandir barra lateral' : 'Recolher barra lateral';
   const marca = '<svg class="laika-mark" viewBox="0 0 102 58.89" aria-hidden="true" focusable="false"><polygon points="0,29.44 34,29.44 17,0"/><polygon points="68,29.44 102,29.44 85,0"/><polygon points="34,29.44 68,29.44 51,58.89"/></svg>'; // três triângulos iguais: orelhas e rosto
-  return `<nav class="sidebar${min ? ' collapsed' : ''}${menuAberto ? ' open' : ''}" id="lateral" aria-label="Navegação principal"><div class="app-logo">${marca}<span>Laika</span><span class="tag">${VERSAO}</span></div>${itens}<div class="sidebar-footer">${pe}${topoRecolhido && S.tela !== 'inicio' ? `<button type="button" class="nav-item small" id="b-topo" data-a="topo"${rot('Mostrar barra superior')}>${ic('baixo')}<span class="label">Mostrar barra superior</span></button>` : ''}<button type="button" class="nav-item small" data-a="tema"${rot(temaRot)}>${ic(tema === 'dark' ? 'sol' : 'lua')}<span class="label">${temaRot}</span></button><button type="button" class="nav-item small" data-popover="aparencia" aria-expanded="false"${rot('Aparência')}>${ic('ajustes')}<span class="label">Aparência</span></button></div></nav><button type="button" class="sidebar-toggle" id="b-lateral" data-a="lateral" aria-controls="lateral" aria-expanded="${!min}" aria-label="${lateralRot}" data-tooltip="${lateralRot}">${ic('esq', 16)}</button>`;
+  return `<nav class="sidebar${min ? ' collapsed' : ''}${menuAberto ? ' open' : ''}" id="lateral" aria-label="Navegação principal"><div class="app-logo">${marca}<span>Laika</span><span class="tag">${VERSAO}</span></div>${itens}<div class="sidebar-footer">${pe}${topoRecolhido ? `<button type="button" class="nav-item small" id="b-topo" data-a="topo"${rot('Mostrar barra superior')}>${ic('baixo')}<span class="label">Mostrar barra superior</span></button>` : ''}<button type="button" class="nav-item small" data-a="tema"${rot(temaRot)}>${ic(tema === 'dark' ? 'sol' : 'lua')}<span class="label">${temaRot}</span></button><button type="button" class="nav-item small" data-popover="aparencia" aria-expanded="false"${rot('Aparência')}>${ic('ajustes')}<span class="label">Aparência</span></button></div></nav><button type="button" class="sidebar-toggle" id="b-lateral" data-a="lateral" aria-controls="lateral" aria-expanded="${!min}" aria-label="${lateralRot}" data-tooltip="${lateralRot}">${ic('esq', 16)}</button>`;
 }
 function htmlTopo() {
-  if (topoRecolhido || S.tela === 'inicio') return ''; // na tela inicial não há tabela aberta: sem barra superior
+  if (topoRecolhido) return '';
   let esq = '<span class="sub">Nenhuma tabela aberta</span>', dir = '';
   if (S.tela === 'mapear' && S.imp) esq = `<span class="filechip">${ic('arquivo')}<b>${esc(S.imp.nome)}</b></span>`;
   else if (P) {
@@ -4164,15 +4156,16 @@ const btnExportar = () => `<button type="button" class="btn primary" data-a="exp
 
 function htmlInicio() {
   const s = S.sessao;
-  return `<div class="start"><div class="start-in"><div class="start-body">
-    <div><h1>Limpar uma tabela</h1><p class="lead" style="margin-top:8px">Importe uma planilha para conferir, corrigir e exportar os dados. Relatórios do Sirius viram duas tabelas ligadas, pessoas e empresas, no formato do Canis.</p></div>
+  // padrão Tela inicial do Grin: cabeçalho e margens iguais aos das outras telas; assinatura só aqui, no fim da janela
+  return `<div class="page-header"><div class="page-title-row"><div class="page-title"><h1>Limpar uma tabela</h1><p class="page-description">Importe uma planilha para conferir, corrigir e exportar os dados. Relatórios do Sirius viram duas tabelas ligadas, pessoas e empresas, no formato do Canis.</p></div></div></div>
+  <div class="page start start-screen" data-scroll="inicio"><div class="secao start-screen-body">
     ${s ? `<div class="card resume">${ic('arquivo', 20)}<div style="flex:1;min-width:0"><b>${esc(s.nome)}</b><div class="sub">${esc(s.resumo)}</div><div class="sub">Salva em ${dataHora(s.salvoEm)}</div></div><button type="button" class="btn" data-a="descartarSessao">Descartar</button><button type="button" class="btn primary" data-a="continuarSessao">Continuar</button></div>` : ''}
     <div class="dropzone${S.arrastando ? ' over' : ''}">${ic('importar', 24)}<b>Arraste um arquivo CSV ou XLSX para cá ou</b><button type="button" class="btn${s ? '' : ' primary'}" data-a="escolherArquivo">Escolher arquivo</button><small>CSV, TXT, XLSX ou o .xls do Sirius. O .xls do Excel 97-2003 precisa ser salvo como .xlsx antes.</small></div>
     <div class="alert">${ic('info')}<div class="alert-body">Os dados ficam só neste navegador e nada é enviado pela internet. <b>Fechar tabela</b> apaga a cópia guardada.</div></div>
     <div><button type="button" class="link" data-a="exemplo">Experimentar com dados de exemplo (fictícios)</button></div>
     </div>
-    <footer class="app-footer"><span><b>Laika ${VERSAO}</b> · por Saúl Ossorio</span><span>Feito com <a href="https://saulossorio.github.io/grin/">Grin 2.26</a></span></footer>
-  </div></div>`; // assinatura só na tela inicial, no fim do conteúdo
+    <footer class="app-footer"><span><b>Laika ${VERSAO}</b> · por Saúl Ossorio</span><span>Feito com <a href="https://saulossorio.github.io/grin/">Grin 2.27</a></span></footer>
+  </div>`;
 }
 
 /* Mapeamento: cada coluna do arquivo vai para um campo do modelo, fica como está, ou é ignorada */
