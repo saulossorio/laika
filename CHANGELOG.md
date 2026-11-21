@@ -2,6 +2,12 @@
 
 Formato baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/). Versionamento semântico.
 
+## [0.3.1] - 2026-11-21
+
+### Alterado
+- Grin 2.23. A assinatura aparece só na tela inicial, no fim do conteúdo, e rola com ele. Antes era uma faixa fixa embaixo de todas as telas.
+- O logo cabe num quadrado de 24 px, como os do Grin e do Vezen. O desenho, mais largo que alto, fica centralizado nesse quadrado.
+
 ## [0.3.0] - 2026-11-21
 
 ### Adicionado
