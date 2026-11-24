@@ -2828,6 +2828,7 @@ if (document.readyState === 'loading') document.addEventListener('DOMContentLoad
 .app { height: 100vh; min-height: 0; --gutter: 32px; } /* margem lateral das telas, a do .page-header do Grin */
 @media (max-width: 760px) { .app { --gutter: 16px; } }
 .app-main { height: 100vh; }
+.mapa-det { display: inline; } .mapa-det summary { display: inline; cursor: pointer; } .mapa-det[open] > p { margin: 8px 0 0; }
 /* celular: a página inteira rola e a tabela cresce com as linhas; ela rola só na horizontal (Grin 2.41, Planilha) */
 @media (max-width: 760px) {
   .app, .app-main { height: auto; min-height: 100vh; }
@@ -3842,7 +3843,7 @@ let D = null;  // tabela em uso, P.t[S.ent]: { k, modelo, cols, rows, naoDup, oc
 let A = null;  // análise da tabela em uso (seção 7)
 /* Cada linha: { id, t (tabela), linha (no arquivo), v (valores), o (originais do que foi editado), del, mesclada,
    emp (pessoa: id da empresa), var (empresa: outras escritas no arquivo), ok (empresa: escritas já conferidas) } */
-const VERSAO = '1.1.7'; // igual à última versão do CHANGELOG.md
+const VERSAO = '1.1.8'; // igual à última versão do CHANGELOG.md
 let tema = lerLS('laika-tema') || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
 document.documentElement.dataset.theme = tema;
 /* Painel Aparência do Grin: o tema e a densidade escolhidos ali passam a ser os do Laika (a densidade só se muda ali, Grin 2.40).
@@ -4380,7 +4381,7 @@ function htmlMapear() {
         ${faltaLado ? `<div class="alert warn">${ic('atencao')}<div class="alert-body">Escolha pelo menos uma coluna de Pessoas e uma de Empresas. Se o arquivo só tem pessoas ou só empresas, use o modelo Pessoas ou Empresas.</div></div>` : ''}
         ${semChaveEmpresa && !faltaLado ? `<div class="alert warn">${ic('atencao')}<div class="alert-body">Nenhuma coluna de CNPJ ou de nome da empresa escolhida. Sem elas, só as linhas com todos os dados de empresa iguais viram a mesma empresa.</div></div>` : ''}
         ${mod === 'empresas' && imp.temPessoa ? `<div class="alert warn">${ic('atencao')}<div class="alert-body">Este arquivo tem colunas de pessoa, como nome e e-mail, então deve ter uma linha por pessoa. No modelo Empresas, cada linha vira uma empresa, e a mesma empresa se repete uma vez para cada pessoa dela. Para ter cada empresa uma vez só, com as pessoas ligadas, use o modelo Pessoas e Empresas.</div></div>` : ''}
-        <div class="alert neutral">${ic('info')}<div class="alert-body">${explica} Nenhum campo é obrigatório. Colunas em Ignorar não entram na tabela nem na exportação.</div></div>
+        <div class="alert neutral">${ic('info')}<div class="alert-body">Nenhum campo é obrigatório. Colunas em Ignorar não entram na tabela nem na exportação. <details class="mapa-det"${S.mapaDet ? ' open' : ''}><summary class="link" data-a="mapaDet">${S.mapaDet ? 'Menos detalhes' : 'Como as colunas são usadas'}</summary><p>${explica}</p></details></div></div>
       </div>
       <div class="secao"><div class="row" style="justify-content:space-between;margin-bottom:8px"><span class="sub small">Toda coluna começa em Ignorar: escolha só as que você precisa. ${nUsadas ? plural(nUsadas, 'coluna escolhida', 'colunas escolhidas') + '.' : 'Nenhuma coluna escolhida ainda.'}</span><div class="row" style="gap:16px">${nSug ? `<button type="button" class="link" data-a="mSugestoes">Usar as ${plural(nSug, 'sugestão', 'sugestões')} pelo nome das colunas</button>` : ''}${nOutras ? `<button type="button" class="link" data-a="mManterOutras" title="As colunas em Ignorar sem sugestão entram com o nome do arquivo, sem validar">Manter ${nOutras === 1 ? 'a outra coluna' : 'as outras ' + fmtInt(nOutras) + ' colunas'} com o nome do arquivo</button>` : ''}</div></div><div class="table-wrap"><table class="table compact mtbl"><thead><tr><th style="width:24%">Coluna no arquivo</th><th>Exemplos</th><th style="width:30%">${mod === 'livre' ? 'Tipo' : 'Campo no Canis'}</th><th style="width:230px">Nome na tabela</th></tr></thead><tbody>${linhas}</tbody></table></div></div>
     </div>`;
@@ -5322,6 +5323,7 @@ const AC = { // cliques: data-a="nome"
   limparTudo: () => { Object.assign(S, { filtros: [], q: '', qIn: '', soProblemas: false, naoConferidas: false, verExcluidas: false, probs: [] }); mudouVista(); },
   soProblemas: () => { S.soProblemas = !S.soProblemas; mudouVista(); },
   verExcluidas: () => { S.verExcluidas = !S.verExcluidas; mudouVista(); },
+  mapaDet: () => { S.mapaDet = !S.mapaDet; render(); }, // o texto longo do modelo fica fechado, para a tabela de colunas aparecer logo
   menuNivel: el => abrirPop(el, { tipo: 'nivel', n: el.dataset.i }),
   menuLote: el => abrirPop(el, { tipo: 'lote' }),
   loteCorrigir: el => { S.pop = null; corrigirTodos(el.dataset.t); },

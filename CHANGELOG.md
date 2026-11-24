@@ -2,6 +2,11 @@
 
 Formato baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/). Versionamento semântico.
 
+## [1.1.8] - 2026-11-24
+
+### Alterado
+- Mapear colunas: a explicação longa do modelo fica fechada em "Como as colunas são usadas". A tabela de colunas sobe e aparece sem rolar.
+
 ## [1.1.7] - 2026-11-24
 
 ### Alterado
