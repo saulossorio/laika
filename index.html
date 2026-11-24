@@ -9,12 +9,12 @@
   Laika: ferramenta para analisar, limpar e exportar tabelas importadas.
   Um único arquivo. Abra no Chrome, Edge, Firefox ou Safari recentes. Funciona sem internet.
   Os dados ficam só neste computador, no armazenamento do navegador, até você fechar a tabela.
-  Visual: Grin 2.40, copiado de https://github.com/saulossorio/grin/releases/tag/v2.40 (dist/grin.inline.css e dist/grin.js).
+  Visual: Grin 2.41, copiado de https://github.com/saulossorio/grin/releases/tag/v2.41 (dist/grin.inline.css e dist/grin.js).
   Regras e listas: as do Canis (docs/regras.md).
 -->
-<!-- Grin 2.40, copiado de https://github.com/saulossorio/grin/releases/tag/v2.40 -->
+<!-- Grin 2.41, copiado de https://github.com/saulossorio/grin/releases/tag/v2.41 -->
 <style>
-/* Grin 2.40 · CSS com as fontes dentro (Geist e Geist Mono, licença SIL OFL 1.1) · https://github.com/saulossorio/grin
+/* Grin 2.41 · CSS com as fontes dentro (Geist e Geist Mono, licença SIL OFL 1.1) · https://github.com/saulossorio/grin
    Gerado por tools/bundle.mjs a partir dos arquivos do repositório. Não edite à mão. */
 /* ---------- styles/fonts.css ---------- */
 /* Grin: fonts. Geist and Geist Mono, variable weight 100 to 900, from the official release
@@ -1293,6 +1293,8 @@ a.tab { text-decoration: none; }
 .menu-item[aria-checked="true"] { background: var(--row-selected); }
 .menu-item[aria-checked="true"]::after { animation: grin-scale-in var(--dur) var(--ease-spring); }
 .menu-item[aria-checked="true"]::after { content: ''; width: 5px; height: 10px; margin-left: auto; border: solid var(--brand-fg); border-width: 0 2px 2px 0; transform: rotate(45deg); }
+/* Multiple choice: <label class="menu-item"><input type="checkbox"><span class="menu-label">…</span></label> */
+.menu-item > input[type="checkbox"] { flex: none; }
 
 /* ---------- components/dialog/dialog.css ---------- */
 /* Grin dialog: short decisions and destructive confirmations. Native <dialog> traps focus and closes with Esc.
@@ -1836,11 +1838,11 @@ a.tab { text-decoration: none; }
 .page-header .page-description, .start-screen-body .lead { max-width: var(--size-prose); }
 </style>
 <script>
-/* Grin 2.40 · comportamentos em JavaScript; inclua com <script src="grin.js" defer> · https://github.com/saulossorio/grin
+/* Grin 2.41 · comportamentos em JavaScript; inclua com <script src="grin.js" defer> · https://github.com/saulossorio/grin
    Gerado por tools/bundle.mjs a partir dos arquivos do repositório. Não edite à mão. */
 'use strict';
 const Grin = (window.Grin = window.Grin || {});
-Grin.version = '2.40';
+Grin.version = '2.41';
 
 // ---------- scripts/utils.js ----------
 {
@@ -2826,6 +2828,12 @@ if (document.readyState === 'loading') document.addEventListener('DOMContentLoad
 .app { height: 100vh; min-height: 0; --gutter: 32px; } /* margem lateral das telas, a do .page-header do Grin */
 @media (max-width: 760px) { .app { --gutter: 16px; } }
 .app-main { height: 100vh; }
+/* celular: a página inteira rola e a tabela cresce com as linhas; ela rola só na horizontal (Grin 2.41, Planilha) */
+@media (max-width: 760px) {
+  .app, .app-main { height: auto; min-height: 100vh; }
+  .main .wrap, .main .dups { flex: none; overflow-y: visible; }
+  .main > .bulk-bar { position: sticky; bottom: 16px; }
+}
 .filechip { display: inline-flex; align-items: center; gap: 8px; min-width: 0; font-size: var(--text-sm); color: var(--muted-foreground); }
 .filechip svg { width: 18px; height: 18px; }
 .filechip b { color: var(--foreground); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 36vw; }
@@ -3486,7 +3494,7 @@ const fmtInt = n => Number(n).toLocaleString('pt-BR');
 const plural = (n, um, varios) => fmtInt(n) + ' ' + (n === 1 ? um : varios);
 const limpo = v => String(v ?? '').replace(/\s+/g, ' ').trim();
 const RANK = { critico: 3, atencao: 2, info: 1 };
-const NIVEL = { critico: 'Crítico', atencao: 'Atenção', info: 'Info' };
+const NIVEL = { critico: 'Crítico', atencao: 'Atenção', info: 'Informação' }; // nomes do .severity do Grin
 const TOM = { critico: 'crit', atencao: 'warn', info: 'info', ok: 'ok' }; // tons do Grin
 const FG = { critico: 'text-crit', atencao: 'text-warn', info: 'text-info', ok: 'text-ok' };
 const maior = (a, b) => (RANK[b] || 0) > (RANK[a] || 0) ? b : a;
@@ -3822,7 +3830,7 @@ function baixar(blob, nome) {
 
 /* ---------- 6. Estado, histórico e gravação no navegador ---------- */
 /* Busca, filtros, ordem, seleção e página: cada tabela guarda os seus (S.vistas) ao trocar de tabela */
-const VISTA_PADRAO = () => ({ q: '', qIn: '', filtros: [], soProblemas: false, naoConferidas: false, verExcluidas: false, nivel: null, problema: null, ord: [], pagina: 1, sel: new Set(), dupMotivo: null, dupPag: 1 });
+const VISTA_PADRAO = () => ({ q: '', qIn: '', filtros: [], soProblemas: false, naoConferidas: false, verExcluidas: false, probs: [], ord: [], pagina: 1, sel: new Set(), dupMotivo: null, dupPag: 1 });
 const S = { // estado da tela
   tela: 'inicio', imp: null, carregando: '', sessao: null, salvo: '', arrastando: false, ent: 'tabela', vistas: {}, ...VISTA_PADRAO(),
   tamanho: +(lerLS('laika-tamanho') || 50), densidade: lerLS('laika-densidade') || 'conforto',
@@ -3834,7 +3842,7 @@ let D = null;  // tabela em uso, P.t[S.ent]: { k, modelo, cols, rows, naoDup, oc
 let A = null;  // análise da tabela em uso (seção 7)
 /* Cada linha: { id, t (tabela), linha (no arquivo), v (valores), o (originais do que foi editado), del, mesclada,
    emp (pessoa: id da empresa), var (empresa: outras escritas no arquivo), ok (empresa: escritas já conferidas) } */
-const VERSAO = '1.1.6'; // igual à última versão do CHANGELOG.md
+const VERSAO = '1.1.7'; // igual à última versão do CHANGELOG.md
 let tema = lerLS('laika-tema') || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
 document.documentElement.dataset.theme = tema;
 /* Painel Aparência do Grin: o tema e a densidade escolhidos ali passam a ser os do Laika (a densidade só se muda ali, Grin 2.40).
@@ -4147,7 +4155,7 @@ function passa(r, f) {
 }
 let VISTA = { chave: '', rows: [] };
 function linhasDaVista() { // filtros, busca e ordenação da tabela (guardado até algo mudar)
-  const k = D.k + '|' + versao + '|' + JSON.stringify([S.tela === 'revisao', S.verExcluidas, S.soProblemas, S.naoConferidas, S.nivel, S.problema, S.filtros, S.q, S.ord]);
+  const k = D.k + '|' + versao + '|' + JSON.stringify([S.tela === 'revisao', S.verExcluidas, S.soProblemas, S.naoConferidas, S.probs, S.filtros, S.q, S.ord]);
   if (VISTA.chave === k) return VISTA.rows;
   let rows = D.rows;
   if (!S.verExcluidas) rows = rows.filter(r => !r.del);
@@ -4155,8 +4163,7 @@ function linhasDaVista() { // filtros, busca e ordenação da tabela (guardado a
   if (S.tela === 'revisao') rows = rows.filter(r => nv(r)); // a Revisão mostra também as notas (Info)
   else if (S.soProblemas) rows = rows.filter(r => RANK[nv(r)] >= 2);
   if (S.naoConferidas) rows = rows.filter(r => !r.conf);
-  if (S.nivel) rows = rows.filter(r => nv(r) === S.nivel);
-  if (S.problema) rows = rows.filter(r => ((resDe(r) || {}).probs || []).some(p => p.rotulo === S.problema));
+  if (S.probs.length) rows = rows.filter(r => ((resDe(r) || {}).probs || []).some(p => S.probs.includes(p.rotulo))); // os tipos marcados nos menus dos níveis
   for (const f of S.filtros) rows = rows.filter(r => passa(r, f));
   const toks = tokens(S.q); if (toks.length) rows = rows.filter(r => { const h = palheiro(r); return toks.every(t => h.includes(t)); });
   if (S.ord.length) {
@@ -4199,6 +4206,7 @@ function draw() {
   }
   if (dlgNovo && !document.activeElement.closest('.laika-dialog')) { const d = $('.laika-dialog'); (d && (d.querySelector('.dialog-body :is(input, select, textarea):not([disabled])') || d.querySelector('.dialog-footer .btn')))?.focus(); }
   const sp = document.getElementById('sel-pagina'); if (sp) sp.indeterminate = sp.dataset.ind === '1';
+  const pt = document.getElementById('pn-todos'); if (pt) pt.indeterminate = pt.dataset.ind === '1';
 }
 function htmlApp() {
   const telas = { inicio: htmlInicio, mapear: htmlMapear, tabela: htmlLista, revisao: htmlLista, duplicados: htmlDuplicados, historico: htmlHistorico };
@@ -4242,7 +4250,7 @@ function htmlInicio() {
     <div class="alert">${ic('info')}<div class="alert-body">Os dados ficam só neste navegador e nada é enviado pela internet. <b>Fechar tabela</b> apaga a cópia guardada.</div></div>
     <div><button type="button" class="link" data-a="exemplo">Experimentar com dados de exemplo (fictícios)</button></div>
     </div>
-    <footer class="app-footer"><span><b>Laika ${VERSAO}</b> · por Saúl Ossorio</span><span>Feito com <a href="https://saulossorio.github.io/grin/">Grin 2.40</a></span></footer>
+    <footer class="app-footer"><span><b>Laika ${VERSAO}</b> · por Saúl Ossorio</span><span>Feito com <a href="https://saulossorio.github.io/grin/">Grin 2.41</a></span></footer>
   </div>`;
 }
 
@@ -4386,30 +4394,33 @@ function abasEnt(n, dica) { // Revisão e Duplicados no modelo combinado: escolh
   return `<div class="types" role="group" aria-label="Tabela">${ordemTabelas().map(k => { const x = n(cache(k).A); return `<button type="button" class="btn" aria-pressed="${S.ent === k}" data-a="ent" data-ent="${k}" title="${plural(x, ...dica)}">${ic(k)}<span>${MODELOS[k].titulo}</span><span class="count-inline">${fmtInt(x)}</span></button>`; }).join('')}</div>`;
 }
 function htmlLista() {
-  if (S.problema && !A.tipos.has(S.problema)) S.problema = null; // o filtro some junto com o último problema daquele tipo
-  if (S.nivel && !A.cont[S.nivel]) S.nivel = null;
+  S.probs = S.probs.filter(p => A.tipos.has(p)); // o tipo some do filtro junto com o último problema dele
   const rows = linhasDaVista(), total = rows.length, revisao = S.tela === 'revisao', toks = tokens(S.q);
   const paginas = Math.max(1, Math.ceil(total / S.tamanho)); if (S.pagina > paginas) S.pagina = paginas;
   const ini = (S.pagina - 1) * S.tamanho, pag = rows.slice(ini, ini + S.tamanho);
   const vivas = D.rows.filter(r => !r.del).length, excluidas = D.rows.length - vivas, editadas = D.rows.filter(r => !r.del && Object.keys(r.o).length).length;
   const conferidas = D.rows.filter(r => !r.del && r.conf).length;
-  const filtrando = S.filtros.length || S.q || S.soProblemas || S.naoConferidas || S.nivel || S.problema || S.verExcluidas;
-  const contagem = revisao ? plural(total, 'linha com problema', 'linhas com problemas') + (S.nivel || S.problema || S.filtros.length || S.q || S.naoConferidas ? ' no filtro' : '')
+  const filtrando = S.filtros.length || S.q || S.soProblemas || S.naoConferidas || S.probs.length || S.verExcluidas;
+  const contagem = revisao ? plural(total, 'linha com problema', 'linhas com problemas') + (S.probs.length || S.filtros.length || S.q || S.naoConferidas ? ' no filtro' : '')
     : filtrando ? fmtInt(total) + ' de ' + plural(S.verExcluidas ? D.rows.length : vivas, 'linha', 'linhas')
     : [plural(vivas, 'linha', 'linhas'), A.comProblema ? plural(A.comProblema, 'com problema', 'com problemas') : 'nenhum problema', editadas ? plural(editadas, 'editada', 'editadas') : '', excluidas ? plural(excluidas, 'excluída', 'excluídas') : '', conferidas ? plural(conferidas, 'conferida', 'conferidas') + ' de ' + fmtInt(vivas) : ''].filter(Boolean).join(' · ');
   // resumo da Revisão: níveis e tipos de problema, clicáveis (como no protótipo)
   let resumo = '';
   if (revisao && (A.comProblema || A.cont.info)) {
-    const niveis = ['critico', 'atencao', 'info'].filter(n => A.cont[n]).map(n => `<button type="button" class="severity ${TOM[n]}" aria-pressed="${S.nivel === n}" data-a="filtroNivel" data-n="${n}">${icNivel(n, 16)}<span>${NIVEL[n]}</span><span class="severity-count">${fmtInt(A.cont[n])}</span></button>`).join('');
-    const tipos = [...A.tipos].sort((a, b) => RANK[b[1].nivel] - RANK[a[1].nivel] || b[1].n - a[1].n).map(([rot, t]) => `<button type="button" class="btn" aria-pressed="${S.problema === rot}" data-a="filtroProblema" data-p="${esc(rot)}"><span class="dot ${TOM[t.nivel]}"></span><span>${esc(rot)}</span><span class="count-inline">${fmtInt(t.n)}</span></button>`).join('');
+    // cada nível abre um menu de escolha múltipla com os seus tipos de problema (Grin 2.41: filtro por nível)
+    const niveis = ['critico', 'atencao', 'info'].filter(n => A.cont[n]).map(n => {
+      const ts = tiposDoNivel(n), sel = ts.filter(t => S.probs.includes(t)).length, aberto = S.pop && S.pop.tipo === 'nivel' && S.pop.n === n;
+      return `<button type="button" class="severity ${TOM[n]}" aria-pressed="${sel > 0}" aria-haspopup="menu" aria-expanded="${!!aberto}" data-a="menuNivel" data-i="${n}" data-pop-anchor>${icNivel(n, 16)}<span>${NIVEL[n]}</span><span class="severity-count">${fmtInt(A.cont[n])}</span>${sel && sel < ts.length ? `<span>· ${sel} de ${plural(ts.length, 'tipo', 'tipos')}</span>` : ''}${ic('baixo', 14)}</button>`;
+    }).join('');
     const lote = [['espacos', 'Remover espaços extras'], ['caixa', 'Nomes em Primeira Letra Maiúscula'], ['multi', 'Separar valores (o primeiro fica, os outros vão para uma coluna à parte)']]
-      .map(([t, rot]) => [t, rot, contarTipo(t)]).filter(x => x[2]).map(([t, rot, n]) => `<button type="button" class="btn xs" data-a="corrigir" data-t="${t}">${ic('varinha', 14)}${rot} (${plural(n, 'célula', 'células')})</button>`).join('');
-    const nLista = contarTipo('lista');
-    const rapidas = lote || nLista ? `<div class="row"><span class="sub small">Correções em lote:</span>${lote}${nLista ? `<button type="button" class="btn xs" data-a="abrirDePara">${ic('trocar', 14)}Trocar valores fora da lista (${plural(nLista, 'célula', 'células')})</button>` : ''}</div>` : '';
-    resumo = `<div style="display:flex;flex-direction:column;gap:10px"><div class="severity-group" role="group" aria-label="Contagem por nível; clique para filtrar">${niveis}</div><div class="types" role="group" aria-label="Contagem por tipo de problema; clique para filtrar">${tipos}</div>${rapidas}</div>`;
+      .map(([t, rot]) => [t, rot, contarTipo(t)]).filter(x => x[2]);
+    const nLista = contarTipo('lista'), nLote = lote.length + (nLista ? 1 : 0);
+    // as correções em lote ficam num botão de menu ao lado dos níveis (Grin 2.41)
+    const rapidas = nLote ? `<button type="button" class="btn" aria-haspopup="menu" aria-expanded="${!!(S.pop && S.pop.tipo === 'lote')}" data-a="menuLote" data-pop-anchor>${ic('varinha')}<span>Correções em lote</span><span class="count-inline">${nLote}</span>${ic('baixo', 14)}</button>` : '';
+    resumo = `<div class="row"><div class="severity-group" role="group" aria-label="Filtrar por nível e tipo de problema">${niveis}</div><span class="spacer"></span>${rapidas}</div>`;
   }
   const chips = S.filtros.map((f, i) => `<span class="chip"><button type="button" class="chip-label" data-a="editarFiltro" data-i="${i}" data-pop-anchor title="Editar filtro">${esc(rotuloFiltro(f))}</button><button type="button" class="chip-remove" data-a="removerFiltro" data-i="${i}" aria-label="Remover filtro ${esc(rotuloFiltro(f))}">${ic('x', 14)}</button></span>`).join('');
-  const nCond = S.filtros.length + (S.q ? 1 : 0) + (S.soProblemas ? 1 : 0) + (S.naoConferidas ? 1 : 0) + (S.verExcluidas ? 1 : 0) + (S.nivel ? 1 : 0) + (S.problema ? 1 : 0);
+  const nCond = S.filtros.length + (S.q ? 1 : 0) + (S.soProblemas ? 1 : 0) + (S.naoConferidas ? 1 : 0) + (S.verExcluidas ? 1 : 0) + (S.probs.length ? 1 : 0);
   const barra = `<div class="toolbar list-toolbar" role="toolbar" aria-label="Busca, filtros e visualização">
     <div class="search">${ic('busca')}<input id="busca" class="input" type="text" role="searchbox" aria-label="Buscar na tabela" placeholder="Buscar em todas as colunas" value="${esc(S.qIn)}" data-in="busca" autocomplete="off">${S.qIn ? `<button type="button" class="btn ghost icon xs" data-a="limparBusca" aria-label="Limpar busca">${ic('x')}</button>` : ''}</div>
     ${chips}<button type="button" class="btn dashed" data-a="novoFiltro" data-pop-anchor>${ic('mais')}<span>Filtro</span></button>
@@ -4861,8 +4872,16 @@ function dlgConfirmar() {
 /* Popovers: filtro e colunas */
 function htmlPop() {
   if (!S.pop || !D) return '';
-  const p = S.pop, w = p.tipo === 'filtro' ? 320 : 300, x = Math.max(8, Math.min(p.x, innerWidth - w - 8));
+  const p = S.pop, w = p.tipo === 'filtro' ? 320 : p.tipo === 'lote' ? 360 : 300, x = Math.max(8, Math.min(p.x, innerWidth - w - 8));
   const caixa = conteudo => `<div class="menu laika-pop" style="left:${x}px;top:${p.y}px;width:${w}px;max-height:calc(100vh - ${p.y + 12}px)">${conteudo}</div>`;
+  if (p.tipo === 'nivel') {
+    const ts = tiposDoNivel(p.n), sel = ts.filter(t => S.probs.includes(t)).length;
+    return caixa(`<div class="menu-list" role="group" aria-label="${NIVEL[p.n]}: tipos de problema"><label class="menu-item"><input type="checkbox" id="pn-todos" data-ch="nivelTodos" data-n="${p.n}"${sel === ts.length ? ' checked' : ''} data-ind="${sel && sel < ts.length ? 1 : 0}"><span class="menu-label"><b>Todos</b></span><span class="count-inline">${fmtInt(A.cont[p.n])}</span></label><div class="menu-separator" role="separator"></div>${ts.map((t, i) => `<label class="menu-item"><input type="checkbox" id="pn-${i}" data-ch="nivelTipo" data-p="${esc(t)}"${S.probs.includes(t) ? ' checked' : ''}><span class="menu-label">${esc(t)}</span><span class="count-inline">${fmtInt(A.tipos.get(t).n)}</span></label>`).join('')}</div>`);
+  }
+  if (p.tipo === 'lote') {
+    const lote = [['espacos', 'Remover espaços extras', ''], ['caixa', 'Nomes em Primeira Letra Maiúscula', ''], ['multi', 'Separar valores', 'O primeiro fica; os outros vão para uma coluna à parte']].map(([t, rot, dica]) => [t, rot, dica, contarTipo(t)]).filter(x => x[3]), nLista = contarTipo('lista');
+    return caixa(`<div class="menu-list" role="menu" aria-label="Correções em lote">${lote.map(([t, rot, dica, n]) => `<button type="button" class="menu-item" role="menuitem" data-a="loteCorrigir" data-t="${t}">${ic('varinha')}<span class="menu-label">${rot}<small>${dica ? dica + '. ' : ''}${plural(n, 'célula', 'células')}</small></span></button>`).join('')}${nLista ? `<button type="button" class="menu-item" role="menuitem" data-a="abrirDePara">${ic('trocar')}<span class="menu-label">Trocar valores fora da lista<small>${plural(nLista, 'célula', 'células')}</small></span></button>` : ''}</div>`);
+  }
   if (p.tipo === 'colunas') {
     const faltam = D.modelo === 'livre' ? [] : MODELOS[D.modelo].campos.filter(f => !temCol(f.key) && !(P.combinado && D.k === 'pessoas' && (f.key in VINCULO || f.key === 'afiliacao'))); // o vínculo vem da empresa
     return caixa(`<div class="menu-header row"><b>Colunas</b><span class="spacer"></span><button type="button" class="link" data-a="pcTodas">Mostrar todas</button></div><div class="menu-list">${D.cols.filter(c => !c.soExport).map(c => `<label class="menu-item"><input type="checkbox" id="pc-${esc(c.key)}" data-ch="pcVis" data-k="${esc(c.key)}"${D.ocultas.has(c.key) ? '' : ' checked'}><span class="menu-label">${esc(c.label)}</span></label>`).join('')}</div>${faltam.length ? `<div class="menu-separator" role="separator"></div><div class="sub small" style="padding:0 4px">Adicionar campo do modelo (coluna vazia)</div><div class="menu-list" style="max-height:180px">${faltam.map(f => `<button type="button" class="menu-item" data-a="addCampo" data-k="${f.key}">${ic('mais', 14)}<span class="menu-label">${esc(f.label)}</span></button>`).join('')}</div>` : ''}`);
@@ -4896,6 +4915,7 @@ function aviso(texto, tom = 'info', comDesfazer = false) {
   render();
 }
 function confirmar(titulo, texto, ok, perigo, acao) { S.pop = null; S.dlg = { tipo: 'confirmar', titulo, texto, ok, perigo, acao }; S.foco = 'dlg-cancelar'; render(); } // confirmação: o foco começa em Cancelar (Grin)
+const tiposDoNivel = n => [...A.tipos].filter(([, t]) => t.nivel === n).sort((a, b) => b[1].n - a[1].n).map(([rot]) => rot);
 function mudouVista() { S.pagina = 1; S.topo = true; render(); }
 async function importar(file) {
   if (!file) return;
@@ -5199,7 +5219,7 @@ function corrigirTodos(tipo) { // correções em lote da Revisão, num passo só
     const n = mudar({ espacos: 'Remover espaços extras', caixa: 'Nomes em Primeira Letra Maiúscula' }[tipo] + ' (correção em lote)', alvos.map(([r, k]) => [r, k, fn(String(r.v[k] ?? ''))]));
     aviso(plural(n, 'célula corrigida', 'células corrigidas') + '.', 'ok', true);
   }
-  if (S.problema && !A.tipos.has(S.problema)) S.problema = null;
+  S.probs = S.probs.filter(p => A.tipos.has(p));
 }
 function fecharTabela() {
   P = null; D = null; A = null; for (const k in CACHE) delete CACHE[k];
@@ -5234,7 +5254,7 @@ const AC = { // cliques: data-a="nome"
   continuarSessao: () => { const s = S.sessao; if (!s) return; P = s.dados; migrarSessao(); S.sessao = null; Object.assign(S, VISTA_PADRAO(), { tela: 'tabela', ent: Object.keys(P.t)[0], vistas: {}, salvo: 'ok', topo: true, histAberto: new Set(), histPag: 1 }); analisarTudo(); registrar('Sessão retomada'); render(); },
   descartarSessao: () => confirmar('Descartar a sessão salva?', 'A cópia guardada neste navegador será apagada.', 'Descartar', true, () => { apagarSessao(); S.sessao = null; render(); }),
   fechar: () => confirmar('Fechar a tabela?', 'A cópia guardada neste navegador será apagada, com o histórico de alterações. Exporte antes se quiser guardar as alterações e o histórico.', 'Fechar tabela', true, fecharTabela),
-  ir: el => { if (!P) return; if (el.dataset.ent) trocarEnt(el.dataset.ent); Object.assign(S, { tela: el.dataset.tela, nivel: null, problema: null, pagina: 1, topo: true, gaveta: null, pop: null }); render(); },
+  ir: el => { if (!P) return; if (el.dataset.ent) trocarEnt(el.dataset.ent); Object.assign(S, { tela: el.dataset.tela, probs: [], pagina: 1, topo: true, gaveta: null, pop: null }); render(); },
   ent: el => { trocarEnt(el.dataset.ent); S.topo = true; render(); },
   abrirEmpresa: el => { commitAtivo(); trocarEnt('empresas'); Object.assign(S, { tela: 'tabela', gaveta: +el.dataset.id, foco: 'dr-fechar', topo: true }); render(); },
   abrirFinanceiro: el => { commitAtivo(); trocarEnt('financeiro'); Object.assign(S, { tela: 'tabela', gaveta: +el.dataset.id, foco: 'dr-fechar', topo: true }); render(); },
@@ -5270,7 +5290,7 @@ const AC = { // cliques: data-a="nome"
     aviso(plural(n, 'linha desmarcada', 'linhas desmarcadas') + '.', 'ok', true);
   },
   naoConferidas: () => { S.naoConferidas = !S.naoConferidas; mudouVista(); },
-  verNaoConferidas: el => { trocarEnt(el.dataset.ent); Object.assign(S, { tela: 'tabela', filtros: [], q: '', qIn: '', soProblemas: false, verExcluidas: false, nivel: null, problema: null, naoConferidas: true, pagina: 1, topo: true, gaveta: null, pop: null }); render(); }, // só o filtro de não conferidas: a contagem bate com a do Resumo
+  verNaoConferidas: el => { trocarEnt(el.dataset.ent); Object.assign(S, { tela: 'tabela', filtros: [], q: '', qIn: '', soProblemas: false, verExcluidas: false, probs: [], naoConferidas: true, pagina: 1, topo: true, gaveta: null, pop: null }); render(); }, // só o filtro de não conferidas: a contagem bate com a do Resumo
   histAba: el => { S.histAba = el.dataset.aba; S.topo = true; render(); },
   histDetalhes: el => { const n = +el.dataset.n; if (S.histAberto.has(n)) S.histAberto.delete(n); else S.histAberto.add(n); render(); },
   histPagina: el => { S.histPag += +el.dataset.d; S.topo = true; render(); },
@@ -5299,11 +5319,12 @@ const AC = { // cliques: data-a="nome"
   novoFiltro: el => abrirPop(el, { tipo: 'filtro', passo: 'campo', q: '' }),
   editarFiltro: el => { const f = S.filtros[+el.dataset.i]; if (f.key === '$colprob') return; abrirPop(el, { tipo: 'filtro', passo: 'valor', idx: +el.dataset.i, key: f.key, op: f.op, valores: f.valores.slice(), texto: f.texto || '', busca: '' }); if (S.pop) prepararValores(); },
   removerFiltro: el => { S.filtros.splice(+el.dataset.i, 1); S.pop = null; mudouVista(); },
-  limparTudo: () => { Object.assign(S, { filtros: [], q: '', qIn: '', soProblemas: false, naoConferidas: false, verExcluidas: false, nivel: null, problema: null }); mudouVista(); },
+  limparTudo: () => { Object.assign(S, { filtros: [], q: '', qIn: '', soProblemas: false, naoConferidas: false, verExcluidas: false, probs: [] }); mudouVista(); },
   soProblemas: () => { S.soProblemas = !S.soProblemas; mudouVista(); },
   verExcluidas: () => { S.verExcluidas = !S.verExcluidas; mudouVista(); },
-  filtroNivel: el => { S.nivel = S.nivel === el.dataset.n ? null : el.dataset.n; mudouVista(); },
-  filtroProblema: el => { S.problema = S.problema === el.dataset.p ? null : el.dataset.p; mudouVista(); },
+  menuNivel: el => abrirPop(el, { tipo: 'nivel', n: el.dataset.i }),
+  menuLote: el => abrirPop(el, { tipo: 'lote' }),
+  loteCorrigir: el => { S.pop = null; corrigirTodos(el.dataset.t); },
   filtroColuna: el => { const k = el.dataset.k; if (!S.filtros.some(f => f.key === '$colprob' && f.col === k)) S.filtros.push({ key: '$colprob', col: k, op: 'any', valores: [] }); mudouVista(); },
   ordenar: (el, e) => {
     const k = el.dataset.k, cur = S.ord.find(o => o.key === k);
@@ -5373,6 +5394,9 @@ const CH = { // mudanças em campos de formulário: data-ch="nome"
   mEscolha: el => { const k = el.dataset.k; S.dlg.escolha[k] = +el.value; if (k === '$emp' && temCol('afiliacao')) S.dlg.escolha.afiliacao = +el.value; render(); },
   pfOp: el => { S.pop.op = el.value; render(); },
   pfValor: el => { const v = S.pop.distintos[+el.dataset.i][0], a = S.pop.valores, i = a.indexOf(v); if (el.checked && i < 0) a.push(v); if (!el.checked && i >= 0) a.splice(i, 1); render(); },
+  // menu do nível: "Todos" marca ou desmarca os tipos do nível; cada tipo entra ou sai sozinho. Os outros níveis ficam como estão
+  nivelTodos: el => { const ts = tiposDoNivel(el.dataset.n), todos = ts.every(t => S.probs.includes(t)); S.probs = todos ? S.probs.filter(t => !ts.includes(t)) : [...new Set([...S.probs, ...ts])]; mudouVista(); },
+  nivelTipo: el => { const t = el.dataset.p; S.probs = S.probs.includes(t) ? S.probs.filter(x => x !== t) : [...S.probs, t]; mudouVista(); },
   pcVis: el => { if (el.checked) D.ocultas.delete(el.dataset.k); else D.ocultas.add(el.dataset.k); salvarDepois(); render(); },
 };
 let tBusca = 0;

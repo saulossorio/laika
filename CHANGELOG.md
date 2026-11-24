@@ -2,6 +2,14 @@
 
 Formato baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/). Versionamento semântico.
 
+## [1.1.7] - 2026-11-24
+
+### Alterado
+- Revisão: os tipos de problema saem da área de cima. Crítico, Atenção e Informação abrem um menu com caixas de seleção ("Todos" e cada tipo), e dá para combinar tipos de níveis diferentes. As correções em lote ficam num só botão de menu. A tabela começa logo abaixo.
+- "Info" passa a "Informação", como no Grin.
+- Celular: a página inteira rola e a tabela cresce com as linhas, em vez de ficar numa janela pequena embaixo do cabeçalho.
+- Grin 2.41.
+
 ## [1.1.6] - 2026-11-24
 
 ### Alterado
