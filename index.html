@@ -9,12 +9,12 @@
   Laika: ferramenta para analisar, limpar e exportar tabelas importadas.
   Um único arquivo. Abra no Chrome, Edge, Firefox ou Safari recentes. Funciona sem internet.
   Os dados ficam só neste computador, no armazenamento do navegador, até você fechar a tabela.
-  Visual: Grin 2.38, copiado de https://github.com/saulossorio/grin/releases/tag/v2.38 (dist/grin.inline.css e dist/grin.js).
+  Visual: Grin 2.39, copiado de https://github.com/saulossorio/grin/releases/tag/v2.39 (dist/grin.inline.css e dist/grin.js).
   Regras e listas: as do Canis (docs/regras.md).
 -->
-<!-- Grin 2.38, copiado de https://github.com/saulossorio/grin/releases/tag/v2.38 -->
+<!-- Grin 2.39, copiado de https://github.com/saulossorio/grin/releases/tag/v2.39 -->
 <style>
-/* Grin 2.38 · CSS com as fontes dentro (Geist e Geist Mono, licença SIL OFL 1.1) · https://github.com/saulossorio/grin
+/* Grin 2.39 · CSS com as fontes dentro (Geist e Geist Mono, licença SIL OFL 1.1) · https://github.com/saulossorio/grin
    Gerado por tools/bundle.mjs a partir dos arquivos do repositório. Não edite à mão. */
 /* ---------- styles/fonts.css ---------- */
 /* Grin: fonts. Geist and Geist Mono, variable weight 100 to 900, from the official release
@@ -1307,6 +1307,12 @@ a.tab { text-decoration: none; }
 @media (max-width: 520px) { .dialog-footer > .btn { flex: 1 1 auto; } }
 /* Wide dialog: comparisons, previews, tables (up to 880 px) */
 .dialog.wide { width: min(880px, calc(100vw - 32px)); }
+/* Dialog drawn by a tool that redraws the whole screen on every change: <div class="dialog-veil"></div><dialog class="dialog|drawer" open>.
+   It is not modal (no showModal), so the tool marks the rest of the screen inert while it is open. Veil and dialog share one layer:
+   the one drawn last stays on top, so a confirmation over a drawer needs no extra z-index. Above the phone sidebar (60), below menus, toasts and tooltips. */
+.dialog-veil { position: fixed; inset: 0; z-index: 70; background: var(--overlay); backdrop-filter: blur(2px); animation: grin-fade var(--dur) ease-out; }
+.dialog[open]:not(:modal), .drawer[open]:not(:modal) { z-index: 70; }
+.dialog[open]:not(:modal) { position: fixed; inset: 0; height: fit-content; margin: auto; }
 
 /* ---------- components/drawer/drawer.css ---------- */
 /* Grin drawer: view and edit a record without leaving the list. A floating panel that slides in from the right,
@@ -1827,11 +1833,11 @@ a.tab { text-decoration: none; }
 .page-header .page-description, .start-screen-body .lead { max-width: var(--size-prose); }
 </style>
 <script>
-/* Grin 2.38 · comportamentos em JavaScript; inclua com <script src="grin.js" defer> · https://github.com/saulossorio/grin
+/* Grin 2.39 · comportamentos em JavaScript; inclua com <script src="grin.js" defer> · https://github.com/saulossorio/grin
    Gerado por tools/bundle.mjs a partir dos arquivos do repositório. Não edite à mão. */
 'use strict';
 const Grin = (window.Grin = window.Grin || {});
-Grin.version = '2.38';
+Grin.version = '2.39';
 
 // ---------- scripts/utils.js ----------
 {
@@ -2899,9 +2905,6 @@ if (document.readyState === 'loading') document.addEventListener('DOMContentLoad
 .rc-b > span { display: block; height: 100%; background: var(--primary); }
 
 /* Gaveta e diálogos: abertos pelo estado da tela, sem a camada superior do navegador */
-.veil { position: fixed; inset: 0; background: var(--overlay); backdrop-filter: blur(2px); animation: grin-fade var(--dur) ease-out; }
-.laika-drawer { z-index: 40; }
-.laika-dialog { position: fixed; inset: 0; z-index: 50; height: fit-content; margin: auto; }
 .toasts.desvio { right: calc(min(var(--size-drawer), 100vw - 24px) + 36px); }
 .fields { padding: 4px 16px; }
 .field-row .textarea { min-height: 0; }
@@ -3831,7 +3834,7 @@ let D = null;  // tabela em uso, P.t[S.ent]: { k, modelo, cols, rows, naoDup, oc
 let A = null;  // análise da tabela em uso (seção 7)
 /* Cada linha: { id, t (tabela), linha (no arquivo), v (valores), o (originais do que foi editado), del, mesclada,
    emp (pessoa: id da empresa), var (empresa: outras escritas no arquivo), ok (empresa: escritas já conferidas) } */
-const VERSAO = '1.1.4'; // igual à última versão do CHANGELOG.md
+const VERSAO = '1.1.5'; // igual à última versão do CHANGELOG.md
 let tema = lerLS('laika-tema') || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
 document.documentElement.dataset.theme = tema;
 /* Painel Aparência do Grin: o tema e a densidade escolhidos ali passam a ser os do Laika, e os botões do Laika
@@ -4176,8 +4179,9 @@ function linhasDaVista() { // filtros, busca e ordenação da tabela (guardado a
 let quadro = 0, apertado = 0, adiado = false;
 /* Pede um redesenho. Durante um clique, espera o botão do mouse soltar para o clique não se perder. */
 function render() { if (apertado && Date.now() - apertado < 1500) { adiado = true; return; } if (!quadro) quadro = requestAnimationFrame(() => { quadro = 0; draw(); }); }
+let dlgAberto = null; // o diálogo do último desenho: um diálogo novo recebe o foco (Grin: primeiro campo, senão o primeiro botão do rodapé)
 function draw() {
-  const ae = document.activeElement;
+  const ae = document.activeElement, dlgNovo = S.dlg && S.dlg !== dlgAberto; dlgAberto = S.dlg;
   const foco = ae && ae.id ? { id: ae.id, v: ae.value, v0: ae.getAttribute('data-v0'), s: ae.selectionStart, e: ae.selectionEnd } : null;
   const rolagem = [...document.querySelectorAll('[data-scroll]')].map(el => [el.dataset.scroll, el.scrollTop, el.scrollLeft]);
   $('#app').dataset.density = S.densidade === 'compacta' ? 'compact' : 'comfortable';
@@ -4193,11 +4197,12 @@ function draw() {
       try { if (foco.s != null) el.setSelectionRange(foco.s, foco.e); } catch (e) { }
     }
   }
+  if (dlgNovo && !document.activeElement.closest('.laika-dialog')) { const d = $('.laika-dialog'); (d && (d.querySelector('.dialog-body :is(input, select, textarea):not([disabled])') || d.querySelector('.dialog-footer .btn')))?.focus(); }
   const sp = document.getElementById('sel-pagina'); if (sp) sp.indeterminate = sp.dataset.ind === '1';
 }
 function htmlApp() {
   const telas = { inicio: htmlInicio, mapear: htmlMapear, tabela: htmlLista, revisao: htmlLista, duplicados: htmlDuplicados, historico: htmlHistorico };
-  return `<div class="app">${htmlLateral()}<div class="app-main"><main class="main" id="principal">${telas[S.tela]()}</main></div></div>${htmlGaveta()}${htmlDialogo()}${htmlPop()}${htmlAvisos()}${S.carregando ? `<div class="loading-overlay" role="status"><div class="loading-overlay-card"><span class="spinner" aria-hidden="true"></span>${esc(S.carregando)}</div></div>` : ''}`;
+  return `<div class="app"${S.dlg || S.gaveta ? ' inert' : ''}>${htmlLateral()}<div class="app-main"><main class="main" id="principal">${telas[S.tela]()}</main></div></div>${htmlGaveta()}${htmlDialogo()}${htmlPop()}${htmlAvisos()}${S.carregando ? `<div class="loading-overlay" role="status"><div class="loading-overlay-card"><span class="spinner" aria-hidden="true"></span>${esc(S.carregando)}</div></div>` : ''}`;
 }
 function htmlLateral() {
   const rot = () => ''; // recolhida, o sidebar.js do Grin põe o nome de cada item na dica
@@ -4237,7 +4242,7 @@ function htmlInicio() {
     <div class="alert">${ic('info')}<div class="alert-body">Os dados ficam só neste navegador e nada é enviado pela internet. <b>Fechar tabela</b> apaga a cópia guardada.</div></div>
     <div><button type="button" class="link" data-a="exemplo">Experimentar com dados de exemplo (fictícios)</button></div>
     </div>
-    <footer class="app-footer"><span><b>Laika ${VERSAO}</b> · por Saúl Ossorio</span><span>Feito com <a href="https://saulossorio.github.io/grin/">Grin 2.38</a></span></footer>
+    <footer class="app-footer"><span><b>Laika ${VERSAO}</b> · por Saúl Ossorio</span><span>Feito com <a href="https://saulossorio.github.io/grin/">Grin 2.39</a></span></footer>
   </div>`;
 }
 
@@ -4642,7 +4647,7 @@ function htmlGaveta() {
   }).join('');
   const listas = [...new Set(D.cols.filter(ehLista).map(c => c.lista))].map(l => `<datalist id="dl-${l}">${LISTAS[l].map(x => `<option value="${esc(x)}">`).join('')}</datalist>`).join('');
   const vinculo = P.combinado && D.k === 'pessoas' ? htmlVinculo(r) : P.combinado && D.k === 'financeiro' ? htmlEmpresaDoValor(r) : '', equipe = P.combinado && D.k === 'empresas' ? htmlPessoasDaEmpresa(r) + htmlFinanceiroDaEmpresa(r) : '';
-  return `<div class="veil" style="z-index:39" data-a="fecharGaveta"></div><dialog class="drawer laika-drawer" open aria-modal="true" aria-labelledby="dr-t">
+  return `<div class="dialog-veil" data-a="fecharGaveta"></div><dialog class="drawer laika-drawer"${S.dlg ? ' inert' : ''} open aria-modal="true" aria-labelledby="dr-t">
     <div class="drawer-header"><div class="drawer-heading"><div class="row"><h2 id="dr-t">Linha ${r.linha}</h2>${selo}</div><span class="text-secondary">${esc(tituloLinha(r)) || '&nbsp;'}</span></div><div class="row" style="flex-wrap:nowrap">${nav}<button type="button" class="btn ghost icon" id="dr-fechar" data-a="fecharGaveta" aria-label="Fechar" title="Fechar (Esc)">${ic('x')}</button></div></div>
     <div class="drawer-body" data-scroll="gaveta">${r.del ? `<div class="alert neutral">${ic(r.mesclada ? 'mesclar' : 'lixo')}<div class="alert-body">${r.mesclada ? 'Esta linha foi mesclada na linha ' + linhaDe(r.mesclada) + ' e não sai na exportação.' : 'Esta linha foi excluída e não sai na exportação.'}</div></div>` : ''}${listaProbs}${vinculo}<section><h3 class="overline sec-t">Campos</h3><div class="card fields">${campos}</div></section>${equipe}${listas}</div>
     <div class="drawer-footer" style="flex-wrap:wrap">${r.del ? `<button type="button" class="btn" data-a="restaurarLinha">${ic('restaurar')}<span>Restaurar linha</span></button>` : `<button type="button" class="btn" data-a="excluirLinha">${ic('lixo')}<span>Excluir linha</span></button>`}<span class="spacer"></span>${r.del ? '' : `<button type="button" class="btn" id="dr-conf" data-a="conferir" aria-pressed="${!!r.conf}" title="Marca que esta linha já foi revisada, mudando ou não">${ic('check')}<span>Conferida</span></button>${lista ? `<button type="button" class="btn primary" data-a="conferirProxima" title="Marca como conferida e abre a próxima linha (Alt+Enter)">Conferir e ir para a próxima</button>` : ''}`}<span class="sub small" style="flex-basis:100%;text-align:right">${lista ? 'Enter salva o campo · Alt+↑↓ troca de linha · Alt+Enter confere e vai para a próxima · Esc fecha' : 'Enter salva o campo · Alt+Enter marca como conferida · Esc fecha'}</span></div>
@@ -4684,9 +4689,9 @@ function htmlPessoasDaEmpresa(e) { // empresa: as pessoas ligadas a ela
   return `<section><h3 class="overline sec-t">Pessoas desta empresa (${fmtInt(vivas)})</h3>${ps.length ? `<ul class="pessoas">${itens}</ul>${ps.length > 200 ? `<div class="sub small" style="margin-top:6px">Mostrando 200 de ${fmtInt(ps.length)}. Na tabela Pessoas, filtre pela empresa para ver todas.</div>` : ''}` : '<div class="sub">Nenhuma pessoa ligada a esta empresa.</div>'}</section>`;
 }
 
-/* Diálogos: exportar, ferramentas de limpeza, mesclar e confirmar */
+/* Diálogos: exportar, ferramentas de limpeza, mesclar e confirmar. Diálogo desenhado do Grin: open + .dialog-veil, o resto da tela fica inert */
 function dlg(largura, titulo, sub, corpo, rodape) {
-  return `<div class="veil" style="z-index:49" data-a="fecharDlg"></div><dialog class="dialog laika-dialog" open aria-modal="true" aria-labelledby="dlg-t" style="width:min(${largura}px,calc(100vw - 32px))"><div class="dialog-header"><div style="flex:1;min-width:0"><h2 id="dlg-t">${titulo}</h2>${sub ? `<p class="sub" style="margin-top:6px;line-height:1.45">${sub}</p>` : ''}</div><button type="button" class="btn ghost icon xs" data-a="fecharDlg" aria-label="Fechar">${ic('x')}</button></div><div class="dialog-body" data-scroll="dlg">${corpo}</div><div class="dialog-footer">${rodape}</div></dialog>`;
+  return `<div class="dialog-veil" data-a="fecharDlg"></div><dialog class="dialog laika-dialog" open aria-modal="true" aria-labelledby="dlg-t" style="width:min(${largura}px,calc(100vw - 32px))"><div class="dialog-header"><div style="flex:1;min-width:0"><h2 id="dlg-t">${titulo}</h2>${sub ? `<p class="sub" style="margin-top:6px;line-height:1.45">${sub}</p>` : ''}</div><button type="button" class="btn ghost icon xs" data-a="fecharDlg" aria-label="Fechar">${ic('x')}</button></div><div class="dialog-body" data-scroll="dlg">${corpo}</div><div class="dialog-footer">${rodape}</div></dialog>`;
 }
 function htmlDialogo() {
   if (!S.dlg) return '';

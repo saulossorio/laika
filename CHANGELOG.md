@@ -2,6 +2,12 @@
 
 Formato baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/). Versionamento semântico.
 
+## [1.1.5] - 2026-11-24
+
+### Alterado
+- Grin 2.39. Diálogos e gaveta seguem a regra do diálogo desenhado: `.dialog-veil` do Grin no lugar do véu próprio, e o resto da tela fica `inert` enquanto estão abertos, para o foco não sair deles com Tab.
+- Diálogo novo sem foco definido (Exportar, Mesclar) começa no primeiro campo, como pede o Grin.
+
 ## [1.1.4] - 2026-11-24
 
 ### Alterado
