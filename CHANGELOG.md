@@ -2,6 +2,14 @@
 
 Formato baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/). Versionamento semântico.
 
+## [1.1.6] - 2026-11-24
+
+### Alterado
+- Grin 2.40. Os níveis atenção e informação usam o Grin: `.cell-info` na tabela e `.field-message.info` na gaveta. O campo com atenção mantém a borda normal; só o erro muda a borda.
+- Barra de ações em massa com os botões `.btn.xs` do Grin, e Excluir em vermelho (`.btn.xs.danger`).
+- O botão Confortável/Compacta sai da barra da tabela: a densidade se muda no painel Aparência. A barra cabe numa linha.
+- O rodapé da gaveta tem só botões. As dicas de teclado saem dali; os atalhos estão no texto de ajuda de cada botão.
+
 ## [1.1.5] - 2026-11-24
 
 ### Alterado

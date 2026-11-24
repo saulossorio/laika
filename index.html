@@ -9,12 +9,12 @@
   Laika: ferramenta para analisar, limpar e exportar tabelas importadas.
   Um único arquivo. Abra no Chrome, Edge, Firefox ou Safari recentes. Funciona sem internet.
   Os dados ficam só neste computador, no armazenamento do navegador, até você fechar a tabela.
-  Visual: Grin 2.39, copiado de https://github.com/saulossorio/grin/releases/tag/v2.39 (dist/grin.inline.css e dist/grin.js).
+  Visual: Grin 2.40, copiado de https://github.com/saulossorio/grin/releases/tag/v2.40 (dist/grin.inline.css e dist/grin.js).
   Regras e listas: as do Canis (docs/regras.md).
 -->
-<!-- Grin 2.39, copiado de https://github.com/saulossorio/grin/releases/tag/v2.39 -->
+<!-- Grin 2.40, copiado de https://github.com/saulossorio/grin/releases/tag/v2.40 -->
 <style>
-/* Grin 2.39 · CSS com as fontes dentro (Geist e Geist Mono, licença SIL OFL 1.1) · https://github.com/saulossorio/grin
+/* Grin 2.40 · CSS com as fontes dentro (Geist e Geist Mono, licença SIL OFL 1.1) · https://github.com/saulossorio/grin
    Gerado por tools/bundle.mjs a partir dos arquivos do repositório. Não edite à mão. */
 /* ---------- styles/fonts.css ---------- */
 /* Grin: fonts. Geist and Geist Mono, variable weight 100 to 900, from the official release
@@ -872,6 +872,7 @@ input:focus-visible, select:focus-visible, textarea:focus-visible { outline: 2px
 .field-hint { font-size: var(--text-sm); color: var(--muted-foreground); line-height: var(--leading-ui); }
 .field-message { display: flex; gap: 6px; align-items: flex-start; font-size: var(--text-sm); line-height: var(--leading-ui); color: var(--crit-fg); animation: grin-rise var(--dur) var(--ease); }
 .field-message.warn { color: var(--warn-fg); }
+.field-message.info { color: var(--info-fg); } /* a suggestion, not a problem: the field keeps its normal border */
 .field-message svg { width: 16px; height: 16px; margin-top: 2px; }
 .field-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr)); gap: var(--space-5); }
 
@@ -1231,6 +1232,8 @@ a.card:hover { border-color: var(--border-strong); box-shadow: var(--shadow-md);
 
 /* More cell and row states */
 .table td.cell-derived { color: var(--muted-foreground); font-style: italic; }
+/* Info: a suggestion about the value (not a problem), so no background: only a dotted underline */
+.table td.cell-info { text-decoration: underline dotted var(--info-fg); text-underline-offset: 3px; }
 .table td.cell-diff { background: var(--warn-bg); box-shadow: inset 3px 0 0 var(--warn-solid); }
 .table td.cell-link a { font-weight: var(--weight-medium); text-decoration: none; }
 .table td.cell-link a:hover { text-decoration: underline; }
@@ -1833,11 +1836,11 @@ a.tab { text-decoration: none; }
 .page-header .page-description, .start-screen-body .lead { max-width: var(--size-prose); }
 </style>
 <script>
-/* Grin 2.39 · comportamentos em JavaScript; inclua com <script src="grin.js" defer> · https://github.com/saulossorio/grin
+/* Grin 2.40 · comportamentos em JavaScript; inclua com <script src="grin.js" defer> · https://github.com/saulossorio/grin
    Gerado por tools/bundle.mjs a partir dos arquivos do repositório. Não edite à mão. */
 'use strict';
 const Grin = (window.Grin = window.Grin || {});
-Grin.version = '2.39';
+Grin.version = '2.40';
 
 // ---------- scripts/utils.js ----------
 {
@@ -2860,7 +2863,6 @@ if (document.readyState === 'loading') document.addEventListener('DOMContentLoad
 .table td.sticky-col.cell-crit { background: var(--crit-bg); }
 .table td.sticky-col.cell-warn { background: var(--warn-bg); }
 .table td.sticky-col.cell-edited { position: sticky; }
-.table td.cell-info { text-decoration: underline dotted var(--info-fg); text-underline-offset: 3px; }
 .thw { display: flex; align-items: center; gap: 6px; min-width: 0; }
 .thw > button:first-child { flex: 1 1 auto; min-width: 0; }
 .thw .tl { overflow: hidden; text-overflow: ellipsis; }
@@ -2908,9 +2910,7 @@ if (document.readyState === 'loading') document.addEventListener('DOMContentLoad
 .toasts.desvio { right: calc(min(var(--size-drawer), 100vw - 24px) + 36px); }
 .fields { padding: 4px 16px; }
 .field-row .textarea { min-height: 0; }
-.field-row.warn .input, .field-row.warn .textarea { border-color: var(--warn-fg); }
 .field-row .field-original { flex-wrap: wrap; margin-top: 4px; }
-.field-message.info { color: var(--info-fg); }
 .probs { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 12px; }
 .prob { display: flex; gap: 10px; align-items: flex-start; font-size: var(--text-sm); line-height: var(--leading-ui); }
 .prob > svg { margin-top: 2px; }
@@ -3834,11 +3834,11 @@ let D = null;  // tabela em uso, P.t[S.ent]: { k, modelo, cols, rows, naoDup, oc
 let A = null;  // análise da tabela em uso (seção 7)
 /* Cada linha: { id, t (tabela), linha (no arquivo), v (valores), o (originais do que foi editado), del, mesclada,
    emp (pessoa: id da empresa), var (empresa: outras escritas no arquivo), ok (empresa: escritas já conferidas) } */
-const VERSAO = '1.1.5'; // igual à última versão do CHANGELOG.md
+const VERSAO = '1.1.6'; // igual à última versão do CHANGELOG.md
 let tema = lerLS('laika-tema') || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
 document.documentElement.dataset.theme = tema;
-/* Painel Aparência do Grin: o tema e a densidade escolhidos ali passam a ser os do Laika, e os botões do Laika
-   avisam o Grin. Ao abrir, o Grin recebe as escolhas guardadas do Laika, para os dois ficarem iguais. */
+/* Painel Aparência do Grin: o tema e a densidade escolhidos ali passam a ser os do Laika (a densidade só se muda ali, Grin 2.40).
+   Ao abrir, o Grin recebe as escolhas guardadas do Laika, para os dois ficarem iguais. */
 document.documentElement.addEventListener('grin:theme', () => {
   const t = Grin.effectiveTheme(); if (t === tema) return;
   tema = t; document.documentElement.dataset.theme = tema; gravarLS('laika-tema', tema); render();
@@ -4242,7 +4242,7 @@ function htmlInicio() {
     <div class="alert">${ic('info')}<div class="alert-body">Os dados ficam só neste navegador e nada é enviado pela internet. <b>Fechar tabela</b> apaga a cópia guardada.</div></div>
     <div><button type="button" class="link" data-a="exemplo">Experimentar com dados de exemplo (fictícios)</button></div>
     </div>
-    <footer class="app-footer"><span><b>Laika ${VERSAO}</b> · por Saúl Ossorio</span><span>Feito com <a href="https://saulossorio.github.io/grin/">Grin 2.39</a></span></footer>
+    <footer class="app-footer"><span><b>Laika ${VERSAO}</b> · por Saúl Ossorio</span><span>Feito com <a href="https://saulossorio.github.io/grin/">Grin 2.40</a></span></footer>
   </div>`;
 }
 
@@ -4420,7 +4420,7 @@ function htmlLista() {
     <div class="spacer"></div>
     <button type="button" class="btn" data-a="ferramentas">${ic('varinha')}<span>Ferramentas</span></button>
     <button type="button" class="btn" data-a="colunas" data-pop-anchor>${ic('colunas')}<span>Colunas</span></button>
-    <button type="button" class="btn" data-a="densidade" title="Mudar a densidade das linhas">${ic('linhas')}<span>${S.densidade === 'compacta' ? 'Compacta' : 'Confortável'}</span></button>
+    
   </div>`;
   // tabela
   const vis = D.cols.filter(c => !D.ocultas.has(c.key) && !c.soExport), L0 = 52, L1 = 52 + 132, L2 = 52 + 132 + 88;
@@ -4442,12 +4442,12 @@ function htmlLista() {
   const banner = todasPag && total > pag.length ? (rows.every(r => S.sel.has(r.id)) ? `<div class="select-all-banner">Todas as ${fmtInt(total)} linhas estão selecionadas. <button type="button" class="link" data-a="limparSel">Limpar seleção</button></div>` : `<div class="select-all-banner">As ${fmtInt(pag.length)} linhas desta página estão selecionadas. <button type="button" class="link" data-a="selTodasVista">Selecionar todas as ${fmtInt(total)}</button></div>`) : '';
   const nSel = S.sel.size, selRows = nSel ? D.rows.filter(r => S.sel.has(r.id)) : [], nVivasSel = selRows.filter(r => !r.del).length;
   const lote = nSel ? `<div class="bulk-bar" role="toolbar" aria-label="Ações em lote"><span class="bulk-bar-count">${plural(nSel, 'selecionada', 'selecionadas')}</span><span class="divider-v"></span>
-      ${nVivasSel ? `<button type="button" class="btn" data-a="loteExcluir">${ic('lixo')}<span>Excluir</span></button>` : ''}
-      ${nVivasSel < nSel ? `<button type="button" class="btn" data-a="loteRestaurar">${ic('restaurar')}<span>Restaurar</span></button>` : ''}
-      ${nVivasSel >= 2 && nVivasSel <= 8 ? `<button type="button" class="btn" data-a="loteMesclar">${ic('mesclar')}<span>Mesclar</span></button>` : ''}
-      ${selRows.some(r => !r.del && !r.conf) ? `<button type="button" class="btn" data-a="loteConferir">${ic('check')}<span>Marcar conferidas</span></button>` : ''}
-      ${selRows.some(r => !r.del && r.conf) ? `<button type="button" class="btn" data-a="loteDesconferir"><span>Desmarcar conferidas</span></button>` : ''}
-      ${nVivasSel ? `<button type="button" class="btn" data-a="loteEditar">${ic('lapis')}<span>Editar coluna</span></button><button type="button" class="btn" data-a="loteExportar">${ic('exportar')}<span>Exportar selecionadas</span></button>` : ''}
+      ${nVivasSel ? `<button type="button" class="btn xs danger" data-a="loteExcluir">${ic('lixo')}<span>Excluir</span></button>` : ''}
+      ${nVivasSel < nSel ? `<button type="button" class="btn xs" data-a="loteRestaurar">${ic('restaurar')}<span>Restaurar</span></button>` : ''}
+      ${nVivasSel >= 2 && nVivasSel <= 8 ? `<button type="button" class="btn xs" data-a="loteMesclar">${ic('mesclar')}<span>Mesclar</span></button>` : ''}
+      ${selRows.some(r => !r.del && !r.conf) ? `<button type="button" class="btn xs" data-a="loteConferir">${ic('check')}<span>Marcar conferidas</span></button>` : ''}
+      ${selRows.some(r => !r.del && r.conf) ? `<button type="button" class="btn xs" data-a="loteDesconferir"><span>Desmarcar conferidas</span></button>` : ''}
+      ${nVivasSel ? `<button type="button" class="btn xs" data-a="loteEditar">${ic('lapis')}<span>Editar coluna</span></button><button type="button" class="btn xs" data-a="loteExportar">${ic('exportar')}<span>Exportar selecionadas</span></button>` : ''}
       <button type="button" class="btn ghost icon" data-a="limparSel" aria-label="Limpar seleção" title="Limpar seleção">${ic('x')}</button></div>` : '';
   return `<div class="page-header">${htmlArquivo()}<div class="page-title-row"><div class="page-title"><h1>${esc(revisao ? 'Revisão' : tituloTabela())}</h1><span class="sub" aria-live="polite">${contagem}</span></div><div class="toolbar">${btnsHistorico()}${btnExportar()}</div></div>${revisao ? abasEnt(a => a.comProblema, ['registro com problema', 'registros com problemas']) : ''}${resumo}${barra}</div>
     ${banner}
@@ -4641,7 +4641,7 @@ function htmlGaveta() {
     const marcador = !v && r.vaz && r.vaz[c.key] ? `<div class="field-original">No arquivo: <span class="text-mono">${esc(r.vaz[c.key])}</span>, marcador de vazio do Sirius</div>` : '';
     const lido = r.arq && r.arq[c.key] && !(c.key in r.o) && limpo(r.arq[c.key]) !== limpo(v) ? `<div class="field-original">No arquivo: <span class="text-mono">${esc(r.arq[c.key].replace(/\n/g, ' · '))}</span></div>` : ''; // texto do Sirius que o Laika interpretou
     const campo = c.campo && norm(c.campo) !== norm(c.label) ? ` <span class="text-secondary" style="font-weight:400">· ${esc(c.campo)}</span>` : ''; // nome do campo no Canis
-    return `<div class="field-row${cel && cel.nivel !== 'critico' ? ' ' + TOM[cel.nivel] : ''}"><label class="field-label" for="${esc(id)}">${esc(c.label)}${campo}</label><div>${v.includes('\n') /* o campo de uma linha perderia as quebras: vários valores ou texto em parágrafos */
+    return `<div class="field-row"><label class="field-label" for="${esc(id)}">${esc(c.label)}${campo}</label><div>${v.includes('\n') /* o campo de uma linha perderia as quebras: vários valores ou texto em parágrafos */
       ? `<textarea id="${esc(id)}" class="textarea" rows="${Math.min(6, v.split('\n').length)}" data-v0="${esc(v)}" data-ch="campo" data-k="${esc(c.key)}"${cel ? ` aria-invalid="${cel.nivel === 'critico'}" aria-describedby="${esc('m-' + c.key)}"` : ''}${r.del ? ' disabled' : ''}>${esc(v)}</textarea>`
       : `<input id="${esc(id)}" class="input" type="text" value="${esc(v)}" data-v0="${esc(v)}" data-ch="campo" data-k="${esc(c.key)}" autocomplete="off"${ehLista(c) ? ` list="dl-${c.lista}"` : ''}${cel ? ` aria-invalid="${cel.nivel === 'critico'}" aria-describedby="${esc('m-' + c.key)}"` : ''}${r.del ? ' disabled' : ''}>`}${cel ? `<div class="field-message ${TOM[cel.nivel]}" id="${esc('m-' + c.key)}">${esc(cel.msgs.join(' '))}</div>` : ''}${ed ? `<div class="field-original">Original: <span class="text-mono">${esc(r.o[c.key] || '(vazio)')}</span><button type="button" class="link" data-a="restaurarCampo" data-k="${esc(c.key)}"${r.del ? ' disabled' : ''}>Restaurar</button></div>` : ''}${escritas}${marcador}${lido}</div></div>`;
   }).join('');
@@ -4650,7 +4650,7 @@ function htmlGaveta() {
   return `<div class="dialog-veil" data-a="fecharGaveta"></div><dialog class="drawer laika-drawer"${S.dlg ? ' inert' : ''} open aria-modal="true" aria-labelledby="dr-t">
     <div class="drawer-header"><div class="drawer-heading"><div class="row"><h2 id="dr-t">Linha ${r.linha}</h2>${selo}</div><span class="text-secondary">${esc(tituloLinha(r)) || '&nbsp;'}</span></div><div class="row" style="flex-wrap:nowrap">${nav}<button type="button" class="btn ghost icon" id="dr-fechar" data-a="fecharGaveta" aria-label="Fechar" title="Fechar (Esc)">${ic('x')}</button></div></div>
     <div class="drawer-body" data-scroll="gaveta">${r.del ? `<div class="alert neutral">${ic(r.mesclada ? 'mesclar' : 'lixo')}<div class="alert-body">${r.mesclada ? 'Esta linha foi mesclada na linha ' + linhaDe(r.mesclada) + ' e não sai na exportação.' : 'Esta linha foi excluída e não sai na exportação.'}</div></div>` : ''}${listaProbs}${vinculo}<section><h3 class="overline sec-t">Campos</h3><div class="card fields">${campos}</div></section>${equipe}${listas}</div>
-    <div class="drawer-footer" style="flex-wrap:wrap">${r.del ? `<button type="button" class="btn" data-a="restaurarLinha">${ic('restaurar')}<span>Restaurar linha</span></button>` : `<button type="button" class="btn" data-a="excluirLinha">${ic('lixo')}<span>Excluir linha</span></button>`}<span class="spacer"></span>${r.del ? '' : `<button type="button" class="btn" id="dr-conf" data-a="conferir" aria-pressed="${!!r.conf}" title="Marca que esta linha já foi revisada, mudando ou não">${ic('check')}<span>Conferida</span></button>${lista ? `<button type="button" class="btn primary" data-a="conferirProxima" title="Marca como conferida e abre a próxima linha (Alt+Enter)">Conferir e ir para a próxima</button>` : ''}`}<span class="sub small" style="flex-basis:100%;text-align:right">${lista ? 'Enter salva o campo · Alt+↑↓ troca de linha · Alt+Enter confere e vai para a próxima · Esc fecha' : 'Enter salva o campo · Alt+Enter marca como conferida · Esc fecha'}</span></div>
+    <div class="drawer-footer" style="flex-wrap:wrap">${r.del ? `<button type="button" class="btn" data-a="restaurarLinha">${ic('restaurar')}<span>Restaurar linha</span></button>` : `<button type="button" class="btn" data-a="excluirLinha">${ic('lixo')}<span>Excluir linha</span></button>`}<span class="spacer"></span>${r.del ? '' : `<button type="button" class="btn" id="dr-conf" data-a="conferir" aria-pressed="${!!r.conf}" title="Marca que esta linha já foi revisada, mudando ou não${lista ? '' : ' (Alt+Enter)'}">${ic('check')}<span>Conferida</span></button>${lista ? `<button type="button" class="btn primary" data-a="conferirProxima" title="Marca como conferida e abre a próxima linha (Alt+Enter)">Conferir e ir para a próxima</button>` : ''}`}</div>
   </dialog>`;
 }
 const nomeEmpresa = e => String(e.v.nome_comercial ?? '').trim() || String(e.v.razao_social ?? '').trim() || 'Empresa sem nome';
@@ -5311,7 +5311,6 @@ const AC = { // cliques: data-a="nome"
     else if (cur) { if (cur.dir === 'asc') cur.dir = 'desc'; else S.ord = S.ord.filter(o => o !== cur); } else S.ord.push({ key: k, dir: 'asc' });
     mudouVista();
   },
-  densidade: () => { S.densidade = S.densidade === 'compacta' ? 'conforto' : 'compacta'; gravarLS('laika-densidade', S.densidade); window.Grin?.setDensity?.(S.densidade === 'compacta' ? 'compact' : 'comfortable'); render(); },
   colunas: el => abrirPop(el, { tipo: 'colunas' }),
   pcTodas: () => { D.ocultas.clear(); salvarDepois(); render(); },
   addCampo: el => { adicionarCampo(el.dataset.k); S.pop = null; aviso('Coluna ' + rotuloCol(el.dataset.k) + ' adicionada, vazia.', 'ok'); },
