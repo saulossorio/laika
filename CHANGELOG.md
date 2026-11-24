@@ -2,6 +2,19 @@
 
 Formato baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/). Versionamento semântico.
 
+## [1.1.0] - 2026-11-24
+
+### Alterado
+- Grin 2.30.
+- Sem barra superior, como pede o Grin. O nome do arquivo e o aviso de salvo ficam acima do título, e desfazer e refazer ficam ao lado de Exportar. O título fica no mesmo lugar em todas as telas e no mesmo lugar do Vezen.
+- A barra lateral usa o `sidebar.js` do Grin para recolher, expandir e abrir no celular. A escolha de recolher fica guardada pelo Grin, e no celular a barra fecha ao escolher uma tela.
+- O botão de tema é o do Grin (`data-theme-toggle`).
+- Todos os ícones vêm do Grin. Antes 18 eram desenhos próprios do Laika.
+- O logo usa `.app-logo-mark`, o quadrado de 24 px do Grin.
+
+### Removido
+- O botão "Recolher barra superior", que não tem mais função.
+
 ## [1.0.2] - 2026-11-21
 
 ### Alterado
