@@ -2,6 +2,12 @@
 
 Formato baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/). Versionamento semântico.
 
+## [1.1.3] - 2026-11-24
+
+### Alterado
+- Grin 2.37.
+- Diálogos pela regra do modal do Grin. Na confirmação, o foco começa em Cancelar, e não mais na ação (por exemplo, "Fechar tabela"). O rodapé tem só os botões: a dica "Ctrl+Enter confirma · Esc fecha" saiu, porque empurrava o botão principal para outra linha. Os atalhos continuam funcionando.
+
 ## [1.1.2] - 2026-11-24
 
 ### Alterado
