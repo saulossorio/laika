@@ -2,6 +2,11 @@
 
 Formato baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/). Versionamento semântico.
 
+## [1.1.1] - 2026-11-24
+
+### Alterado
+- Grin 2.32, a mesma versão do Vezen. O tooltip some com um clique e com a rolagem.
+
 ## [1.1.0] - 2026-11-24
 
 ### Alterado

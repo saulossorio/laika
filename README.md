@@ -34,7 +34,7 @@ Cada problema tem um nível de severidade. A lista completa, com exemplos e a fu
 
 | Caminho | O que é |
 |---|---|
-| `index.html` | O Laika inteiro: o Grin 2.30 (estilos e scripts, copiados da release), as regras (`<script id="regras">`) e a tela |
+| `index.html` | O Laika inteiro: o Grin 2.32 (estilos e scripts, copiados da release), as regras (`<script id="regras">`) e a tela |
 | `docs/regras.md` | Todas as regras, agrupadas por severidade |
 | `docs/formato-sirius.md` | Como é o relatório do Sirius e como o Laika o lê |
 | `docs/decisoes.md` | Por que o Laika é assim, e de onde vêm os IDs (`RN-*`, `D-*`) |
