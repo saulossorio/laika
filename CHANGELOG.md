@@ -2,6 +2,13 @@
 
 Formato baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/). Versionamento semântico.
 
+## [1.1.2] - 2026-11-24
+
+### Alterado
+- Grin 2.35.
+- Largura do Grin: em telas largas, o cabeçalho e o conteúdo crescem até 1440 px e depois ficam centralizados. Só a tabela da Planilha vai de borda a borda, como no tipo Planilha do Grin. Antes o cabeçalho, os cartões de Duplicados e o Histórico iam até a borda da janela.
+- As ações do cabeçalho ficam alinhadas pelo topo com o título, pela regra do Grin (antes uma regra própria do Laika fazia o mesmo).
+
 ## [1.1.1] - 2026-11-24
 
 ### Alterado
