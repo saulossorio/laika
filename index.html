@@ -9,12 +9,12 @@
   Laika: ferramenta para analisar, limpar e exportar tabelas importadas.
   Um único arquivo. Abra no Chrome, Edge, Firefox ou Safari recentes. Funciona sem internet.
   Os dados ficam só neste computador, no armazenamento do navegador, até você fechar a tabela.
-  Visual: Grin 2.41, copiado de https://github.com/saulossorio/grin/releases/tag/v2.41 (dist/grin.inline.css e dist/grin.js).
+  Visual: Grin 2.42, copiado de https://github.com/saulossorio/grin/releases/tag/v2.42 (dist/grin.inline.css e dist/grin.js).
   Regras e listas: as do Canis (docs/regras.md).
 -->
-<!-- Grin 2.41, copiado de https://github.com/saulossorio/grin/releases/tag/v2.41 -->
+<!-- Grin 2.42, copiado de https://github.com/saulossorio/grin/releases/tag/v2.42 -->
 <style>
-/* Grin 2.41 · CSS com as fontes dentro (Geist e Geist Mono, licença SIL OFL 1.1) · https://github.com/saulossorio/grin
+/* Grin 2.42 · CSS com as fontes dentro (Geist e Geist Mono, licença SIL OFL 1.1) · https://github.com/saulossorio/grin
    Gerado por tools/bundle.mjs a partir dos arquivos do repositório. Não edite à mão. */
 /* ---------- styles/fonts.css ---------- */
 /* Grin: fonts. Geist and Geist Mono, variable weight 100 to 900, from the official release
@@ -1838,11 +1838,11 @@ a.tab { text-decoration: none; }
 .page-header .page-description, .start-screen-body .lead { max-width: var(--size-prose); }
 </style>
 <script>
-/* Grin 2.41 · comportamentos em JavaScript; inclua com <script src="grin.js" defer> · https://github.com/saulossorio/grin
+/* Grin 2.42 · comportamentos em JavaScript; inclua com <script src="grin.js" defer> · https://github.com/saulossorio/grin
    Gerado por tools/bundle.mjs a partir dos arquivos do repositório. Não edite à mão. */
 'use strict';
 const Grin = (window.Grin = window.Grin || {});
-Grin.version = '2.41';
+Grin.version = '2.42';
 
 // ---------- scripts/utils.js ----------
 {
@@ -2828,7 +2828,7 @@ if (document.readyState === 'loading') document.addEventListener('DOMContentLoad
 .app { height: 100vh; min-height: 0; --gutter: 32px; } /* margem lateral das telas, a do .page-header do Grin */
 @media (max-width: 760px) { .app { --gutter: 16px; } }
 .app-main { height: 100vh; }
-.mapa-det { display: inline; } .mapa-det summary { display: inline; cursor: pointer; } .mapa-det[open] > p { margin: 8px 0 0; }
+.opt-arq > summary { display: inline; cursor: pointer; } .mapa-det { display: inline; } .mapa-det summary { display: inline; cursor: pointer; } .mapa-det[open] > p { margin: 8px 0 0; }
 /* celular: a página inteira rola e a tabela cresce com as linhas; ela rola só na horizontal (Grin 2.41, Planilha) */
 @media (max-width: 760px) {
   .app, .app-main { height: auto; min-height: 100vh; }
@@ -3843,7 +3843,7 @@ let D = null;  // tabela em uso, P.t[S.ent]: { k, modelo, cols, rows, naoDup, oc
 let A = null;  // análise da tabela em uso (seção 7)
 /* Cada linha: { id, t (tabela), linha (no arquivo), v (valores), o (originais do que foi editado), del, mesclada,
    emp (pessoa: id da empresa), var (empresa: outras escritas no arquivo), ok (empresa: escritas já conferidas) } */
-const VERSAO = '1.1.8'; // igual à última versão do CHANGELOG.md
+const VERSAO = '1.1.9'; // igual à última versão do CHANGELOG.md
 let tema = lerLS('laika-tema') || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
 document.documentElement.dataset.theme = tema;
 /* Painel Aparência do Grin: o tema e a densidade escolhidos ali passam a ser os do Laika (a densidade só se muda ali, Grin 2.40).
@@ -4226,7 +4226,7 @@ function htmlLateral() {
     itens = tabelas + nav('revisao', 'Revisão', 'revisao', cont(crit, plural(crit, 'registro crítico', 'registros críticos'))) + nav('duplicados', 'Duplicados', 'duplicados', cont(grupos, plural(grupos, 'grupo', 'grupos') + ' de duplicados'))
       + nav('historico', 'Histórico', 'historico', nLog ? `<span class="nav-count" title="${plural(nLog, 'registro', 'registros')} no histórico">${fmtInt(nLog)}</span>` : '');
     pe = `<button type="button" class="nav-item small" data-a="importarOutro"${rot('Importar outro arquivo')}>${ic('importar')}<span class="label">Importar outro arquivo</span></button><button type="button" class="nav-item small" data-a="fechar"${rot('Fechar tabela')}>${ic('x')}<span class="label">Fechar tabela</span></button>`;
-  } else itens = `<button type="button" class="nav-item" aria-current="page" data-a="ir" data-tela="${S.tela}"${rot(S.tela === 'mapear' ? 'Mapear colunas' : 'Importar')}>${ic('importar')}<span class="label">${S.tela === 'mapear' ? 'Mapear colunas' : 'Importar'}</span></button>`;
+  } else itens = `<button type="button" class="nav-item" aria-current="page" data-a="ir" data-tela="${S.tela}"${rot(rotuloImport())}>${ic('importar')}<span class="label">${rotuloImport()}</span></button>`;
   const marca = '<svg class="app-logo-mark" viewBox="0 0 102 58.89" aria-hidden="true" focusable="false"><polygon points="0,29.44 34,29.44 17,0"/><polygon points="68,29.44 102,29.44 85,0"/><polygon points="34,29.44 68,29.44 51,58.89"/></svg>'; // três triângulos iguais: orelhas e rosto
   return `<nav class="sidebar" id="lateral" aria-label="Navegação principal"><div class="app-logo">${marca}<span>Laika</span><span class="tag">${VERSAO}</span></div>${itens}<div class="sidebar-footer">${pe}<button type="button" class="nav-item small" data-theme-toggle>${ic(tema === 'dark' ? 'sol' : 'lua')}<span class="label">${tema === 'dark' ? 'Tema claro' : 'Tema escuro'}</span></button><button type="button" class="nav-item small" data-popover="aparencia" aria-expanded="false">${ic('ajustes')}<span class="label">Aparência</span></button></div></nav>`;
 }
@@ -4251,7 +4251,7 @@ function htmlInicio() {
     <div class="alert">${ic('info')}<div class="alert-body">Os dados ficam só neste navegador e nada é enviado pela internet. <b>Fechar tabela</b> apaga a cópia guardada.</div></div>
     <div><button type="button" class="link" data-a="exemplo">Experimentar com dados de exemplo (fictícios)</button></div>
     </div>
-    <footer class="app-footer"><span><b>Laika ${VERSAO}</b> · por Saúl Ossorio</span><span>Feito com <a href="https://saulossorio.github.io/grin/">Grin 2.41</a></span></footer>
+    <footer class="app-footer"><span><b>Laika ${VERSAO}</b> · por Saúl Ossorio</span><span>Feito com <a href="https://saulossorio.github.io/grin/">Grin 2.42</a></span></footer>
   </div>`;
 }
 
@@ -4326,6 +4326,14 @@ function ladoProvavel(imp, i) {
   }
   return repetidas ? 'e' : 'p';
 }
+/* Importar (Grin 2.42): as colunas reconhecidas já vêm ligadas aos campos; no modelo Livre, todas as colunas entram com o tipo provável */
+function sugerirEUsar(imp) {
+  sugerir(imp);
+  for (const m of imp.mapa) {
+    if (imp.modelo === 'livre') { m.destino = '$usar'; m.tipo = m.sugestao || 'texto'; }
+    else if (sugestaoPendente(imp, m)) usarSugestao(m, false);
+  }
+}
 /* Sugestão ainda disponível: a coluna está em Ignorar e o campo sugerido não foi escolhido em outra */
 const sugestaoPendente = (imp, m) => !!m.sugestao && m.destino === '$ignorar' && (imp.modelo === 'livre' || !imp.mapa.some(x => x.destino === m.sugestao));
 function manterOutras(imp) { // as colunas em Ignorar sem sugestão entram com o nome do arquivo, sem validar
@@ -4344,22 +4352,18 @@ function usarSugestao(m, tirarDeOutra) { // escolhe o campo sugerido; tirarDeOut
   if (outra) outra.destino = '$ignorar';
   m.destino = m.sugestao;
 }
+const rotuloImport = () => S.tela !== 'mapear' ? 'Importar' : S.imp && S.imp.passo === 'colunas' ? 'Mapear colunas' : 'Formato da planilha';
 function htmlMapear() {
+  if (S.imp.passo !== 'colunas') return htmlFormato();
   const imp = S.imp, mod = imp.modelo, comb = mod === 'combinado', M = MODELOS[comb ? 'pessoas' : mod], n = contarLinhas(imp), opc = (v, rot, atual) => `<option value="${esc(v)}"${v === atual ? ' selected' : ''}>${esc(rot)}</option>`;
   const usadas = imp.mapa.filter(m => m.destino !== '$ignorar'), nUsadas = usadas.length;
   const temLado = x => usadas.some(m => m.destino.startsWith(x + ':') || m.destino === (x === 'p' ? '$manterP' : '$manterE'));
   const faltaLado = comb && nUsadas > 0 && !(temLado('p') && temLado('e'));
   const semChaveEmpresa = comb && temLado('e') && !usadas.some(m => ['e:identificacao', 'e:nome_comercial', 'e:razao_social'].includes(m.destino));
   const opcoes = (x, campos, m) => campos.map(f => { const v = (x ? x + ':' : '') + f.key; return opc(v, (x ? LADO_ROTULO[x] : '') + f.label + (v === m.sugestao ? ' · sugerido' : ''), m.destino); }).join('');
-  const controles = [
-    imp.folhas.length > 1 ? `<label class="ctl">${imp.tipo === 'html' ? 'Tabela' : 'Planilha'} <select class="select" id="m-planilha" data-ch="mPlanilha">${imp.folhas.map((f, i) => opc(String(i), f.nome, String(imp.planilha))).join('')}</select></label>` : '',
-    imp.tipo === 'csv' ? `<label class="ctl">Separador <select class="select" id="m-sep" data-ch="mSep">${[[';', 'Ponto e vírgula ( ; )'], [',', 'Vírgula ( , )'], ['\t', 'Tabulação'], ['|', 'Barra vertical ( | )']].map(([v, r]) => opc(v, r, imp.sep)).join('')}</select></label>` : '',
-    imp.tipo === 'csv' || imp.tipo === 'html' ? `<label class="ctl">Codificação <select class="select" id="m-enc" data-ch="mEnc">${[['utf-8', 'UTF-8'], ['windows-1252', 'Windows-1252 (Excel antigo)'], ...(imp.enc.startsWith('utf-16') ? [[imp.enc, 'UTF-16']] : [])].map(([v, r]) => opc(v, r, imp.enc)).join('')}</select></label>` : '',
-    `<label class="ctl">Cabeçalho na linha <input class="input" type="number" id="m-cab" min="1" max="${linhasImp(imp).length || 1}" value="${imp.cab + 1}" data-ch="mCab" style="width:84px"></label>`,
-  ].join('');
-  const cartao = (v, titulo, desc) => `<label class="choice"><input type="radio" name="modelo" id="mod-${v}" value="${v}" data-ch="mModelo"${mod === v ? ' checked' : ''}><span><span class="choice-title">${titulo}</span><span class="choice-description">${desc}</span></span></label>`;
   const nSug = imp.mapa.filter(m => sugestaoPendente(imp, m)).length, nOutras = imp.mapa.filter(m => m.destino === '$ignorar' && !sugestaoPendente(imp, m)).length;
   const linhas = imp.mapa.map((m, i) => {
+    if (imp.so && !imp.so.has(m.i)) return ''; // só as colunas que estavam sem campo, até a pessoa pedir todas
     const sel = mod === 'livre'
       ? `<select class="select" id="mt-${i}" data-ch="mTipo" data-i="${i}" aria-label="Tipo da coluna ${esc(m.titulo)}">${opc('$ignorar', 'Ignorar (não carregar)', m.destino === '$ignorar' ? '$ignorar' : '')}${TIPOS_LIVRE.map(t => opc(t, TIPOS[t] + (t === m.sugestao ? ' · sugerido' : ''), m.destino === '$ignorar' ? '' : m.tipo)).join('')}</select>`
       : comb ? `<select class="select" id="md-${i}" data-ch="mDestino" data-i="${i}" aria-label="Campo da coluna ${esc(m.titulo)}">${opc('$ignorar', 'Ignorar (não carregar)', m.destino)}<optgroup label="Pessoas">${opc('$manterP', 'Pessoa · manter como está (sem validar)', m.destino)}${opcoes('p', camposComb('p'), m)}</optgroup><optgroup label="Empresas">${opc('$manterE', 'Empresa · manter como está (sem validar)', m.destino)}${opcoes('e', camposComb('e'), m)}</optgroup><optgroup label="Dados financeiros">${opcoes('f', CAMPOS_FIN, m)}</optgroup></select>`
@@ -4372,18 +4376,50 @@ function htmlMapear() {
     : comb ? 'Cada empresa vira um registro só: as linhas com o mesmo CNPJ (ou, sem CNPJ, com o mesmo nome) são juntadas, e cada pessoa fica ligada à sua empresa. Linha só com dados de empresa vira só a empresa; linha só com dados de pessoa vira uma pessoa sem empresa. A exportação sai no layout do Canis, um arquivo para pessoas e outro para empresas: as colunas com campo do Canis saem com o cabeçalho do layout (por exemplo, <span class="text-mono">email</span>), as outras com o nome escolhido, e as pessoas levam o nome e o CNPJ da empresa nas colunas <span class="text-mono">empresa_*</span>. Colunas financeiras, como as de Ano e Valor do Sirius, viram a tabela Dados financeiros, com uma linha por empresa, métrica e ano, e um terceiro arquivo.'
     : 'Na exportação, as colunas com campo do Canis saem com o cabeçalho do layout do Canis (por exemplo, <span class="text-mono">email</span>); as outras saem com o nome escolhido.';
   return `<div class="page-header"><div class="page-title-row"><div class="page-title"><h1>Mapear colunas</h1><span class="sub">${esc(imp.nome)} · ${plural(n, 'linha', 'linhas')} de dados</span></div>
-      <div class="toolbar"><button type="button" class="btn" data-a="cancelarMapa">Cancelar</button><button type="button" class="btn primary" data-a="carregar"${n && nUsadas && !faltaLado ? '' : ' disabled'}>Carregar ${plural(n, 'linha', 'linhas')}</button></div></div></div>
+      <div class="toolbar"><button type="button" class="btn" data-a="mVoltar">${ic('esq')}<span>Voltar</span></button><button type="button" class="btn primary" data-a="carregar"${n && nUsadas && !faltaLado ? '' : ' disabled'}>Carregar ${plural(n, 'linha', 'linhas')}</button></div></div></div>
     <div class="page" data-scroll="mapa">
-      <div class="secao"><h2 class="overline sec-t">Arquivo</h2><div class="row" style="gap:16px">${controles}</div></div>
-      <div class="secao"><h2 class="overline sec-t">Modelo de colunas</h2><div class="choices">${cartao('combinado', 'Pessoas e Empresas', 'Para relatórios com as pessoas e as empresas delas, como o do Sirius. Separa em duas tabelas ligadas, com cada empresa uma vez só.')}${cartao('pessoas', 'Pessoas', 'Só pessoas, no layout de Pessoas do Canis (doc 08). Valida nome, e-mail, listas e telefones.')}${cartao('empresas', 'Empresas', 'Só empresas, no layout de Empresas do Canis. Valida CNPJ, listas, site e endereço.')}${cartao('livre', 'Livre', 'Mantém as colunas do arquivo. Você escolhe o tipo de cada uma para validar.')}</div></div>
       <div class="secao" style="display:flex;flex-direction:column;gap:8px">
-        ${imp.tipo === 'html' ? `<div class="alert neutral">${ic('info')}<div class="alert-body">Este arquivo é uma página da web com uma tabela, salva com extensão .xls (é o que o Sirius e outros sistemas web exportam como Excel). A ferramenta lê a tabela direto; células agrupadas por linha, como a empresa de várias pessoas, são repetidas em cada linha${comb ? ' e voltam a ser uma empresa só ao carregar' : ''}.</div></div>` : ''}
         ${faltaLado ? `<div class="alert warn">${ic('atencao')}<div class="alert-body">Escolha pelo menos uma coluna de Pessoas e uma de Empresas. Se o arquivo só tem pessoas ou só empresas, use o modelo Pessoas ou Empresas.</div></div>` : ''}
         ${semChaveEmpresa && !faltaLado ? `<div class="alert warn">${ic('atencao')}<div class="alert-body">Nenhuma coluna de CNPJ ou de nome da empresa escolhida. Sem elas, só as linhas com todos os dados de empresa iguais viram a mesma empresa.</div></div>` : ''}
-        ${mod === 'empresas' && imp.temPessoa ? `<div class="alert warn">${ic('atencao')}<div class="alert-body">Este arquivo tem colunas de pessoa, como nome e e-mail, então deve ter uma linha por pessoa. No modelo Empresas, cada linha vira uma empresa, e a mesma empresa se repete uma vez para cada pessoa dela. Para ter cada empresa uma vez só, com as pessoas ligadas, use o modelo Pessoas e Empresas.</div></div>` : ''}
         <div class="alert neutral">${ic('info')}<div class="alert-body">Nenhum campo é obrigatório. Colunas em Ignorar não entram na tabela nem na exportação. <details class="mapa-det"${S.mapaDet ? ' open' : ''}><summary class="link" data-a="mapaDet">${S.mapaDet ? 'Menos detalhes' : 'Como as colunas são usadas'}</summary><p>${explica}</p></details></div></div>
       </div>
-      <div class="secao"><div class="row" style="justify-content:space-between;margin-bottom:8px"><span class="sub small">Toda coluna começa em Ignorar: escolha só as que você precisa. ${nUsadas ? plural(nUsadas, 'coluna escolhida', 'colunas escolhidas') + '.' : 'Nenhuma coluna escolhida ainda.'}</span><div class="row" style="gap:16px">${nSug ? `<button type="button" class="link" data-a="mSugestoes">Usar as ${plural(nSug, 'sugestão', 'sugestões')} pelo nome das colunas</button>` : ''}${nOutras ? `<button type="button" class="link" data-a="mManterOutras" title="As colunas em Ignorar sem sugestão entram com o nome do arquivo, sem validar">Manter ${nOutras === 1 ? 'a outra coluna' : 'as outras ' + fmtInt(nOutras) + ' colunas'} com o nome do arquivo</button>` : ''}</div></div><div class="table-wrap"><table class="table compact mtbl"><thead><tr><th style="width:24%">Coluna no arquivo</th><th>Exemplos</th><th style="width:30%">${mod === 'livre' ? 'Tipo' : 'Campo no Canis'}</th><th style="width:230px">Nome na tabela</th></tr></thead><tbody>${linhas}</tbody></table></div></div>
+      <div class="secao"><div class="row" style="justify-content:space-between;margin-bottom:8px"><span class="sub small">${imp.so ? `${plural(imp.so.size, 'coluna', 'colunas')} sem campo reconhecido. <button type="button" class="link" data-a="mTodas">Mostrar as ${imp.mapa.length} colunas</button> · ` : 'As colunas reconhecidas pelo nome já vêm escolhidas; as outras ficam em Ignorar. '}${nUsadas ? plural(nUsadas, 'coluna escolhida', 'colunas escolhidas') + '.' : 'Nenhuma coluna escolhida ainda.'}</span><div class="row" style="gap:16px">${nSug ? `<button type="button" class="link" data-a="mSugestoes">Usar as ${plural(nSug, 'sugestão', 'sugestões')} pelo nome das colunas</button>` : ''}${nOutras ? `<button type="button" class="link" data-a="mManterOutras" title="As colunas em Ignorar sem sugestão entram com o nome do arquivo, sem validar">Manter ${nOutras === 1 ? 'a outra coluna' : 'as outras ' + fmtInt(nOutras) + ' colunas'} com o nome do arquivo</button>` : ''}</div></div><div class="table-wrap"><table class="table compact mtbl"><thead><tr><th style="width:24%">Coluna no arquivo</th><th>Exemplos</th><th style="width:30%">${mod === 'livre' ? 'Tipo' : 'Campo no Canis'}</th><th style="width:230px">Nome na tabela</th></tr></thead><tbody>${linhas}</tbody></table></div></div>
+    </div>`;
+}
+
+/* Importar, passo 2 (Grin 2.42): só o formato da planilha. As colunas reconhecidas já vêm ligadas; a tela de colunas só é a ação principal quando sobra coluna sem campo */
+function htmlFormato() {
+  const imp = S.imp, mod = imp.modelo, comb = mod === 'combinado', n = contarLinhas(imp), opc = (v, rot, atual) => `<option value="${esc(v)}"${v === atual ? ' selected' : ''}>${esc(rot)}</option>`;
+  const usadas = imp.mapa.filter(m => m.destino !== '$ignorar'), nUsadas = usadas.length;
+  const temLado = x => usadas.some(m => m.destino.startsWith(x + ':') || m.destino === (x === 'p' ? '$manterP' : '$manterE'));
+  const faltaLado = comb && nUsadas > 0 && !(temLado('p') && temLado('e'));
+  const semChaveEmpresa = comb && temLado('e') && !usadas.some(m => ['e:identificacao', 'e:nome_comercial', 'e:razao_social'].includes(m.destino));
+  const fora = imp.mapa.filter(m => m.destino === '$ignorar'), nomes = fora.slice(0, 5).map(m => esc(m.titulo)).join(', ') + (fora.length > 5 ? ' e mais ' + (fora.length - 5) : '');
+  const controles = [
+    imp.folhas.length > 1 ? `<label class="ctl">${imp.tipo === 'html' ? 'Tabela' : 'Planilha'} <select class="select" id="m-planilha" data-ch="mPlanilha">${imp.folhas.map((f, i) => opc(String(i), f.nome, String(imp.planilha))).join('')}</select></label>` : '',
+    imp.tipo === 'csv' ? `<label class="ctl">Separador <select class="select" id="m-sep" data-ch="mSep">${[[';', 'Ponto e vírgula ( ; )'], [',', 'Vírgula ( , )'], ['\t', 'Tabulação'], ['|', 'Barra vertical ( | )']].map(([v, r]) => opc(v, r, imp.sep)).join('')}</select></label>` : '',
+    imp.tipo === 'csv' || imp.tipo === 'html' ? `<label class="ctl">Codificação <select class="select" id="m-enc" data-ch="mEnc">${[['utf-8', 'UTF-8'], ['windows-1252', 'Windows-1252 (Excel antigo)'], ...(imp.enc.startsWith('utf-16') ? [[imp.enc, 'UTF-16']] : [])].map(([v, r]) => opc(v, r, imp.enc)).join('')}</select></label>` : '',
+    `<label class="ctl">Cabeçalho na linha <input class="input" type="number" id="m-cab" min="1" max="${linhasImp(imp).length || 1}" value="${imp.cab + 1}" data-ch="mCab" style="width:84px"></label>`,
+  ].join('');
+  const cartao = (v, titulo, desc) => `<label class="choice"><input type="radio" name="modelo" id="mod-${v}" value="${v}" data-ch="mModelo"${mod === v ? ' checked' : ''}><span><span class="choice-title">${titulo}</span><span class="choice-description">${desc}</span></span></label>`;
+  const pode = n && nUsadas && !faltaLado;
+  const btnCarregar = (cls, rot) => `<button type="button" class="btn${cls}" data-a="carregar"${pode ? '' : ' disabled'}>${rot}</button>`;
+  const acoes = fora.length && !faltaLado
+    ? `${btnCarregar('', 'Carregar sem elas')}<button type="button" class="btn primary" data-a="mColunas">Mapear ${plural(fora.length, 'coluna', 'colunas')}${ic('dir')}</button>`
+    : `<button type="button" class="btn" data-a="mColunas">Conferir as colunas</button>${btnCarregar(' primary', 'Carregar ' + plural(n, 'linha', 'linhas'))}`;
+  const resumoArq = [imp.folhas.length > 1 ? imp.folhas[imp.planilha].nome : '', imp.tipo === 'csv' ? { ';': 'ponto e vírgula', ',': 'vírgula', '\t': 'tabulação', '|': 'barra vertical' }[imp.sep] : '', imp.tipo === 'csv' || imp.tipo === 'html' ? (imp.enc === 'utf-8' ? 'UTF-8' : imp.enc === 'windows-1252' ? 'Windows-1252' : 'UTF-16') : '', 'cabeçalho na linha ' + (imp.cab + 1)].filter(Boolean).join(' · ');
+  return `<div class="page-header"><div class="page-title-row"><div class="page-title"><h1>Formato da planilha</h1><span class="sub">${esc(imp.nome)} · ${plural(n, 'linha', 'linhas')} de dados</span></div>
+      <div class="toolbar"><button type="button" class="btn" data-a="cancelarMapa">Cancelar</button>${acoes}</div></div></div>
+    <div class="page" data-scroll="mapa">
+      <div class="secao"><div class="choices">${cartao('combinado', 'Pessoas e Empresas', 'Para relatórios com as pessoas e as empresas delas, como o do Sirius. Separa em duas tabelas ligadas, com cada empresa uma vez só.')}${cartao('pessoas', 'Pessoas', 'Só pessoas, no layout de Pessoas do Canis (doc 08). Valida nome, e-mail, listas e telefones.')}${cartao('empresas', 'Empresas', 'Só empresas, no layout de Empresas do Canis. Valida CNPJ, listas, site e endereço.')}${cartao('livre', 'Livre', 'Mantém as colunas do arquivo. Você escolhe o tipo de cada uma para validar.')}</div></div>
+      <div class="secao" style="display:flex;flex-direction:column;gap:8px">
+        <div class="alert ${fora.length ? 'neutral' : 'ok'}">${ic(fora.length ? 'info' : 'ok')}<div class="alert-body">${mod === 'livre' ? `As ${plural(imp.mapa.length, 'coluna', 'colunas')} do arquivo entram com o tipo provável de cada uma.` : `${fora.length ? 'Reconhecidas' : 'Todas as colunas reconhecidas'} pelo nome: ${fmtInt(nUsadas)} de ${plural(imp.mapa.length, 'coluna', 'colunas')}.${fora.length ? ` Sem campo: ${nomes}. Mapeie essas colunas ou carregue sem elas.` : ''}`}</div></div>
+        ${imp.tipo === 'html' ? `<div class="alert neutral">${ic('info')}<div class="alert-body">Este arquivo é uma página da web com uma tabela, salva com extensão .xls (é o que o Sirius e outros sistemas web exportam como Excel). A ferramenta lê a tabela direto; células agrupadas por linha, como a empresa de várias pessoas, são repetidas em cada linha${comb ? ' e voltam a ser uma empresa só ao carregar' : ''}.</div></div>` : ''}
+        ${faltaLado ? `<div class="alert warn">${ic('atencao')}<div class="alert-body">O arquivo não tem colunas reconhecidas de pessoas e de empresas ao mesmo tempo. Escolha o formato Pessoas ou Empresas, ou mapeie as colunas.</div></div>` : ''}
+        ${semChaveEmpresa && !faltaLado ? `<div class="alert warn">${ic('atencao')}<div class="alert-body">Nenhuma coluna de CNPJ ou de nome da empresa reconhecida. Sem elas, só as linhas com todos os dados de empresa iguais viram a mesma empresa.</div></div>` : ''}
+        ${mod === 'empresas' && imp.temPessoa ? `<div class="alert warn">${ic('atencao')}<div class="alert-body">Este arquivo tem colunas de pessoa, como nome e e-mail, então deve ter uma linha por pessoa. No modelo Empresas, cada linha vira uma empresa, e a mesma empresa se repete uma vez para cada pessoa dela. Para ter cada empresa uma vez só, com as pessoas ligadas, use o modelo Pessoas e Empresas.</div></div>` : ''}
+      </div>
+      <div class="secao"><details class="opt-arq"${S.optArq ? ' open' : ''}><summary class="link" data-a="optArq">Opções do arquivo</summary> <span class="sub small">${esc(resumoArq)}</span><div class="row" style="gap:16px;margin-top:12px">${controles}</div></details></div>
     </div>`;
 }
 
@@ -4934,8 +4970,8 @@ async function abrirMapeamento(imp) {
     for (let i = 0; i < Math.min(imp.folhas.length, 10) && !achou; i++) { await abrirFolha(imp, i); imp.planilha = i; imp.cab = cabecalhoProvavel(imp); achou = contarLinhas(imp) > 0; }
     if (!achou) imp.planilha = 0;
   }
-  imp.cab = cabecalhoProvavel(imp); imp.modelo = modeloProvavel(imp); sugerir(imp);
-  S.imp = imp; S.tela = 'mapear';
+  imp.cab = cabecalhoProvavel(imp); imp.modelo = modeloProvavel(imp); imp.passo = 'formato';
+  S.imp = imp; sugerirEUsar(imp); S.tela = 'mapear';
 }
 function larguras(cols, rows) {
   const amostra = rows.slice(0, 300);
@@ -5251,7 +5287,7 @@ const AC = { // cliques: data-a="nome"
   escolherArquivo: () => $('#arquivo').click(),
   importarOutro: () => $('#arquivo').click(), // a confirmação vem ao carregar, quando a tabela atual seria substituída
   nada: () => { },
-  exemplo: async () => { S.carregando = 'Preparando o exemplo…'; draw(); try { await abrirMapeamento(await lerArquivo(new TextEncoder().encode(exemploCSV()).buffer, 'exemplo-inscritos.csv')); } catch (e) { console.error(e); } S.carregando = ''; render(); },
+  exemplo: async () => { S.carregando = 'Preparando o exemplo…'; draw(); try { await abrirMapeamento(await lerArquivo(new TextEncoder().encode(exemploCSV()).buffer, 'exemplo-inscritos.csv')); } catch (e) { console.error(e); } S.carregando = ''; if (S.imp) AC.carregar(); else render(); }, // o exemplo abre direto na tabela, sem as perguntas da importação
   continuarSessao: () => { const s = S.sessao; if (!s) return; P = s.dados; migrarSessao(); S.sessao = null; Object.assign(S, VISTA_PADRAO(), { tela: 'tabela', ent: Object.keys(P.t)[0], vistas: {}, salvo: 'ok', topo: true, histAberto: new Set(), histPag: 1 }); analisarTudo(); registrar('Sessão retomada'); render(); },
   descartarSessao: () => confirmar('Descartar a sessão salva?', 'A cópia guardada neste navegador será apagada.', 'Descartar', true, () => { apagarSessao(); S.sessao = null; render(); }),
   fechar: () => confirmar('Fechar a tabela?', 'A cópia guardada neste navegador será apagada, com o histórico de alterações. Exporte antes se quiser guardar as alterações e o histórico.', 'Fechar tabela', true, fecharTabela),
@@ -5314,6 +5350,10 @@ const AC = { // cliques: data-a="nome"
     const e = empresaDe(r);
     if (mudar('Acrescentar ' + p.faltam.join(', ') + ' no relacionamento da empresa ' + nomeEmpresa(e), [[e, 'tipo_relacionamento', juntarLista([...valoresDeLista(e.v.tipo_relacionamento), ...p.faltam])]])) aviso('Acrescentado na empresa ' + nomeEmpresa(e) + ': ' + p.faltam.join(', ') + '.', 'ok', true);
   },
+  mColunas: () => { const fora = S.imp.mapa.filter(m => m.destino === '$ignorar').map(m => m.i); S.imp.so = S.imp.modelo !== 'livre' && fora.length ? new Set(fora) : null; S.imp.passo = 'colunas'; S.topo = true; render(); }, // as colunas sem campo aparecem sozinhas
+  mTodas: () => { S.imp.so = null; render(); },
+  mVoltar: () => { S.imp.passo = 'formato'; S.topo = true; render(); },
+  optArq: () => { S.optArq = !S.optArq; render(); },
   cancelarMapa: () => { S.imp = null; S.tela = P ? 'tabela' : 'inicio'; render(); },
   carregar: () => { if (P && temEdicoes()) confirmar('Substituir a tabela atual?', 'As alterações da tabela atual se perdem. Exporte antes se quiser guardá-las.', 'Substituir', true, carregar); else carregar(); render(); },
   limparBusca: () => { S.q = S.qIn = ''; S.foco = 'busca'; mudouVista(); },
@@ -5382,11 +5422,11 @@ const CH = { // mudanças em campos de formulário: data-ch="nome"
   selPagina: el => { const rows = linhasDaVista(), pag = rows.slice((S.pagina - 1) * S.tamanho, S.pagina * S.tamanho); for (const r of pag) if (el.checked) S.sel.add(r.id); else S.sel.delete(r.id); render(); },
   tamanho: el => { S.tamanho = +el.value; gravarLS('laika-tamanho', el.value); mudouVista(); },
   campo: el => { const r = S.gaveta && linhaPorId(S.gaveta); if (!r || r.del) return; const k = el.dataset.k; if (String(r.v[k] ?? '') === el.value) return; mudar('Editar ' + rotuloCol(k) + ' na linha ' + r.linha, [[r, k, el.value]]); },
-  mPlanilha: async el => { const i = +el.value; S.carregando = 'Lendo a planilha…'; draw(); try { await abrirFolha(S.imp, i); S.imp.planilha = i; S.imp.cab = cabecalhoProvavel(S.imp); S.imp.modelo = modeloProvavel(S.imp); sugerir(S.imp); } catch (e) { aviso(e.message, 'critico'); } S.carregando = ''; render(); },
-  mSep: el => { S.imp.sep = el.value; prepararTexto(S.imp, false); S.imp.cab = cabecalhoProvavel(S.imp); S.imp.modelo = modeloProvavel(S.imp); sugerir(S.imp); render(); },
-  mEnc: el => { S.imp.enc = el.value; try { prepararTexto(S.imp, true); } catch (e) { aviso(e.message, 'critico'); return; } if (S.imp.planilha >= S.imp.folhas.length) S.imp.planilha = 0; sugerir(S.imp); render(); },
-  mCab: el => { S.imp.cab = Math.max(0, Math.min((+el.value || 1) - 1, linhasImp(S.imp).length - 1)); sugerir(S.imp); render(); },
-  mModelo: el => { S.imp.modelo = el.value; sugerir(S.imp); render(); },
+  mPlanilha: async el => { const i = +el.value; S.carregando = 'Lendo a planilha…'; draw(); try { await abrirFolha(S.imp, i); S.imp.planilha = i; S.imp.cab = cabecalhoProvavel(S.imp); S.imp.modelo = modeloProvavel(S.imp); sugerirEUsar(S.imp); } catch (e) { aviso(e.message, 'critico'); } S.carregando = ''; render(); },
+  mSep: el => { S.imp.sep = el.value; prepararTexto(S.imp, false); S.imp.cab = cabecalhoProvavel(S.imp); S.imp.modelo = modeloProvavel(S.imp); sugerirEUsar(S.imp); render(); },
+  mEnc: el => { S.imp.enc = el.value; try { prepararTexto(S.imp, true); } catch (e) { aviso(e.message, 'critico'); return; } if (S.imp.planilha >= S.imp.folhas.length) S.imp.planilha = 0; sugerirEUsar(S.imp); render(); },
+  mCab: el => { S.imp.cab = Math.max(0, Math.min((+el.value || 1) - 1, linhasImp(S.imp).length - 1)); sugerirEUsar(S.imp); render(); },
+  mModelo: el => { S.imp.modelo = el.value; sugerirEUsar(S.imp); render(); },
   mDestino: el => { const m = S.imp.mapa[+el.dataset.i], v = el.value; if (!v.startsWith('$')) for (const x of S.imp.mapa) if (x !== m && x.destino === v) x.destino = '$ignorar'; m.destino = v; render(); },
   mTipo: el => { const m = S.imp.mapa[+el.dataset.i]; if (el.value === '$ignorar') m.destino = '$ignorar'; else { m.destino = '$usar'; m.tipo = el.value; } render(); },
   dlgCampo: el => { S.dlg[el.dataset.k] = el.type === 'checkbox' ? el.checked : el.value; render(); },

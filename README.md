@@ -8,8 +8,8 @@ O caso principal é o relatório "Vínculos Empresariais" do Sirius, que vem com
 
 1. Abra `index.html` no navegador (duplo clique). Não há nada para instalar.
 2. Carregue o arquivo: CSV, TXT, TSV, XLSX ou o `.xls` do Sirius (que na verdade é uma página HTML salva com essa extensão). Planilhas `.xls` binárias antigas não abrem: salve como `.xlsx` ou CSV.
-3. Confira o mapeamento das colunas. O Laika reconhece os cabeçalhos mais comuns, e você pode ajustar.
-4. Revise os problemas, do mais grave ao mais leve: **Crítico**, **Atenção**, **Info**. Nada é corrigido sozinho: use as ferramentas de limpeza (separar valores, trocar valores, completar zeros, mesclar duplicados) ou edite a célula.
+3. Escolha o formato da planilha (Pessoas e Empresas, Pessoas, Empresas ou Livre). O Laika já marca o provável e liga as colunas que reconhece pelo nome. A tela de mapear colunas só aparece se sobrar coluna sem campo, ou se você pedir para conferir. Os dados de exemplo abrem direto na tabela.
+4. Revise os problemas, do mais grave ao mais leve: **Crítico**, **Atenção**, **Informação**. Nada é corrigido sozinho: use as ferramentas de limpeza (separar valores, trocar valores, completar zeros, mesclar duplicados) ou edite a célula.
 5. Exporte. Antes de gerar o arquivo, o Laika avisa quantas linhas o Canis recusaria.
 
 Para experimentar sem dados reais, abra `tests/dados/sirius-vinculos-ficticio.xls`.
@@ -22,7 +22,7 @@ Cada problema tem um nível de severidade. A lista completa, com exemplos e a fu
 |---|---|
 | Crítico | O Canis recusaria a linha. Por exemplo: e-mail inválido, CNPJ com dígito errado, valor fora da lista, pessoa sem nome, e-mail ou identificação duplicados |
 | Atenção | O Canis aceita, mas vale conferir. Por exemplo: e-mail de função, telefone ou CEP fora do padrão, gênero diferente do nome, possível duplicado |
-| Info | Nota. Por exemplo: espaços extras, nome em maiúsculas |
+| Informação | Nota. Por exemplo: espaços extras, nome em maiúsculas |
 
 ## Privacidade
 
@@ -34,7 +34,7 @@ Cada problema tem um nível de severidade. A lista completa, com exemplos e a fu
 
 | Caminho | O que é |
 |---|---|
-| `index.html` | O Laika inteiro: o Grin 2.41 (estilos e scripts, copiados da release), as regras (`<script id="regras">`) e a tela |
+| `index.html` | O Laika inteiro: o Grin 2.42 (estilos e scripts, copiados da release), as regras (`<script id="regras">`) e a tela |
 | `docs/regras.md` | Todas as regras, agrupadas por severidade |
 | `docs/formato-sirius.md` | Como é o relatório do Sirius e como o Laika o lê |
 | `docs/decisoes.md` | Por que o Laika é assim, e de onde vêm os IDs (`RN-*`, `D-*`) |

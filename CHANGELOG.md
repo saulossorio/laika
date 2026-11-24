@@ -2,6 +2,12 @@
 
 Formato baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/). Versionamento semântico.
 
+## [1.1.9] - 2026-11-24
+
+### Alterado
+- Importação em passos, como no padrão Importar arquivo do Grin 2.42. Depois do arquivo, a tela Formato da planilha pergunta só o formato, já com o provável marcado, e diz quantas colunas foram reconhecidas. As colunas reconhecidas já vêm ligadas aos campos. Mapear colunas só é a ação principal quando sobra coluna sem campo, e mostra só essas colunas (com "Mostrar as N colunas"). Separador, codificação e cabeçalho ficam em "Opções do arquivo".
+- Os dados de exemplo abrem direto na tabela.
+
 ## [1.1.8] - 2026-11-24
 
 ### Alterado
