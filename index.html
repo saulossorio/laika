@@ -9,12 +9,12 @@
   Laika: ferramenta para analisar, limpar e exportar tabelas importadas.
   Um único arquivo. Abra no Chrome, Edge, Firefox ou Safari recentes. Funciona sem internet.
   Os dados ficam só neste computador, no armazenamento do navegador, até você fechar a tabela.
-  Visual: Grin 2.44, copiado de https://github.com/saulossorio/grin/releases/tag/v2.44 (dist/grin.inline.css e dist/grin.js).
+  Visual: Grin 2.45, copiado de https://github.com/saulossorio/grin/releases/tag/v2.45 (dist/grin.inline.css e dist/grin.js).
   Regras e listas: as do Canis (docs/regras.md).
 -->
-<!-- Grin 2.44, copiado de https://github.com/saulossorio/grin/releases/tag/v2.44 -->
+<!-- Grin 2.45, copiado de https://github.com/saulossorio/grin/releases/tag/v2.45 -->
 <style>
-/* Grin 2.44 · CSS com as fontes dentro (Geist e Geist Mono, licença SIL OFL 1.1) · https://github.com/saulossorio/grin
+/* Grin 2.45 · CSS com as fontes dentro (Geist e Geist Mono, licença SIL OFL 1.1) · https://github.com/saulossorio/grin
    Gerado por tools/bundle.mjs a partir dos arquivos do repositório. Não edite à mão. */
 /* ---------- styles/fonts.css ---------- */
 /* Grin: fonts. Geist and Geist Mono, variable weight 100 to 900, from the official release
@@ -1871,13 +1871,18 @@ body.tour-open .menu, body.tour-open .popover { z-index: 125; }
            <main class="page-content start-screen"><div class="start-screen-body">…</div><footer class="app-footer">…</footer></main> */
 .start-screen-body { display: flex; flex-direction: column; gap: var(--space-4); }
 .page-header .page-description, .start-screen-body .lead { max-width: var(--size-prose); }
+/* A start screen that only asks for a file: the dropzone takes the free height down to the signature, with its content
+   in the middle, so the empty part of the screen is also where the file can be dropped. The title stays in place. */
+.start-screen:has(> .start-screen-body > .dropzone) { display: flex; flex-direction: column; }
+.start-screen-body:has(> .dropzone) { flex: 1 1 auto; padding-bottom: var(--space-6); }
+.start-screen-body > .dropzone { flex: 1 1 auto; justify-content: center; min-height: 280px; }
 </style>
 <script>
-/* Grin 2.44 · comportamentos em JavaScript; inclua com <script src="grin.js" defer> · https://github.com/saulossorio/grin
+/* Grin 2.45 · comportamentos em JavaScript; inclua com <script src="grin.js" defer> · https://github.com/saulossorio/grin
    Gerado por tools/bundle.mjs a partir dos arquivos do repositório. Não edite à mão. */
 'use strict';
 const Grin = (window.Grin = window.Grin || {});
-Grin.version = '2.44';
+Grin.version = '2.45';
 
 // ---------- scripts/utils.js ----------
 {
@@ -3994,7 +3999,7 @@ let D = null;  // tabela em uso, P.t[S.ent]: { k, modelo, cols, rows, naoDup, oc
 let A = null;  // análise da tabela em uso (seção 7)
 /* Cada linha: { id, t (tabela), linha (no arquivo), v (valores), o (originais do que foi editado), del, mesclada,
    emp (pessoa: id da empresa), var (empresa: outras escritas no arquivo), ok (empresa: escritas já conferidas) } */
-const VERSAO = '1.1.11'; // igual à última versão do CHANGELOG.md
+const VERSAO = '1.1.12'; // igual à última versão do CHANGELOG.md
 let tema = lerLS('laika-tema') || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
 document.documentElement.dataset.theme = tema;
 /* Painel Aparência do Grin: o tema e a densidade escolhidos ali passam a ser os do Laika (a densidade só se muda ali, Grin 2.40).
@@ -4400,7 +4405,7 @@ function htmlInicio() {
     ${s ? `<div class="card resume">${ic('arquivo', 20)}<div style="flex:1;min-width:0"><b>${esc(s.nome)}</b><div class="sub">${esc(s.resumo)}</div><div class="sub">Salva em ${dataHora(s.salvoEm)}</div></div><button type="button" class="btn" data-a="descartarSessao">Descartar</button><button type="button" class="btn primary" data-a="continuarSessao">Continuar</button></div>` : ''}
     <div class="dropzone${S.arrastando ? ' over' : ''}">${ic('importar', 24)}<b>Arraste um arquivo CSV ou XLSX para cá ou</b><button type="button" class="btn${s ? '' : ' primary'}" data-a="escolherArquivo">Escolher arquivo</button><small>ou <button type="button" class="link" data-a="exemplo">abra os dados de exemplo</button></small></div>
     </div>
-    <footer class="app-footer"><span><b>Laika ${VERSAO}</b> · por Saúl Ossorio</span><span>Feito com <a href="https://saulossorio.github.io/grin/">Grin 2.44</a></span></footer>
+    <footer class="app-footer"><span><b>Laika ${VERSAO}</b> · por Saúl Ossorio</span><span>Feito com <a href="https://saulossorio.github.io/grin/">Grin 2.45</a></span></footer>
   </div>`;
 }
 
@@ -4577,7 +4582,7 @@ const tituloDe = T => MODELOS[T.modelo].titulo || P.nome.replace(/\.[^.]+$/, '')
 const tituloTabela = () => tituloDe(D);
 function abasEnt(n, dica) { // Revisão e Duplicados no modelo combinado: escolher entre Pessoas e Empresas
   if (!P.combinado) return '';
-  // só ícone e contagem: o nome da tabela fica no tooltip, para os filtros caberem em duas linhas (Grin 2.44, Busca e filtros)
+  // só ícone e contagem: o nome da tabela fica no tooltip, para os filtros caberem em duas linhas (Grin 2.45, Busca e filtros)
   return `<div class="types" role="group" aria-label="Tabela">${ordemTabelas().map(k => { const x = n(cache(k).A), nome = MODELOS[k].titulo; return `<button type="button" class="btn" aria-pressed="${S.ent === k}" data-a="ent" data-ent="${k}" aria-label="${nome}, ${plural(x, ...dica)}" data-tooltip="${nome}: ${plural(x, ...dica)}">${ic(k)}<span class="count-inline">${fmtInt(x)}</span></button>`; }).join('')}</div>`;
 }
 function htmlLista() {
@@ -4751,7 +4756,7 @@ function acoesPorTipo() {
   for (const e of P.log || []) { const t = TIPOS_ACAO.find(([, re]) => re.test(e.acao)), c = t ? t[0] : 'Ferramentas de limpeza'; if (c) n.set(c, (n.get(c) || 0) + 1); }
   return [...TIPOS_ACAO.map(t => t[0]), 'Ferramentas de limpeza'].filter(c => n.has(c)).map(c => [c, n.get(c)]);
 }
-/* Resumo da limpeza: seções na largura da página, uma por assunto (Grin 2.44, Resumo). As tabelas do arquivo
+/* Resumo da limpeza: seções na largura da página, uma por assunto (Grin 2.45, Resumo). As tabelas do arquivo
    aparecem lado a lado só onde os números são os mesmos para todas: conferidas e alterações */
 function htmlResumo() {
   const log = P.log || [], carga = log.find(e => /^Arquivo carregado: /.test(e.acao)), ultima = [...log].reverse().find(e => e.itens.length);

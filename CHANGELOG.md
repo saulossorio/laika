@@ -2,6 +2,11 @@
 
 Formato baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/). Versionamento semântico.
 
+## [1.1.12] - 2026-11-25
+
+### Alterado
+- Grin 2.45. Na tela inicial, a área do arquivo ocupa a altura livre até a assinatura, com o botão no meio; o título continua no lugar de sempre.
+
 ## [1.1.11] - 2026-11-25
 
 ### Alterado
