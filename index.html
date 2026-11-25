@@ -9,12 +9,12 @@
   Laika: ferramenta para analisar, limpar e exportar tabelas importadas.
   Um único arquivo. Abra no Chrome, Edge, Firefox ou Safari recentes. Funciona sem internet.
   Os dados ficam só neste computador, no armazenamento do navegador, até você fechar a tabela.
-  Visual: Grin 2.47, copiado de https://github.com/saulossorio/grin/releases/tag/v2.47 (dist/grin.inline.css e dist/grin.js).
+  Visual: Grin 2.48, copiado de https://github.com/saulossorio/grin/releases/tag/v2.48 (dist/grin.inline.css e dist/grin.js).
   Regras e listas: as do Canis (docs/regras.md).
 -->
-<!-- Grin 2.47, copiado de https://github.com/saulossorio/grin/releases/tag/v2.47 -->
+<!-- Grin 2.48, copiado de https://github.com/saulossorio/grin/releases/tag/v2.48 -->
 <style>
-/* Grin 2.47 · CSS com as fontes dentro (Geist e Geist Mono, licença SIL OFL 1.1) · https://github.com/saulossorio/grin
+/* Grin 2.48 · CSS com as fontes dentro (Geist e Geist Mono, licença SIL OFL 1.1) · https://github.com/saulossorio/grin
    Gerado por tools/bundle.mjs a partir dos arquivos do repositório. Não edite à mão. */
 /* ---------- styles/fonts.css ---------- */
 /* Grin: fonts. Geist and Geist Mono, variable weight 100 to 900, from the official release
@@ -1889,11 +1889,11 @@ body.tour-open .menu, body.tour-open .popover { z-index: 125; }
 .start-screen-body > .dropzone { flex: 1 1 auto; justify-content: center; min-height: 280px; }
 </style>
 <script>
-/* Grin 2.47 · comportamentos em JavaScript; inclua com <script src="grin.js" defer> · https://github.com/saulossorio/grin
+/* Grin 2.48 · comportamentos em JavaScript; inclua com <script src="grin.js" defer> · https://github.com/saulossorio/grin
    Gerado por tools/bundle.mjs a partir dos arquivos do repositório. Não edite à mão. */
 'use strict';
 const Grin = (window.Grin = window.Grin || {});
-Grin.version = '2.47';
+Grin.version = '2.48';
 
 // ---------- scripts/utils.js ----------
 {
@@ -2797,6 +2797,7 @@ document.querySelectorAll('.toc').forEach((toc) => {
 //   target: selector, function returning an element, or a list of them in order of preference; none = card in the center.
 //   action: what the person does on the screen ("Clique em Empresas"). With it, the step can wait:
 //   click: true waits for a click on the target, which goes on to the page; done: () => true when the task is done.
+//   A finished task shows a done message and turns Próximo on; the person moves on.
 // A first step without target is the presentation: it is not counted and offers Começar and Agora não.
 // The tour never changes the screen by itself. Outside the cut-out, clicks are held: the card shakes and says what to do.
 // A target in the sidebar opens the sidebar drawer on a phone. On a narrow screen the card is a sheet at the bottom or top.
@@ -2946,8 +2947,7 @@ function startTour(steps, { onEnd } = {}) {
   function finish(seq) {
     T.done = true;
     spot.classList.remove('pulse'); $('[data-tour="next"]').classList.remove('waiting');
-    message('Isso mesmo. Seguindo para o próximo passo…', 'ok');
-    setTimeout(() => { if (live(seq)) show(T.i + 1); }, reduce() ? 600 : 1100);
+    message('Feito. Clique em Próximo para continuar.', 'ok'); // the tour waits for the person: it never moves on by itself
   }
   function next() { if (T.i >= steps.length - 1) return end(); if (waiting()) return nudge(); show(T.i + 1); }
 
@@ -2962,11 +2962,11 @@ function startTour(steps, { onEnd } = {}) {
     (before?.isConnected ? before : document.body).focus?.({ preventScroll: true });
     onEnd?.();
   }
-  // on a click step, the click on the target goes on to the page and moves the tour forward
+  // on a click step, the click on the target goes on to the page and marks the step done
   function onClick(e) {
     const s = steps[T.i];
     if (!s.click || !T.el || !T.el.contains(e.target)) return;
-    const seq = T.seq; setTimeout(() => { if (live(seq)) show(T.i + 1); }, 0);
+    const seq = T.seq; setTimeout(() => { if (live(seq) && !T.done) finish(seq); }, 0);
   }
   function keys(e) {
     if (document.querySelector('dialog[open]:modal, .dialog[open]')) return; // a dialog the person opened keeps its keys
@@ -4017,7 +4017,7 @@ let D = null;  // tabela em uso, P.t[S.ent]: { k, modelo, cols, rows, naoDup, oc
 let A = null;  // análise da tabela em uso (seção 7)
 /* Cada linha: { id, t (tabela), linha (no arquivo), v (valores), o (originais do que foi editado), del, mesclada,
    emp (pessoa: id da empresa), var (empresa: outras escritas no arquivo), ok (empresa: escritas já conferidas) } */
-const VERSAO = '1.1.15'; // igual à última versão do CHANGELOG.md
+const VERSAO = '1.1.16'; // igual à última versão do CHANGELOG.md
 let tema = lerLS('laika-tema') || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
 document.documentElement.dataset.theme = tema;
 /* Painel Aparência do Grin: o tema e a densidade escolhidos ali passam a ser os do Laika (a densidade só se muda ali, Grin 2.40).
@@ -4423,7 +4423,7 @@ function htmlInicio() {
     ${s ? `<div class="card resume">${ic('arquivo', 20)}<div style="flex:1;min-width:0"><b>${esc(s.nome)}</b><div class="sub">${esc(s.resumo)}</div><div class="sub">Salva em ${dataHora(s.salvoEm)}</div></div><button type="button" class="btn" data-a="descartarSessao">Descartar</button><button type="button" class="btn primary" data-a="continuarSessao">Continuar</button></div>` : ''}
     <div class="dropzone${S.arrastando ? ' over' : ''}">${ic('importar', 24)}<b>Arraste um arquivo CSV ou XLSX para cá ou</b><button type="button" class="btn${s ? '' : ' primary'}" data-a="escolherArquivo">Escolher arquivo</button><small>ou <button type="button" class="link" data-a="exemplo">abra os dados de exemplo</button></small></div>
     </div>
-    <footer class="app-footer"><span><b>Laika ${VERSAO}</b> · por Saúl Ossorio</span><span>Feito com <a href="https://saulossorio.github.io/grin/">Grin 2.47</a></span></footer>
+    <footer class="app-footer"><span><b>Laika ${VERSAO}</b> · por Saúl Ossorio</span><span>Feito com <a href="https://saulossorio.github.io/grin/">Grin 2.48</a></span></footer>
   </div>`;
 }
 
