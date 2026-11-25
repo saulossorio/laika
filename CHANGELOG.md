@@ -2,6 +2,11 @@
 
 Formato baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/). Versionamento semântico.
 
+## [1.1.13] - 2026-11-25
+
+### Alterado
+- Grin 2.46. Na Revisão saiu o botão Correções em lote; as mesmas correções (espaços, maiúsculas, separar valores, valores fora da lista) ficam em Ferramentas, por coluna e com prévia. O botão Ferramentas mostra só o ícone, com o nome no tooltip.
+
 ## [1.1.12] - 2026-11-25
 
 ### Alterado
