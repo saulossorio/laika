@@ -9,12 +9,12 @@
   Laika: ferramenta para analisar, limpar e exportar tabelas importadas.
   Um único arquivo. Abra no Chrome, Edge, Firefox ou Safari recentes. Funciona sem internet.
   Os dados ficam só neste computador, no armazenamento do navegador, até você fechar a tabela.
-  Visual: Grin 2.43, copiado de https://github.com/saulossorio/grin/releases/tag/v2.43 (dist/grin.inline.css e dist/grin.js).
+  Visual: Grin 2.44, copiado de https://github.com/saulossorio/grin/releases/tag/v2.44 (dist/grin.inline.css e dist/grin.js).
   Regras e listas: as do Canis (docs/regras.md).
 -->
-<!-- Grin 2.43, copiado de https://github.com/saulossorio/grin/releases/tag/v2.43 -->
+<!-- Grin 2.44, copiado de https://github.com/saulossorio/grin/releases/tag/v2.44 -->
 <style>
-/* Grin 2.43 · CSS com as fontes dentro (Geist e Geist Mono, licença SIL OFL 1.1) · https://github.com/saulossorio/grin
+/* Grin 2.44 · CSS com as fontes dentro (Geist e Geist Mono, licença SIL OFL 1.1) · https://github.com/saulossorio/grin
    Gerado por tools/bundle.mjs a partir dos arquivos do repositório. Não edite à mão. */
 /* ---------- styles/fonts.css ---------- */
 /* Grin: fonts. Geist and Geist Mono, variable weight 100 to 900, from the official release
@@ -839,6 +839,12 @@ input:focus-visible, select:focus-visible, textarea:focus-visible { outline: 2px
 .btn[aria-pressed="true"] { background: var(--brand-bg); border-color: var(--brand-border); color: var(--brand-fg); }
 .btn[aria-pressed="true"] svg { color: currentColor; }
 
+/* Phones: in a filter row or toolbar, .btn-text hides the text of a button that has an icon, leaving the icon and the
+   count. The text stays for screen readers; the full name also goes in data-tooltip. */
+@media (max-width: 760px) {
+  .btn-text { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+}
+
 /* ---------- components/input/input.css ---------- */
 /* Grin fields: text input, select, textarea, search, checkbox, choice cards and the label + control + message group.
    Focus shows a soft ring around the field; an invalid field turns red and says what to fix. */
@@ -883,6 +889,8 @@ input:focus-visible, select:focus-visible, textarea:focus-visible { outline: 2px
 
 /* Search: leading icon and optional clear button */
 .search { position: relative; width: min(320px, 100%); }
+/* in a toolbar the search shrinks to 200 px before the toolbar wraps */
+.toolbar > .search { flex: 10 1 200px; max-width: 320px; }
 .search > svg { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); width: 20px; height: 20px; color: var(--muted-foreground); pointer-events: none; }
 .search .input { padding: 0 40px 0 44px; }
 .search .btn { position: absolute; right: 4px; top: 50%; transform: translateY(-50%); }
@@ -1865,11 +1873,11 @@ body.tour-open .menu, body.tour-open .popover { z-index: 125; }
 .page-header .page-description, .start-screen-body .lead { max-width: var(--size-prose); }
 </style>
 <script>
-/* Grin 2.43 · comportamentos em JavaScript; inclua com <script src="grin.js" defer> · https://github.com/saulossorio/grin
+/* Grin 2.44 · comportamentos em JavaScript; inclua com <script src="grin.js" defer> · https://github.com/saulossorio/grin
    Gerado por tools/bundle.mjs a partir dos arquivos do repositório. Não edite à mão. */
 'use strict';
 const Grin = (window.Grin = window.Grin || {});
-Grin.version = '2.43';
+Grin.version = '2.44';
 
 // ---------- scripts/utils.js ----------
 {
@@ -3045,27 +3053,17 @@ if (document.readyState === 'loading') document.addEventListener('DOMContentLoad
 .hlist { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
 .hitem { padding: 12px 16px; }
 .hdet { margin-top: 12px; }
-.resumo { display: flex; flex-direction: column; gap: 12px; }
-.rgrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(340px, 100%), 1fr)); gap: 16px; align-items: start; }
-.rcard { gap: 10px; padding: 16px 20px; }
-.rcard .sec-t { margin: 4px 0 0; }
-.rtit { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; font-size: var(--text-lg); }
-.rbox { display: flex; flex-direction: column; align-items: flex-start; gap: 8px; padding: 12px 14px; border-radius: var(--radius-md); background: var(--muted); }
-.rbox .progress { align-self: stretch; }
-.rnum { font-size: var(--text-2xl); font-weight: var(--weight-semibold); font-variant-numeric: tabular-nums; }
-.rtbl { table-layout: fixed; }
-.rtbl th, .rtbl td { white-space: normal; }
-.rtbl th:first-child, .rtbl td:first-child { padding-left: 12px; }
-.rtbl th:last-child, .rtbl td:last-child { padding-right: 12px; }
-.rtbl th.numeric, .rtbl td.numeric { width: 64px; }
+.resumo { display: flex; flex-direction: column; gap: 28px; }
+.resumo > p { margin: 0; }
+.rsec { display: flex; flex-direction: column; gap: 12px; }
+.rtit { font-size: var(--text-lg); }
+.rtbl th.numeric, .rtbl td.numeric { width: 140px; }
 .rtbl tr.feito td { color: var(--muted-foreground); }
 .rtbl tr.feito td.numeric b { color: var(--ok-fg); } /* problema que sumiu */
 .rtbl tr.total td { border-top: 1px solid var(--border); }
-.rcols { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; font-size: var(--text-sm); }
-.rcols li { display: grid; grid-template-columns: minmax(0, 1fr) 90px 44px; gap: 8px; align-items: center; }
-.rcols .tabular { text-align: right; }
-.rc-n { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.rc-b { height: 6px; overflow: hidden; border-radius: var(--radius-pill); background: var(--border-soft); }
+.rtbl tr.rgrupo th { background: var(--table-head); color: var(--foreground); font-size: var(--text-sm); text-transform: none; letter-spacing: 0; }
+.rtbl .rc-barra { width: 30%; }
+.rc-b { display: block; height: 6px; overflow: hidden; border-radius: var(--radius-pill); background: var(--border-soft); }
 .rc-b > span { display: block; height: 100%; background: var(--primary); }
 
 /* Gaveta e diálogos: abertos pelo estado da tela, sem a camada superior do navegador */
@@ -3996,7 +3994,7 @@ let D = null;  // tabela em uso, P.t[S.ent]: { k, modelo, cols, rows, naoDup, oc
 let A = null;  // análise da tabela em uso (seção 7)
 /* Cada linha: { id, t (tabela), linha (no arquivo), v (valores), o (originais do que foi editado), del, mesclada,
    emp (pessoa: id da empresa), var (empresa: outras escritas no arquivo), ok (empresa: escritas já conferidas) } */
-const VERSAO = '1.1.10'; // igual à última versão do CHANGELOG.md
+const VERSAO = '1.1.11'; // igual à última versão do CHANGELOG.md
 let tema = lerLS('laika-tema') || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
 document.documentElement.dataset.theme = tema;
 /* Painel Aparência do Grin: o tema e a densidade escolhidos ali passam a ser os do Laika (a densidade só se muda ali, Grin 2.40).
@@ -4397,14 +4395,12 @@ const btnExportar = () => `<button type="button" class="btn primary" data-a="exp
 function htmlInicio() {
   const s = S.sessao;
   // padrão Tela inicial do Grin: cabeçalho e margens iguais aos das outras telas; assinatura só aqui, no fim da janela
-  return `<div class="page-header"><div class="page-title-row"><div class="page-title"><h1>Limpar uma tabela</h1><p class="page-description">Importe uma planilha para conferir, corrigir e exportar os dados. Relatórios do Sirius viram duas tabelas ligadas, pessoas e empresas, no formato do Canis.</p></div></div></div>
+  return `<div class="page-header"><div class="page-title-row"><div class="page-title"><h1>Limpar uma tabela</h1></div></div></div>
   <div class="page start start-screen" data-scroll="inicio"><div class="secao start-screen-body">
     ${s ? `<div class="card resume">${ic('arquivo', 20)}<div style="flex:1;min-width:0"><b>${esc(s.nome)}</b><div class="sub">${esc(s.resumo)}</div><div class="sub">Salva em ${dataHora(s.salvoEm)}</div></div><button type="button" class="btn" data-a="descartarSessao">Descartar</button><button type="button" class="btn primary" data-a="continuarSessao">Continuar</button></div>` : ''}
-    <div class="dropzone${S.arrastando ? ' over' : ''}">${ic('importar', 24)}<b>Arraste um arquivo CSV ou XLSX para cá ou</b><button type="button" class="btn${s ? '' : ' primary'}" data-a="escolherArquivo">Escolher arquivo</button><small>CSV, TXT, XLSX ou o .xls do Sirius. O .xls do Excel 97-2003 precisa ser salvo como .xlsx antes.</small></div>
-    <div class="alert">${ic('info')}<div class="alert-body">Os dados ficam só neste navegador e nada é enviado pela internet. <b>Fechar tabela</b> apaga a cópia guardada.</div></div>
-    <div><button type="button" class="link" data-a="exemplo">Experimentar com dados de exemplo (fictícios)</button></div>
+    <div class="dropzone${S.arrastando ? ' over' : ''}">${ic('importar', 24)}<b>Arraste um arquivo CSV ou XLSX para cá ou</b><button type="button" class="btn${s ? '' : ' primary'}" data-a="escolherArquivo">Escolher arquivo</button><small>ou <button type="button" class="link" data-a="exemplo">abra os dados de exemplo</button></small></div>
     </div>
-    <footer class="app-footer"><span><b>Laika ${VERSAO}</b> · por Saúl Ossorio</span><span>Feito com <a href="https://saulossorio.github.io/grin/">Grin 2.43</a></span></footer>
+    <footer class="app-footer"><span><b>Laika ${VERSAO}</b> · por Saúl Ossorio</span><span>Feito com <a href="https://saulossorio.github.io/grin/">Grin 2.44</a></span></footer>
   </div>`;
 }
 
@@ -4581,7 +4577,8 @@ const tituloDe = T => MODELOS[T.modelo].titulo || P.nome.replace(/\.[^.]+$/, '')
 const tituloTabela = () => tituloDe(D);
 function abasEnt(n, dica) { // Revisão e Duplicados no modelo combinado: escolher entre Pessoas e Empresas
   if (!P.combinado) return '';
-  return `<div class="types" role="group" aria-label="Tabela">${ordemTabelas().map(k => { const x = n(cache(k).A); return `<button type="button" class="btn" aria-pressed="${S.ent === k}" data-a="ent" data-ent="${k}" title="${plural(x, ...dica)}">${ic(k)}<span>${MODELOS[k].titulo}</span><span class="count-inline">${fmtInt(x)}</span></button>`; }).join('')}</div>`;
+  // só ícone e contagem: o nome da tabela fica no tooltip, para os filtros caberem em duas linhas (Grin 2.44, Busca e filtros)
+  return `<div class="types" role="group" aria-label="Tabela">${ordemTabelas().map(k => { const x = n(cache(k).A), nome = MODELOS[k].titulo; return `<button type="button" class="btn" aria-pressed="${S.ent === k}" data-a="ent" data-ent="${k}" aria-label="${nome}, ${plural(x, ...dica)}" data-tooltip="${nome}: ${plural(x, ...dica)}">${ic(k)}<span class="count-inline">${fmtInt(x)}</span></button>`; }).join('')}</div>`;
 }
 function htmlLista() {
   S.probs = S.probs.filter(p => A.tipos.has(p)); // o tipo some do filtro junto com o último problema dele
@@ -4596,31 +4593,33 @@ function htmlLista() {
     : [plural(vivas, 'linha', 'linhas'), A.comProblema ? plural(A.comProblema, 'com problema', 'com problemas') : 'nenhum problema', editadas ? plural(editadas, 'editada', 'editadas') : '', excluidas ? plural(excluidas, 'excluída', 'excluídas') : '', conferidas ? plural(conferidas, 'conferida', 'conferidas') + ' de ' + fmtInt(vivas) : ''].filter(Boolean).join(' · ');
   // resumo da Revisão: níveis e tipos de problema, clicáveis (como no protótipo)
   let resumo = '';
-  if (revisao && (A.comProblema || A.cont.info)) {
+  const ents = revisao ? abasEnt(a => a.comProblema, ['registro com problema', 'registros com problemas']) : '';
+  if (revisao && (A.comProblema || A.cont.info || ents)) {
     // cada nível abre um menu de escolha múltipla com os seus tipos de problema (Grin 2.41: filtro por nível)
     const niveis = ['critico', 'atencao', 'info'].filter(n => A.cont[n]).map(n => {
       const ts = tiposDoNivel(n), sel = ts.filter(t => S.probs.includes(t)).length, aberto = S.pop && S.pop.tipo === 'nivel' && S.pop.n === n;
-      return `<button type="button" class="severity ${TOM[n]}" aria-pressed="${sel > 0}" aria-haspopup="menu" aria-expanded="${!!aberto}" data-a="menuNivel" data-i="${n}" data-pop-anchor>${icNivel(n, 16)}<span>${NIVEL[n]}</span><span class="severity-count">${fmtInt(A.cont[n])}</span>${sel && sel < ts.length ? `<span>· ${sel} de ${plural(ts.length, 'tipo', 'tipos')}</span>` : ''}${ic('baixo', 14)}</button>`;
+      return `<button type="button" class="severity ${TOM[n]}" aria-pressed="${sel > 0}" aria-haspopup="menu" aria-expanded="${!!aberto}" data-a="menuNivel" data-i="${n}" data-pop-anchor data-tooltip="${NIVEL[n]}">${icNivel(n, 16)}<span class="btn-text">${NIVEL[n]}</span><span class="severity-count">${fmtInt(A.cont[n])}</span>${sel && sel < ts.length ? `<span>· ${sel} de ${plural(ts.length, 'tipo', 'tipos')}</span>` : ''}${ic('baixo', 14)}</button>`;
     }).join('');
     const lote = [['espacos', 'Remover espaços extras'], ['caixa', 'Nomes em Primeira Letra Maiúscula'], ['multi', 'Separar valores (o primeiro fica, os outros vão para uma coluna à parte)']]
       .map(([t, rot]) => [t, rot, contarTipo(t)]).filter(x => x[2]);
     const nLista = contarTipo('lista'), nLote = lote.length + (nLista ? 1 : 0);
     // as correções em lote ficam num botão de menu ao lado dos níveis (Grin 2.41)
-    const rapidas = nLote ? `<button type="button" class="btn" aria-haspopup="menu" aria-expanded="${!!(S.pop && S.pop.tipo === 'lote')}" data-a="menuLote" data-pop-anchor>${ic('varinha')}<span>Correções em lote</span><span class="count-inline">${nLote}</span>${ic('baixo', 14)}</button>` : '';
-    resumo = `<div class="row"><div class="severity-group" role="group" aria-label="Filtrar por nível e tipo de problema">${niveis}</div><span class="spacer"></span>${rapidas}</div>`;
+    const rapidas = nLote ? `<button type="button" class="btn" aria-haspopup="menu" aria-expanded="${!!(S.pop && S.pop.tipo === 'lote')}" data-a="menuLote" data-pop-anchor data-tooltip="Correções em lote">${ic('varinha')}<span class="btn-text">Correções em lote</span><span class="count-inline">${nLote}</span>${ic('baixo', 14)}</button>` : '';
+    // primeira linha: tabela, níveis e correções em lote; a segunda é a barra de busca
+    resumo = `<div class="row filtros-rev">${ents}${ents && niveis ? '<span class="divider-v"></span>' : ''}${niveis ? `<div class="severity-group" role="group" aria-label="Filtrar por nível e tipo de problema">${niveis}</div>` : ''}<span class="spacer"></span>${rapidas}</div>`;
   }
   const chips = S.filtros.map((f, i) => `<span class="chip"><button type="button" class="chip-label" data-a="editarFiltro" data-i="${i}" data-pop-anchor title="Editar filtro">${esc(rotuloFiltro(f))}</button><button type="button" class="chip-remove" data-a="removerFiltro" data-i="${i}" aria-label="Remover filtro ${esc(rotuloFiltro(f))}">${ic('x', 14)}</button></span>`).join('');
   const nCond = S.filtros.length + (S.q ? 1 : 0) + (S.soProblemas ? 1 : 0) + (S.naoConferidas ? 1 : 0) + (S.verExcluidas ? 1 : 0) + (S.probs.length ? 1 : 0);
   const barra = `<div class="toolbar list-toolbar" role="toolbar" aria-label="Busca, filtros e visualização">
-    <div class="search">${ic('busca')}<input id="busca" class="input" type="text" role="searchbox" aria-label="Buscar na tabela" placeholder="Buscar em todas as colunas" value="${esc(S.qIn)}" data-in="busca" autocomplete="off">${S.qIn ? `<button type="button" class="btn ghost icon xs" data-a="limparBusca" aria-label="Limpar busca">${ic('x')}</button>` : ''}</div>
-    ${chips}<button type="button" class="btn dashed" data-a="novoFiltro" data-pop-anchor>${ic('mais')}<span>Filtro</span></button>
+    <div class="search">${ic('busca')}<input id="busca" class="input" type="text" role="searchbox" aria-label="Buscar na tabela" placeholder="Buscar na tabela" value="${esc(S.qIn)}" data-in="busca" autocomplete="off">${S.qIn ? `<button type="button" class="btn ghost icon xs" data-a="limparBusca" aria-label="Limpar busca">${ic('x')}</button>` : ''}</div>
+    ${chips}<button type="button" class="btn dashed" data-a="novoFiltro" data-pop-anchor>${ic('mais')}<span class="btn-text">Filtro</span></button>
     ${!revisao ? `<button type="button" class="btn${S.soProblemas ? '' : ' dashed'}" aria-pressed="${S.soProblemas}" data-a="soProblemas">${S.soProblemas ? ic('check') : ''}<span>Só com problemas</span></button>` : ''}
     <button type="button" class="btn${S.naoConferidas ? '' : ' dashed'}" aria-pressed="${S.naoConferidas}" data-a="naoConferidas" title="Só as linhas que ainda não foram marcadas como conferidas">${S.naoConferidas ? ic('check') : ''}<span>Não conferidas</span></button>
     ${excluidas ? `<button type="button" class="btn${S.verExcluidas ? '' : ' dashed'}" aria-pressed="${S.verExcluidas}" data-a="verExcluidas">${S.verExcluidas ? ic('check') : ''}<span>Mostrar excluídas</span></button>` : ''}
     ${nCond >= 2 ? `<button type="button" class="link" data-a="limparTudo">Limpar tudo</button>` : ''}
     <div class="spacer"></div>
-    <button type="button" class="btn" data-a="ferramentas">${ic('varinha')}<span>Ferramentas</span></button>
-    <button type="button" class="btn" data-a="colunas" data-pop-anchor>${ic('colunas')}<span>Colunas</span></button>
+    <button type="button" class="btn" data-a="ferramentas" data-tooltip="Ferramentas">${ic('varinha')}<span class="btn-text">Ferramentas</span></button>
+    <button type="button" class="btn" data-a="colunas" data-pop-anchor data-tooltip="Colunas">${ic('colunas')}<span class="btn-text">Colunas</span></button>
     
   </div>`;
   // tabela
@@ -4650,7 +4649,7 @@ function htmlLista() {
       ${selRows.some(r => !r.del && r.conf) ? `<button type="button" class="btn xs" data-a="loteDesconferir"><span>Desmarcar conferidas</span></button>` : ''}
       ${nVivasSel ? `<button type="button" class="btn xs" data-a="loteEditar">${ic('lapis')}<span>Editar coluna</span></button><button type="button" class="btn xs" data-a="loteExportar">${ic('exportar')}<span>Exportar selecionadas</span></button>` : ''}
       <button type="button" class="btn ghost icon" data-a="limparSel" aria-label="Limpar seleção" title="Limpar seleção">${ic('x')}</button></div>` : '';
-  return `<div class="page-header">${htmlArquivo()}<div class="page-title-row"><div class="page-title"><h1>${esc(revisao ? 'Revisão' : tituloTabela())}</h1><span class="sub" aria-live="polite">${contagem}</span></div><div class="toolbar">${btnsHistorico()}${btnExportar()}</div></div>${revisao ? abasEnt(a => a.comProblema, ['registro com problema', 'registros com problemas']) : ''}${resumo}${barra}</div>
+  return `<div class="page-header">${htmlArquivo()}<div class="page-title-row"><div class="page-title"><h1>${esc(revisao ? 'Revisão' : tituloTabela())}</h1><span class="sub" aria-live="polite">${contagem}</span></div><div class="toolbar">${btnsHistorico()}${btnExportar()}</div></div>${resumo}${barra}</div>
     ${banner}
     <div class="wrap" data-scroll="tabela"><table class="table${S.densidade === 'compacta' ? ' compact' : ''}" style="width:${largura}px"><thead><tr>${th}</tr></thead><tbody>${corpo}</tbody></table>${pag.length ? '' : `<div class="empty-state laika-empty">${vazioTxt}</div>`}</div>
     ${lote}
@@ -4683,7 +4682,7 @@ function htmlDuplicados() {
   const paginas = Math.max(1, Math.ceil(gs.length / porPag)); if (S.dupPag > paginas) S.dupPag = paginas;
   const lista = gs.slice((S.dupPag - 1) * porPag, S.dupPag * porPag), nLinhas = A.grupos.reduce((s, g) => s + g.ids.length, 0);
   const filtros = A.grupos.length ? `<div class="types"><button type="button" class="btn" aria-pressed="${!S.dupMotivo}" data-a="dupMotivo" data-m="">Todos <span class="count-inline">${fmtInt(A.grupos.length)}</span></button>${[...motivos].map(([m, x]) => `<button type="button" class="btn" aria-pressed="${S.dupMotivo === m}" data-a="dupMotivo" data-m="${esc(m)}"><span class="dot ${TOM[x.nivel]}"></span>${esc(m)} <span class="count-inline">${fmtInt(x.n)}</span></button>`).join('')}</div>` : '';
-  return `<div class="page-header">${htmlArquivo()}<div class="page-title-row"><div class="page-title"><h1>Duplicados</h1><span class="sub">${plural(A.grupos.length, 'grupo', 'grupos')} · ${plural(nLinhas, 'linha', 'linhas')}</span></div><div class="toolbar">${btnsHistorico()}${btnExportar()}</div></div>${abasEnt(a => a.grupos.length, ['grupo de duplicados', 'grupos de duplicados'])}${filtros}
+  return `<div class="page-header">${htmlArquivo()}<div class="page-title-row"><div class="page-title"><h1>Duplicados</h1><span class="sub">${plural(A.grupos.length, 'grupo', 'grupos')} · ${plural(nLinhas, 'linha', 'linhas')}</span></div><div class="toolbar">${btnsHistorico()}${btnExportar()}</div></div>${(() => { const ents = abasEnt(a => a.grupos.length, ['grupo de duplicados', 'grupos de duplicados']); return ents || filtros ? `<div class="row filtros-rev">${ents}${ents && filtros ? '<span class="divider-v"></span>' : ''}${filtros}</div>` : ''; })()}
       <p class="sub" style="margin:0 0 12px;line-height:1.5">Nada é mesclado sozinho. Compare as linhas, escolha o valor de cada campo e confirme. Se não forem a mesma pessoa ou empresa, marque “Não são duplicados”.${P.combinado && D.k === 'empresas' ? ' Ao mesclar empresas, as pessoas e os dados financeiros delas passam para a empresa que fica.' : ''}</p></div>
     <div class="dups" data-scroll="dups">${lista.length ? lista.map(cartaoGrupo).join('') : `<div class="empty-state"><span class="empty-state-icon">${ic('ok', 24)}</span><h3>Nenhum duplicado encontrado.</h3></div>`}</div>
     ${paginas > 1 ? `<div class="pagination"><span class="tabular">Grupos ${fmtInt((S.dupPag - 1) * porPag + 1)}–${fmtInt((S.dupPag - 1) * porPag + lista.length)} de ${fmtInt(gs.length)}</span><div class="row" style="gap:10px"><span class="tabular">Página ${S.dupPag} de ${paginas}</span><button type="button" class="btn icon" data-a="dupPagina" data-d="-1" aria-label="Página anterior"${S.dupPag > 1 ? '' : ' disabled'}>${ic('esq')}</button><button type="button" class="btn icon" data-a="dupPagina" data-d="1" aria-label="Próxima página"${S.dupPag < paginas ? '' : ' disabled'}>${ic('dir')}</button></div></div>` : ''}`;
@@ -4702,10 +4701,7 @@ function cartaoGrupo(g) {
 function htmlHistorico() {
   const log = P.log || [], total = log.length, nCel = log.reduce((s, e) => s + e.itens.length, 0), resumo = S.histAba !== 'registro';
   const abas = `<div class="types" role="group" aria-label="Visão do histórico"><button type="button" class="btn" aria-pressed="${resumo}" data-a="histAba" data-aba="resumo">${ic('revisao')}<span>Resumo da limpeza</span></button><button type="button" class="btn" aria-pressed="${!resumo}" data-a="histAba" data-aba="registro">${ic('historico')}<span>Todas as alterações</span><span class="count-inline">${fmtInt(total)}</span></button></div>`;
-  const texto = (resumo ? 'Quanto já foi conferido, os problemas que restam comparados com os da carga do arquivo e o que mudou em cada tabela. ' : 'Cada mudança fica registrada aqui, com data e hora, linha, coluna, valor de antes e de depois, inclusive o que foi desfeito. ')
-    + 'O histórico fica salvo neste navegador junto com a sessão e sai num arquivo XLSX à parte, com o resumo e todas as alterações, também pela opção do Exportar.';
-  const topo = `<div class="page-header">${htmlArquivo()}<div class="page-title-row"><div class="page-title"><h1>Histórico</h1><span class="sub">${plural(total, 'registro', 'registros')} · ${plural(nCel, 'célula alterada', 'células alteradas')}</span></div><button type="button" class="btn" data-a="exportarHistorico"${total ? '' : ' disabled'}>${ic('exportar')}<span>Exportar histórico</span></button></div>${abas}
-      <p class="sub" style="margin:0 0 12px;line-height:1.5">${texto}</p></div>`;
+  const topo = `<div class="page-header">${htmlArquivo()}<div class="page-title-row"><div class="page-title"><h1>Histórico</h1><span class="sub">${plural(total, 'registro', 'registros')} · ${plural(nCel, 'célula alterada', 'células alteradas')}</span></div><button type="button" class="btn" data-a="exportarHistorico"${total ? '' : ' disabled'}>${ic('exportar')}<span>Exportar histórico</span></button></div>${abas}</div>`;
   return topo + (resumo ? `<div class="dups" data-scroll="hist">${htmlResumo()}</div>` : htmlRegistro());
 }
 const ordemTabelas = () => P.combinado ? ['pessoas', 'empresas', ...(P.t.financeiro ? ['financeiro'] : [])] : Object.keys(P.t);
@@ -4755,25 +4751,37 @@ function acoesPorTipo() {
   for (const e of P.log || []) { const t = TIPOS_ACAO.find(([, re]) => re.test(e.acao)), c = t ? t[0] : 'Ferramentas de limpeza'; if (c) n.set(c, (n.get(c) || 0) + 1); }
   return [...TIPOS_ACAO.map(t => t[0]), 'Ferramentas de limpeza'].filter(c => n.has(c)).map(c => [c, n.get(c)]);
 }
+/* Resumo da limpeza: seções na largura da página, uma por assunto (Grin 2.44, Resumo). As tabelas do arquivo
+   aparecem lado a lado só onde os números são os mesmos para todas: conferidas e alterações */
 function htmlResumo() {
   const log = P.log || [], carga = log.find(e => /^Arquivo carregado: /.test(e.acao)), ultima = [...log].reverse().find(e => e.itens.length);
   const info = ['Arquivo <b>' + esc(P.nome) + '</b>' + (P.planilha ? ', planilha ' + esc(P.planilha) : ''), carga ? 'carregado em ' + dataHora(carga.em) : '', ultima ? 'última alteração em ' + dataHora(ultima.em) : 'nenhuma alteração ainda'].filter(Boolean).join(' · ');
+  const xs = ordemTabelas().map(resumoDe), varias = xs.length > 1, icT = x => ic(x.k === 'tabela' ? 'tabela' : x.k, 18);
+  const comIni = xs.some(x => x.ini);
+  // conferidas: um indicador por tabela
+  const conf = `<div class="stat-grid">${xs.map(x => {
+    const pct = x.vivas ? Math.floor(x.conferidas / x.vivas * 100) : 0, falta = x.vivas - x.conferidas;
+    return `<div class="stat"><span class="stat-label"><span class="stat-icon">${icT(x)}</span>${esc(x.titulo)}</span><span class="stat-value">${pct}%</span><div class="progress" role="progressbar" aria-label="Linhas conferidas em ${esc(x.titulo)}" aria-valuemin="0" aria-valuemax="${x.vivas}" aria-valuenow="${x.conferidas}"><i style="width:${x.vivas ? x.conferidas / x.vivas * 100 : 0}%"></i></div><span class="stat-delta">${fmtInt(x.conferidas)} de ${plural(x.vivas, 'linha conferida', 'linhas conferidas')}</span>${falta ? `<button type="button" class="link" style="align-self:flex-start;text-align:left" data-a="verNaoConferidas" data-ent="${x.k}">${falta === 1 ? 'Ver a não conferida' : 'Ver as ' + fmtInt(falta) + ' não conferidas'}</button>` : ''}</div>`;
+  }).join('')}</div>`;
+  // problemas: uma tabela larga, um bloco por tabela do arquivo
+  const linha = (rot, ini, agora, cls = '') => `<tr${cls ? ` class="${cls}"` : ''}><td>${rot}</td>${comIni ? `<td class="numeric">${ini == null ? '—' : fmtInt(ini)}</td>` : ''}<td class="numeric"><b>${fmtInt(agora)}</b></td></tr>`;
+  const blocos = xs.map(x => {
+    const cab = varias || x.agora.comProblema || x.agora.info ? `<tr class="rgrupo"><th colspan="${comIni ? 3 : 2}"><span class="row" style="gap:8px">${icT(x)}${esc(x.titulo)}<span class="spacer"></span>${x.agora.comProblema || x.agora.info ? `<button type="button" class="btn xs" data-a="ir" data-tela="revisao" data-ent="${x.k}">${ic('revisao', 14)}Abrir a Revisão</button>` : ''}</span></th></tr>` : '';
+    const tipos = x.tipos.map(t => linha(`<span class="row" style="gap:8px;flex-wrap:nowrap"><span class="dot ${TOM[t.nivel]}" role="img" aria-label="${NIVEL[t.nivel]}" title="${NIVEL[t.nivel]}"></span><span>${esc(t.rot)}</span></span>`, x.ini ? t.ini : null, t.agora, t.agora ? '' : 'feito')).join('');
+    return cab + (tipos || `<tr><td colspan="${comIni ? 3 : 2}" class="text-secondary">Nenhum problema.</td></tr>`)
+      + linha('<b>Linhas com problema</b> <span class="text-secondary small">(crítico ou atenção)</span>', x.ini && x.ini.comProblema, x.agora.comProblema, 'total')
+      + linha('Grupos de possíveis duplicados', x.ini && x.ini.grupos, x.agora.grupos);
+  }).join('');
+  const probs = `<div class="table-wrap"><table class="table compact rtbl"><thead><tr><th>Linhas com cada problema</th>${comIni ? '<th class="numeric">Na carga</th>' : ''}<th class="numeric">Agora</th></tr></thead><tbody>${blocos}</tbody></table></div>${xs.some(x => !x.ini) ? '<p class="sub small">A contagem da carga não existe nesta sessão: ela foi aberta por uma versão anterior do Laika.</p>' : ''}`;
+  // alterações: uma linha por número, uma coluna por tabela
+  const mud = [['Linhas editadas', x => x.editadas], ['Células alteradas', x => x.celulas], ['Linhas excluídas', x => x.excluidas], ['Linhas mescladas em outra', x => x.mescladas], ...(P.combinado ? [['Pessoas com a empresa trocada', x => x.k === 'pessoas' ? x.trocasEmp : null]] : []), ['Pares marcados como não duplicados', x => x.naoDup]];
+  const alt = `<div class="table-wrap"><table class="table compact rtbl"><thead><tr><th></th>${xs.map(x => `<th class="numeric">${esc(x.titulo)}</th>`).join('')}</tr></thead><tbody>${mud.map(([l, f]) => `<tr><td>${l}</td>${xs.map(x => { const v = f(x); return `<td class="numeric">${v == null ? '<span class="text-secondary">—</span>' : `<b>${fmtInt(v)}</b>`}</td>`; }).join('')}</tr>`).join('')}</tbody></table></div>`;
+  const cols = xs.flatMap(x => x.porCol.map(([c, n]) => [x.titulo, c, n])).sort((a, b) => b[2] - a[2]), max = cols.length ? cols[0][2] : 1;
+  const porCol = cols.length ? `<h3 class="overline sec-t">Células alteradas por coluna</h3><div class="table-wrap"><table class="table compact rtbl"><thead><tr><th>Coluna</th>${varias ? '<th>Tabela</th>' : ''}<th class="rc-barra"></th><th class="numeric">Células</th></tr></thead><tbody>${cols.map(([t, c, n]) => `<tr><td>${esc(c)}</td>${varias ? `<td class="text-secondary">${esc(t)}</td>` : ''}<td class="rc-barra"><span class="rc-b" aria-hidden="true"><span style="width:${Math.max(4, Math.round(n / max * 100))}%"></span></span></td><td class="numeric"><b>${fmtInt(n)}</b></td></tr>`).join('')}</tbody></table></div>` : '';
   const acoes = acoesPorTipo();
-  const cartaoAcoes = `<section class="card rcard"><h2 class="rtit">${ic('historico', 18)}Ações registradas</h2><p class="sub small" style="margin:0;line-height:1.45">Quantas vezes cada tipo de ação foi feito, contando também as que depois foram desfeitas. O detalhe de cada uma está em Todas as alterações.</p>${acoes.length ? `<table class="table compact rtbl"><tbody>${acoes.map(([c, n]) => `<tr><td>${esc(c)}</td><td class="numeric"><b>${fmtInt(n)}</b></td></tr>`).join('')}</tbody></table>` : '<div class="sub">Nenhuma ação ainda.</div>'}</section>`;
-  return `<div class="resumo"><div class="sub">${info}</div><div class="rgrid">${ordemTabelas().map(k => cartaoResumo(resumoDe(k))).join('')}${cartaoAcoes}</div></div>`;
-}
-function cartaoResumo(x) {
-  const pct = x.vivas ? Math.floor(x.conferidas / x.vivas * 100) : 0, falta = x.vivas - x.conferidas;
-  const conf = `<div class="rbox"><div class="overline sec-t" style="margin:0">Conferidas</div><div class="rnum">${fmtInt(x.conferidas)} <span class="sub">de ${plural(x.vivas, 'linha', 'linhas')} (${pct}%)</span></div><div class="progress" role="progressbar" aria-label="Linhas conferidas em ${esc(x.titulo)}" aria-valuemin="0" aria-valuemax="${x.vivas}" aria-valuenow="${x.conferidas}"><i style="width:${x.vivas ? x.conferidas / x.vivas * 100 : 0}%"></i></div>${falta ? `<button type="button" class="btn xs" data-a="verNaoConferidas" data-ent="${x.k}">${ic('check', 14)}${falta === 1 ? 'Ver a linha não conferida' : 'Ver as ' + fmtInt(falta) + ' linhas não conferidas'}</button>` : x.vivas ? `<div class="sub small text-ok">Todas as linhas estão conferidas.</div>` : ''}</div>`;
-  const linha = (rot, ini, agora, cls = '') => `<tr${cls ? ` class="${cls}"` : ''}><td>${rot}</td>${x.ini ? `<td class="numeric">${fmtInt(ini)}</td>` : ''}<td class="numeric"><b>${fmtInt(agora)}</b></td></tr>`;
-  const tipos = x.tipos.map(t => linha(`<span class="row" style="gap:8px;flex-wrap:nowrap"><span class="dot ${TOM[t.nivel]}" role="img" aria-label="${NIVEL[t.nivel]}" title="${NIVEL[t.nivel]}"></span><span>${esc(t.rot)}</span></span>`, t.ini, t.agora, t.agora ? '' : 'feito')).join('');
-  const probs = `<table class="table compact rtbl"><thead><tr><th>Linhas com cada problema</th>${x.ini ? '<th class="numeric">Na carga</th>' : ''}<th class="numeric">Agora</th></tr></thead><tbody>${tipos || `<tr><td colspan="${x.ini ? 3 : 2}" class="text-secondary">Nenhum problema.</td></tr>`}${linha('<b>Linhas com problema</b> <span class="text-secondary small">(crítico ou atenção)</span>', x.ini && x.ini.comProblema, x.agora.comProblema, 'total')}${linha('Grupos de possíveis duplicados', x.ini && x.ini.grupos, x.agora.grupos)}</tbody></table>`;
-  const semIni = x.ini ? '' : '<div class="sub small">A contagem da carga não existe nesta sessão: ela foi aberta por uma versão anterior do Laika.</div>';
-  const revisao = x.agora.comProblema || x.agora.info ? `<button type="button" class="btn xs" style="align-self:flex-start" data-a="ir" data-tela="revisao" data-ent="${x.k}">${ic('revisao', 14)}Abrir a Revisão</button>` : '';
-  const mud = [['Linhas editadas', x.editadas], ['Células alteradas', x.celulas], ['Linhas excluídas', x.excluidas], ['Linhas mescladas em outra', x.mescladas], ...(P.combinado && x.k === 'pessoas' ? [['Pessoas com a empresa trocada', x.trocasEmp]] : []), ['Pares marcados como não duplicados', x.naoDup]];
-  const max = x.porCol.length ? x.porCol[0][1] : 1;
-  const porCol = x.porCol.length ? `<div class="overline sec-t">Células alteradas por coluna</div><ul class="rcols">${x.porCol.map(([c, n]) => `<li><span class="rc-n" title="${esc(c)}">${esc(c)}</span><span class="rc-b" aria-hidden="true"><span style="width:${Math.max(4, Math.round(n / max * 100))}%"></span></span><span class="tabular">${fmtInt(n)}</span></li>`).join('')}</ul>` : '';
-  return `<section class="card rcard"><h2 class="rtit">${ic(x.k === 'tabela' ? 'tabela' : x.k, 18)}${esc(x.titulo)} <span class="sub" style="font-weight:400">${plural(x.vivas, 'linha', 'linhas')}</span></h2>${conf}<div class="overline sec-t">Problemas</div>${probs}${semIni}${revisao}<div class="overline sec-t">Alterações</div><table class="table compact rtbl"><tbody>${mud.map(([l, n]) => `<tr><td>${l}</td><td class="numeric"><b>${fmtInt(n)}</b></td></tr>`).join('')}</tbody></table>${porCol}</section>`;
+  const tabAcoes = acoes.length ? `<div class="table-wrap"><table class="table compact rtbl"><thead><tr><th>Tipo de ação</th><th class="numeric">Vezes</th></tr></thead><tbody>${acoes.map(([c, n]) => `<tr><td>${esc(c)}</td><td class="numeric"><b>${fmtInt(n)}</b></td></tr>`).join('')}</tbody></table></div>` : '<p class="sub">Nenhuma ação ainda.</p>';
+  const sec = (t, h) => `<section class="rsec"><h2 class="rtit">${t}</h2>${h}</section>`;
+  return `<div class="resumo"><p class="sub">${info}</p>${sec('Conferidas', conf)}${sec('Problemas', probs)}${sec('Alterações', alt + porCol)}${sec('Ações registradas', tabAcoes)}</div>`;
 }
 function htmlRegistro() {
   const log = P.log || [], total = log.length, porPag = 50;

@@ -2,6 +2,15 @@
 
 Formato baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/). Versionamento semântico.
 
+## [1.1.11] - 2026-11-25
+
+### Alterado
+- Grin 2.44.
+- Tela inicial só com o título e a área do arquivo. Saíram a descrição, o aviso sobre o navegador e a lista de formatos; o link para os dados de exemplo fica dentro da área do arquivo, centralizado com o resto.
+- Revisão com duas linhas de filtros. A primeira junta a tabela (só ícone e contagem, com o nome no tooltip), os níveis e as correções em lote; a segunda é a busca. No celular, os botões com ícone mostram só o ícone e a contagem. Em Duplicados, a tabela e os motivos ficam na mesma linha.
+- Busca com o texto "Buscar na tabela"; a busca diminui para a barra caber numa linha.
+- Histórico › Resumo da limpeza em seções na largura da página, no lugar de um cartão estreito por tabela. Conferidas em indicadores, problemas numa tabela só com um bloco por tabela do arquivo, alterações numa tabela com uma coluna por tabela, células alteradas por coluna e ações registradas. Saíram os parágrafos explicativos do topo.
+
 ## [1.1.10] - 2026-11-24
 
 ### Alterado
