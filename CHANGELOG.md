@@ -2,6 +2,11 @@
 
 Formato baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/). Versionamento semântico.
 
+## [1.1.20] - 2026-11-25
+
+### Alterado
+- A busca da tabela mostra "Buscar", que cabe inteiro no celular. O nome completo, "Buscar na tabela", continua para leitores de tela.
+
 ## [1.1.19] - 2026-11-25
 
 ### Alterado

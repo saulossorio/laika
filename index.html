@@ -4025,7 +4025,7 @@ let D = null;  // tabela em uso, P.t[S.ent]: { k, modelo, cols, rows, naoDup, oc
 let A = null;  // análise da tabela em uso (seção 7)
 /* Cada linha: { id, t (tabela), linha (no arquivo), v (valores), o (originais do que foi editado), del, mesclada,
    emp (pessoa: id da empresa), var (empresa: outras escritas no arquivo), ok (empresa: escritas já conferidas) } */
-const VERSAO = '1.1.19'; // igual à última versão do CHANGELOG.md
+const VERSAO = '1.1.20'; // igual à última versão do CHANGELOG.md
 let tema = lerLS('laika-tema') || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
 document.documentElement.dataset.theme = tema;
 /* Painel Aparência do Grin: o tema e a densidade escolhidos ali passam a ser os do Laika (a densidade só se muda ali, Grin 2.40).
@@ -4640,7 +4640,7 @@ function htmlLista() {
   const nFiltros = nCond - (S.q ? 1 : 0);
   const btnFiltros = `<button type="button" class="btn filters-toggle" data-a="dobrarFiltros" aria-expanded="${!!S.filtrosAbertos}" aria-label="Filtros${nFiltros ? ', ' + plural(nFiltros, 'ligado', 'ligados') : ''}">${ic('filtro')}${nFiltros ? `<span class="count-inline">${fmtInt(nFiltros)}</span>` : ''}</button>`;
   const barra = `<div class="toolbar list-toolbar" role="toolbar" aria-label="Busca, filtros e visualização">
-    <div class="search">${ic('busca')}<input id="busca" class="input" type="text" role="searchbox" aria-label="Buscar na tabela" placeholder="Buscar na tabela" value="${esc(S.qIn)}" data-in="busca" autocomplete="off">${S.qIn ? `<button type="button" class="btn ghost icon xs" data-a="limparBusca" aria-label="Limpar busca">${ic('x')}</button>` : ''}</div>
+    <div class="search">${ic('busca')}<input id="busca" class="input" type="text" role="searchbox" aria-label="Buscar na tabela" placeholder="Buscar" value="${esc(S.qIn)}" data-in="busca" autocomplete="off">${S.qIn ? `<button type="button" class="btn ghost icon xs" data-a="limparBusca" aria-label="Limpar busca">${ic('x')}</button>` : ''}</div>
     ${btnFiltros}<span class="filters-extra">${chips}</span><button type="button" class="btn dashed filters-extra" data-a="novoFiltro" data-pop-anchor>${ic('mais')}<span class="btn-text">Filtro</span></button>
     ${!revisao ? `<button type="button" class="btn${S.soProblemas ? '' : ' dashed'} filters-extra" aria-pressed="${S.soProblemas}" data-a="soProblemas">${S.soProblemas ? ic('check') : ''}<span>Só com problemas</span></button>` : ''}
     <button type="button" class="btn${S.naoConferidas ? '' : ' dashed'} filters-extra" aria-pressed="${S.naoConferidas}" data-a="naoConferidas" title="Só as linhas que ainda não foram marcadas como conferidas">${S.naoConferidas ? ic('check') : ''}<span>Não conferidas</span></button>
