@@ -2,6 +2,11 @@
 
 Formato baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/). Versionamento semântico.
 
+## [1.1.17] - 2026-11-25
+
+### Alterado
+- Grin 2.49. Na tela inicial, a área do arquivo volta à altura própria; o espaço livre abaixo fica vazio.
+
 ## [1.1.16] - 2026-11-25
 
 ### Alterado
