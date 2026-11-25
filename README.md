@@ -12,7 +12,16 @@ O caso principal é o relatório "Vínculos Empresariais" do Sirius, que vem com
 4. Revise os problemas, do mais grave ao mais leve: **Crítico**, **Atenção**, **Informação**. Nada é corrigido sozinho: use as ferramentas de limpeza (separar valores, trocar valores, completar zeros, mesclar duplicados) ou edite a célula.
 5. Exporte. Antes de gerar o arquivo, o Laika avisa quantas linhas o Canis recusaria.
 
-Para experimentar sem dados reais, abra `tests/dados/sirius-vinculos-ficticio.xls`.
+Para experimentar sem dados reais, use o link "abra os dados de exemplo" na tela inicial ou abra `tests/dados/sirius-vinculos-ficticio.xls`.
+
+## Na tela
+
+- **Tour guiado:** abre sozinho na primeira visita e fica na barra lateral. É um exercício com os dados de exemplo: abrir uma linha com problema, corrigir, marcar como conferida, ver a Revisão, os Duplicados e a exportação. Feita cada ação, o tour espera o Próximo.
+- **Tabela:** a coluna Saúde mostra o problema mais grave da linha; a coluna estreita ao lado marca as linhas conferidas. O número da linha na planilha original fica escondido e se liga em Colunas, "Linha da planilha".
+- **Colunas:** o menu mostra ou esconde cada coluna, muda a ordem (arrastar pela alça ou Alt e setas) e fixa colunas à esquerda. "Restaurar" volta à ordem da importação. Tudo fica salvo com a sessão.
+- **Revisão:** só as linhas com problema, com os filtros em até duas linhas: as tabelas em ícones (o nome no tooltip) e os níveis Crítico, Atenção e Informação, cada um com o menu dos tipos de problema.
+- **Ferramentas de limpeza:** um botão só com ícone, ao lado de Colunas. As correções em várias linhas são feitas por coluna e com prévia; não há correção em lote pelos níveis.
+- **Duplicados**, **Histórico** (com o resumo da limpeza) e **Exportar**, que avisa quantas linhas o Canis recusaria.
 
 ## O que o Laika confere
 
@@ -34,7 +43,7 @@ Cada problema tem um nível de severidade. A lista completa, com exemplos e a fu
 
 | Caminho | O que é |
 |---|---|
-| `index.html` | O Laika inteiro: o Grin 2.49 (estilos e scripts, copiados da release), as regras (`<script id="regras">`) e a tela |
+| `index.html` | O Laika inteiro: o Grin 2.50 (estilos e scripts, copiados da release), as regras (`<script id="regras">`) e a tela |
 | `docs/regras.md` | Todas as regras, agrupadas por severidade |
 | `docs/formato-sirius.md` | Como é o relatório do Sirius e como o Laika o lê |
 | `docs/decisoes.md` | Por que o Laika é assim, e de onde vêm os IDs (`RN-*`, `D-*`) |

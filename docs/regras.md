@@ -97,7 +97,7 @@ Duplicados formam grupos: se A repete B e B repete C, os três aparecem juntos. 
 | Mesmo nome | Atenção | nome e sobrenome normalizados |
 | Nome de empresa semelhante | Atenção | trigramas, semelhança de 0,6 ou mais |
 
-- **Não é duplicado:** a pessoa marca um par e o aviso não volta para ele. A marca fica guardada na sessão salva no navegador (`naoDup`).
+- **Não são duplicados:** a pessoa marca o grupo (ou um par) e o aviso não volta para ele. A marca fica guardada na sessão salva no navegador (`naoDup`).
 - **Limite:** num conjunto de mais de 25 linhas com a mesma chave, cada linha se liga só à primeira, para não gerar milhares de pares.
 - **Tabelas livres** (sem modelo de colunas): o critério vem do tipo escolhido para a coluna (e-mail, CNPJ, LinkedIn, site, empresa, nome).
 - **Diferença para o Canis:** o Canis só conta o mesmo nome com vínculo atual na mesma empresa e compara país, tipo e valor da identificação (RN-EMP-003). O Laika compara o nome em todo o arquivo e só o valor da identificação (D-58).

@@ -2,6 +2,15 @@
 
 Formato baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/). Versionamento semântico.
 
+## [1.1.18] - 2026-11-25
+
+### Adicionado
+- Tour guiado, com o tour do Grin. Abre sozinho na primeira visita e fica na barra lateral, em "Tour guiado". É um exercício com os dados de exemplo: abrir o exemplo, ver a tabela e a coluna Saúde, abrir uma linha com problema, corrigir um campo, marcar como conferida, fechar a linha, ver os filtros da Revisão, um grupo de Duplicados e o botão Exportar. Feita cada ação, o cartão diz "Feito" e espera o Próximo.
+
+### Alterado
+- Grin 2.50.
+- Documentação: o README ganhou a seção "Na tela" (tour, colunas Saúde e conferida, Linha da planilha, menu Colunas, filtros da Revisão, Ferramentas sem correção em lote); `docs/decisoes.md` e `docs/regras.md` usam o nome atual do botão "Não são duplicados".
+
 ## [1.1.17] - 2026-11-25
 
 ### Alterado

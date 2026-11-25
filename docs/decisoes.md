@@ -26,7 +26,7 @@ Os dois compartilham colunas, listas e detecção de erros, e diferem no uso, na
 |---|---|---|
 | Arquivo HTML único, sem bibliotecas e sem etapa de build | Abre com duplo clique, funciona sem internet e qualquer pessoa pode ler o código. O código é JavaScript puro | `index.html` |
 | Dados só no navegador | Nada é enviado a servidor. A sessão fica salva no armazenamento local do navegador | Não há `fetch`, XHR nem recurso externo |
-| Só sinaliza (D-55) | A análise não corrige nem mescla sozinha: quem limpa decide | Ferramentas de limpeza e botão "Não é duplicado" |
+| Só sinaliza (D-55) | A análise não corrige nem mescla sozinha: quem limpa decide | Ferramentas de limpeza e botão "Não são duplicados" |
 | Campo vazio não é problema (D-58, 15/10/2026) | Uma linha pode ter só a empresa ou só a pessoa, como no relatório do Sirius. Exceções, que são Crítico desde 20/10/2026: pessoa sem nome, empresa sem razão social, empresa sem relacionamento | [docs/regras.md](regras.md) |
 | Campos obrigatórios do Canis (D-09, 20/10/2026) | Pessoa: nome, sobrenome, e-mail, e cargo quando há empresa. Empresa: nome comercial, razão social, país e relacionamento. Categoria é opcional (RN-EMP-006). Em 21/10/2026 a identificação da empresa deixou de ser obrigatória: vira advertência | Aviso da exportação |
 | Identificação sem tipo (D-10, 20/10/2026) | Empresa do Brasil, ou sem país, sem tipo de identificação é tratada como CNPJ. CNPJ aceita letras (formato alfanumérico de 2026) e usa módulo 11 | `erroIdent`, `cnpjDV` |
@@ -56,4 +56,4 @@ Os códigos que aparecem no código e nos documentos vêm da especificação do 
 
 - **Prefixo dos arquivos exportados:** hoje saem como `canis_pessoas_…`, porque são o layout de importação do Canis. Se o Laika passar a servir a outros destinos, o prefixo e o nome do histórico (`canis_historico_…`) podem mudar.
 - **Regras do Canis sem equivalente no Laika:** RN-PES-010 e RN-VIN-005. Veja a tabela em [regras.md](regras.md#regras-do-canis-que-o-laika-não-aplica).
-- **Código-fonte separado do HTML gerado:** hoje as regras, o CSS e a tela vivem juntos em `index.html` (cerca de 2.850 linhas, algumas muito longas). Separar em arquivos de fonte mais um passo que monta o HTML único melhora os diffs no GitHub, mas muda como o arquivo é editado. Fica para quando houver necessidade.
+- **Código-fonte separado do HTML gerado:** hoje as regras, o CSS e a tela vivem juntos em `index.html` (cerca de 5.800 linhas, algumas muito longas). Separar em arquivos de fonte mais um passo que monta o HTML único melhora os diffs no GitHub, mas muda como o arquivo é editado. Fica para quando houver necessidade.

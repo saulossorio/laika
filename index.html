@@ -9,12 +9,12 @@
   Laika: ferramenta para analisar, limpar e exportar tabelas importadas.
   Um único arquivo. Abra no Chrome, Edge, Firefox ou Safari recentes. Funciona sem internet.
   Os dados ficam só neste computador, no armazenamento do navegador, até você fechar a tabela.
-  Visual: Grin 2.49, copiado de https://github.com/saulossorio/grin/releases/tag/v2.49 (dist/grin.inline.css e dist/grin.js).
+  Visual: Grin 2.50, copiado de https://github.com/saulossorio/grin/releases/tag/v2.50 (dist/grin.inline.css e dist/grin.js).
   Regras e listas: as do Canis (docs/regras.md).
 -->
-<!-- Grin 2.49, copiado de https://github.com/saulossorio/grin/releases/tag/v2.49 -->
+<!-- Grin 2.50, copiado de https://github.com/saulossorio/grin/releases/tag/v2.50 -->
 <style>
-/* Grin 2.49 · CSS com as fontes dentro (Geist e Geist Mono, licença SIL OFL 1.1) · https://github.com/saulossorio/grin
+/* Grin 2.50 · CSS com as fontes dentro (Geist e Geist Mono, licença SIL OFL 1.1) · https://github.com/saulossorio/grin
    Gerado por tools/bundle.mjs a partir dos arquivos do repositório. Não edite à mão. */
 /* ---------- styles/fonts.css ---------- */
 /* Grin: fonts. Geist and Geist Mono, variable weight 100 to 900, from the official release
@@ -1885,11 +1885,11 @@ body.tour-open .menu, body.tour-open .popover { z-index: 125; }
 .page-header .page-description, .start-screen-body .lead { max-width: var(--size-prose); }
 </style>
 <script>
-/* Grin 2.49 · comportamentos em JavaScript; inclua com <script src="grin.js" defer> · https://github.com/saulossorio/grin
+/* Grin 2.50 · comportamentos em JavaScript; inclua com <script src="grin.js" defer> · https://github.com/saulossorio/grin
    Gerado por tools/bundle.mjs a partir dos arquivos do repositório. Não edite à mão. */
 'use strict';
 const Grin = (window.Grin = window.Grin || {});
-Grin.version = '2.49';
+Grin.version = '2.50';
 
 // ---------- scripts/utils.js ----------
 {
@@ -2878,7 +2878,8 @@ function startTour(steps, { onEnd } = {}) {
     if (sheet) { card.style.left = `${m}px`; card.style.right = `${m}px`; } else card.style.right = 'auto';
     const cw = card.offsetWidth, ch = card.offsetHeight, clamp = (v, a, b) => Math.min(Math.max(v, a), Math.max(a, b));
     let x, y;
-    if (sheet) { if (!T.side) T.side = r && f.y + f.h / 2 > vh / 2 ? 'top' : 'bottom'; x = m; y = T.side === 'top' ? m : vh - ch - m; } // the side stays fixed for the step
+    // the side is chosen once the target is found, and stays fixed for the step
+    if (sheet) { if (!T.side && r) T.side = f.y + f.h / 2 > vh / 2 ? 'top' : 'bottom'; x = m; y = T.side === 'top' ? m : vh - ch - m; }
     else if (!r) { x = (vw - cw) / 2; y = (vh - ch) / 2; }
     else if (vh - (f.y + f.h) >= ch + 2 * m) { x = clamp(f.x + f.w / 2 - cw / 2, m, vw - cw - m); y = f.y + f.h + 14; }
     else if (f.y >= ch + 2 * m) { x = clamp(f.x + f.w / 2 - cw / 2, m, vw - cw - m); y = f.y - ch - 14; }
@@ -3654,6 +3655,7 @@ const ICONES_GRIN = {
   desligar: 'unlink',
   abrir: 'arrow-up-right',
   historico: 'history',
+  mapa: 'map',
 };
 const ICONES = Object.fromEntries(Object.entries(ICONES_GRIN).map(([n, g]) => [n, Grin.ICONS[g]]));
 
@@ -4013,7 +4015,7 @@ let D = null;  // tabela em uso, P.t[S.ent]: { k, modelo, cols, rows, naoDup, oc
 let A = null;  // análise da tabela em uso (seção 7)
 /* Cada linha: { id, t (tabela), linha (no arquivo), v (valores), o (originais do que foi editado), del, mesclada,
    emp (pessoa: id da empresa), var (empresa: outras escritas no arquivo), ok (empresa: escritas já conferidas) } */
-const VERSAO = '1.1.17'; // igual à última versão do CHANGELOG.md
+const VERSAO = '1.1.18'; // igual à última versão do CHANGELOG.md
 let tema = lerLS('laika-tema') || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
 document.documentElement.dataset.theme = tema;
 /* Painel Aparência do Grin: o tema e a densidade escolhidos ali passam a ser os do Laika (a densidade só se muda ali, Grin 2.40).
@@ -4398,7 +4400,7 @@ function htmlLateral() {
     pe = `<button type="button" class="nav-item small" data-a="importarOutro"${rot('Importar outro arquivo')}>${ic('importar')}<span class="label">Importar outro arquivo</span></button><button type="button" class="nav-item small" data-a="fechar"${rot('Fechar tabela')}>${ic('x')}<span class="label">Fechar tabela</span></button>`;
   } else itens = `<button type="button" class="nav-item" aria-current="page" data-a="ir" data-tela="${S.tela}"${rot(rotuloImport())}>${ic('importar')}<span class="label">${rotuloImport()}</span></button>`;
   const marca = '<svg class="app-logo-mark" viewBox="0 0 102 58.89" aria-hidden="true" focusable="false"><polygon points="0,29.44 34,29.44 17,0"/><polygon points="68,29.44 102,29.44 85,0"/><polygon points="34,29.44 68,29.44 51,58.89"/></svg>'; // três triângulos iguais: orelhas e rosto
-  return `<nav class="sidebar" id="lateral" aria-label="Navegação principal"><div class="app-logo">${marca}<span>Laika</span><span class="tag">${VERSAO}</span></div>${itens}<div class="sidebar-footer">${pe}<button type="button" class="nav-item small" data-theme-toggle>${ic(tema === 'dark' ? 'sol' : 'lua')}<span class="label">${tema === 'dark' ? 'Tema claro' : 'Tema escuro'}</span></button><button type="button" class="nav-item small" data-popover="aparencia" aria-expanded="false">${ic('ajustes')}<span class="label">Aparência</span></button></div></nav>`;
+  return `<nav class="sidebar" id="lateral" aria-label="Navegação principal"><div class="app-logo">${marca}<span>Laika</span><span class="tag">${VERSAO}</span></div>${itens}<div class="sidebar-footer">${pe}<button type="button" class="nav-item small" data-a="tour">${ic('mapa')}<span class="label">Tour guiado</span></button><button type="button" class="nav-item small" data-theme-toggle>${ic(tema === 'dark' ? 'sol' : 'lua')}<span class="label">${tema === 'dark' ? 'Tema claro' : 'Tema escuro'}</span></button><button type="button" class="nav-item small" data-popover="aparencia" aria-expanded="false">${ic('ajustes')}<span class="label">Aparência</span></button></div></nav>`;
 }
 // Arquivo aberto e desfazer/refazer: no cabeçalho de cada tela de trabalho (Grin: as telas do app não têm barra superior)
 function htmlArquivo() {
@@ -4419,7 +4421,7 @@ function htmlInicio() {
     ${s ? `<div class="card resume">${ic('arquivo', 20)}<div style="flex:1;min-width:0"><b>${esc(s.nome)}</b><div class="sub">${esc(s.resumo)}</div><div class="sub">Salva em ${dataHora(s.salvoEm)}</div></div><button type="button" class="btn" data-a="descartarSessao">Descartar</button><button type="button" class="btn primary" data-a="continuarSessao">Continuar</button></div>` : ''}
     <div class="dropzone${S.arrastando ? ' over' : ''}">${ic('importar', 24)}<b>Arraste um arquivo CSV ou XLSX para cá ou</b><button type="button" class="btn${s ? '' : ' primary'}" data-a="escolherArquivo">Escolher arquivo</button><small>ou <button type="button" class="link" data-a="exemplo">abra os dados de exemplo</button></small></div>
     </div>
-    <footer class="app-footer"><span><b>Laika ${VERSAO}</b> · por Saúl Ossorio</span><span>Feito com <a href="https://saulossorio.github.io/grin/">Grin 2.49</a></span></footer>
+    <footer class="app-footer"><span><b>Laika ${VERSAO}</b> · por Saúl Ossorio</span><span>Feito com <a href="https://saulossorio.github.io/grin/">Grin 2.50</a></span></footer>
   </div>`;
 }
 
@@ -5767,6 +5769,47 @@ function exemploCSV() {
   p('João Pedro', 'Vieira', 'joao.vieira@kappaseguranca.example', 'kappa', 'Gerente de Segurança', 'Gerente', '3 Gerência', '+55 61 99000-0136', '', 'Brasília');
   return L.map(l => l.map(v => /[;"\r\n]/.test(v) ? '"' + v.replace(/"/g, '""') + '"' : v).join(';')).join('\r\n');
 }
+/* Tour guiado (Grin, startTour): um exercício com os dados de exemplo. Quem navega, clica e corrige é a pessoa; o tour
+   não troca de tela nem muda dados sozinho. Feita a ação de um passo, o cartão diz "Feito" e espera o Próximo.
+   Cada passo: titulo, texto, acao (o que a pessoa faz), alvo (seletores ou funções, em ordem de preferência),
+   clique (espera o clique no alvo) e tarefa (função que diz se a pessoa já fez). Ao mudar algo que o tour mostra, atualize o passo. */
+const TOUR_CHAVE = 'laika-tour';
+const linhaAberta = () => S.gaveta && D ? linhaPorId(S.gaveta) : null;
+const TOUR = [
+  { titulo: 'Laika', texto: 'Ferramenta para limpar planilhas de pessoas e empresas antes de importar. O tour usa os dados de exemplo e não mexe em nenhum arquivo seu.' },
+  { titulo: 'Dados de exemplo', texto: 'Uma lista de inscritos com erros comuns: e-mails inválidos, nomes em maiúsculas, telefones incompletos e pessoas repetidas.',
+    acao: 'Clique em abra os dados de exemplo', alvo: ['#app [data-a="exemplo"]'], tarefa: () => !!P && S.tela !== 'inicio' && S.tela !== 'mapear' },
+  { titulo: 'Tabela', texto: 'Uma linha por registro da planilha. Células com problema ficam coloridas: vermelho é crítico, amarelo é atenção.', alvo: ['#app .wrap'] },
+  { titulo: 'Saúde', texto: 'O problema mais grave de cada linha. Ao lado, a coluna estreita marca as linhas já conferidas.', alvo: ['#app .wrap thead th:nth-child(2)'] },
+  { titulo: 'Abrir uma linha', texto: 'A linha abre ao lado, com os problemas e os campos para corrigir.',
+    acao: 'Clique numa linha com problema crítico', alvo: [() => $('#app .wrap tbody tr:has(.cell-crit)'), '#app .wrap tbody tr'], tarefa: () => !!linhaAberta() },
+  { titulo: 'Corrigir', texto: 'Cada problema aparece junto do campo. A mudança vai para o histórico e pode ser desfeita.',
+    acao: 'Corrija um dos campos marcados', alvo: ['.laika-drawer .drawer-body'], tarefa: () => { const r = linhaAberta(); return !!r && Object.keys(r.o).length > 0; } },
+  { titulo: 'Conferida', texto: 'Marca que a linha foi revisada, com ou sem mudança. O filtro Não conferidas mostra o que falta.',
+    acao: 'Clique em Conferida', alvo: ['#dr-conf'], tarefa: () => { const r = linhaAberta(); return !!r && !!r.conf; } },
+  { titulo: 'Fechar a linha', texto: 'A tabela volta com a linha corrigida.', acao: 'Clique no X', alvo: ['#dr-fechar'], tarefa: () => !S.gaveta },
+  { titulo: 'Revisão', texto: 'Só as linhas com problema, das mais graves para as mais leves.', acao: 'Clique em Revisão', alvo: ['#lateral [data-tela="revisao"]'], clique: true },
+  { titulo: 'Filtros da revisão', texto: 'Os ícones escolhem a tabela: pessoas ou empresas. Os níveis filtram por gravidade e, no menu de cada um, por tipo de problema.', alvo: ['#app .filtros-rev'] },
+  { titulo: 'Duplicados', texto: 'Registros que parecem a mesma pessoa ou empresa.', acao: 'Clique em Duplicados', alvo: ['#lateral [data-tela="duplicados"]'], clique: true },
+  { titulo: 'Grupo de duplicados', texto: 'As linhas parecidas ficam lado a lado, com o motivo. Comparar e mesclar escolhe o valor de cada campo; Não são duplicados tira o grupo da lista.', alvo: ['#app .dcard'] },
+  { titulo: 'Exportar', texto: 'Gera a planilha limpa neste computador, em XLSX ou CSV. Nada é enviado pela internet.', alvo: ['#app [data-a="exportar"]'] },
+  { titulo: 'Fim do tour', texto: 'O tour pode ser repetido por este botão.', alvo: ['#lateral [data-a="tour"]'] }
+];
+let tourAtual = null;
+function abrirTour(i = 0) {
+  if (tourAtual) return tourAtual.go(i);
+  S.pop = null; Grin.hideTip?.(); render();
+  tourAtual = Grin.startTour(TOUR.map(p => ({ title: p.titulo, text: p.texto, target: p.alvo, action: p.acao, click: p.clique, done: p.tarefa })), {
+    onEnd: () => { tourAtual = null; gravarLS(TOUR_CHAVE, 'visto'); }
+  });
+  if (i) tourAtual.go(i);
+}
+// primeira visita: o tour abre sozinho uma vez, na tela inicial (os testes automatizados o abrem só quando pedem)
+function tourInicial() {
+  if (navigator.webdriver || P || S.sessao || lerLS(TOUR_CHAVE)) return;
+  abrirTour(0);
+}
+AC.tour = () => abrirTour(0);
 (async () => { // procura uma sessão salva neste navegador
   const s = await lerSessao();
   if (s && !P) {
@@ -5774,6 +5817,7 @@ function exemploCSV() {
     const resumo = s.P.combinado ? plural(n('pessoas'), 'pessoa', 'pessoas') + ' · ' + plural(n('empresas'), 'empresa', 'empresas') + (T.financeiro ? ' · ' + plural(n('financeiro'), 'valor financeiro', 'valores financeiros') : '') : plural(n(Object.keys(T)[0]), 'linha', 'linhas');
     S.sessao = { nome: s.P.nome, resumo, salvoEm: s.salvoEm, dados: s.P }; render();
   }
+  setTimeout(tourInicial, 400);
 })();
 render();
 </script>
