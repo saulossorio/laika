@@ -2,6 +2,12 @@
 
 Formato baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/). Versionamento semântico.
 
+## [1.1.21] - 2026-11-25
+
+### Adicionado
+- `AGENTS.md` (com `CLAUDE.md` apontando para ele): o que é o Laika, como o `index.html` está organizado, como a tela funciona (estado, eventos, histórico, gravação, tour), regras que não podem quebrar, a relação com o Grin, testes e o que fazer ao terminar uma mudança.
+- `tools/atualizar-grin.cjs`: troca o Grin embutido por outra versão publicada, atualiza a versão nos documentos e confere as fontes.
+
 ## [1.1.20] - 2026-11-25
 
 ### Alterado

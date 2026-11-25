@@ -47,6 +47,8 @@ Cada problema tem um nível de severidade. A lista completa, com exemplos e a fu
 | `docs/regras.md` | Todas as regras, agrupadas por severidade |
 | `docs/formato-sirius.md` | Como é o relatório do Sirius e como o Laika o lê |
 | `docs/decisoes.md` | Por que o Laika é assim, e de onde vêm os IDs (`RN-*`, `D-*`) |
+| `tools/atualizar-grin.cjs` | Troca o Grin embutido no `index.html` por outra versão publicada |
+| `AGENTS.md` | Instruções para agentes de IA que forem mudar o código. O `CLAUDE.md` aponta para ele |
 | `tests/` | Testes das regras e dados fictícios. Veja [tests/README.md](tests/README.md) |
 | `assets/laika-logo.svg` | Logo |
 | `assets/OFL.txt` | Licença das fontes Geist e Geist Mono, que vêm com o Grin |
