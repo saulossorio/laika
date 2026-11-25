@@ -2,6 +2,11 @@
 
 Formato baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/). Versionamento semântico.
 
+## [1.1.15] - 2026-11-25
+
+### Alterado
+- A coluna Linha (o número na planilha original) fica escondida; quem precisa liga em Colunas, "Linha da planilha". A marca de conferida ganhou uma coluna estreita própria, logo depois de Saúde.
+
 ## [1.1.14] - 2026-11-25
 
 ### Adicionado

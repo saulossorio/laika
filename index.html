@@ -3056,7 +3056,10 @@ if (document.readyState === 'loading') document.addEventListener('DOMContentLoad
 .thw .tl { overflow: hidden; text-overflow: ellipsis; }
 .thw .on-n { font-size: var(--text-2xs); font-weight: var(--weight-semibold); }
 .hcount { height: 20px; padding: 0 7px; cursor: pointer; }
-.conf { display: inline-flex; vertical-align: -2px; margin-right: 4px; color: var(--ok-fg); }
+.conf { display: inline-flex; vertical-align: -2px; color: var(--ok-fg); }
+.table th.conf-col, .table td.conf-col { width: 44px; min-width: 44px; max-width: 44px; padding-inline: 0; text-align: center; }
+.table th.conf-col { color: var(--muted-foreground); }
+.table th.conf-col svg { vertical-align: -2px; }
 .conf svg { width: 14px; height: 14px; }
 .laika-empty { margin: 24px var(--gutter); }
 .main > .pagination { padding: 8px max(var(--gutter), calc((100% - var(--size-content)) / 2)); border-top: 1px solid var(--border); } /* o conteúdo na largura do cabeçalho */
@@ -4014,7 +4017,7 @@ let D = null;  // tabela em uso, P.t[S.ent]: { k, modelo, cols, rows, naoDup, oc
 let A = null;  // análise da tabela em uso (seção 7)
 /* Cada linha: { id, t (tabela), linha (no arquivo), v (valores), o (originais do que foi editado), del, mesclada,
    emp (pessoa: id da empresa), var (empresa: outras escritas no arquivo), ok (empresa: escritas já conferidas) } */
-const VERSAO = '1.1.14'; // igual à última versão do CHANGELOG.md
+const VERSAO = '1.1.15'; // igual à última versão do CHANGELOG.md
 let tema = lerLS('laika-tema') || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
 document.documentElement.dataset.theme = tema;
 /* Painel Aparência do Grin: o tema e a densidade escolhidos ali passam a ser os do Laika (a densidade só se muda ali, Grin 2.40).
@@ -4638,19 +4641,20 @@ function htmlLista() {
     
   </div>`;
   // tabela
-  // colunas fixas primeiro, na ordem da tabela; cada uma presa à esquerda depois de Saúde e Linha (Grin 2.47, Configurar colunas)
-  const fx = fixasDe(D), vis = colsNaOrdem(D).filter(c => !D.ocultas.has(c.key)), L0 = 52, L1 = 52 + 132, L2 = 52 + 132 + 88;
+  // colunas fixas primeiro, na ordem da tabela; cada uma presa à esquerda depois de Saúde, Conferida e Linha (Grin 2.47, Configurar colunas)
+  // Linha (o número na planilha original) só aparece se ligada no menu Colunas
+  const fx = fixasDe(D), vis = colsNaOrdem(D).filter(c => !D.ocultas.has(c.key)), L0 = 52, L1 = L0 + 132, LL = L1 + 44, L2 = LL + (D.verLinha ? 80 : 0);
   const nFix = vis.filter(c => fx.has(c.key)).length, esq = []; vis.reduce((a, c, i) => { esq[i] = i < nFix ? a : null; return a + (i < nFix ? c.w : 0); }, L2);
   const todasPag = pag.length > 0 && pag.every(r => S.sel.has(r.id)), algumaPag = pag.some(r => S.sel.has(r.id));
   let th = `<th class="select-col sticky-col" style="left:0;width:52px"><input type="checkbox" id="sel-pagina" data-ch="selPagina" aria-label="Selecionar as linhas desta página"${todasPag ? ' checked' : ''} data-ind="${algumaPag && !todasPag ? 1 : 0}"></th>`;
-  th += thCol('$saude', 'Saúde', 132, L0) + thCol('$linha', 'Linha', 88, L1, nFix === 0);
+  th += thCol('$saude', 'Saúde', 132, L0) + `<th scope="col" class="sticky-col conf-col${!D.verLinha && nFix === 0 ? ' last' : ''}" style="left:${L1}px" aria-label="Conferida"><span data-tooltip="Conferida">${ic('check', 14)}</span></th>` + (D.verLinha ? thCol('$linha', 'Linha', 80, LL, nFix === 0) : '');
   vis.forEach((c, i) => { const cc = A.colCont[c.key]; th += thCol(c.key, c.label, c.w, esq[i], i === nFix - 1, cc ? `<button type="button" class="badge ${TOM[cc.nivel]} hcount" data-a="filtroColuna" data-k="${esc(c.key)}" title="${plural(cc.n, 'linha com problema', 'linhas com problemas')} nesta coluna. Clique para filtrar.">${fmtInt(cc.n)}</button>` : ''); });
   const corpo = pag.map(r => {
     const res = resDe(r), sel = S.sel.has(r.id);
     let saude = '';
     if (r.del) saude = `<span class="badge" title="${r.mesclada ? 'Mesclada na linha ' + linhaDe(r.mesclada) : 'Excluída'}">${ic(r.mesclada ? 'mesclar' : 'lixo', 13)}${r.mesclada ? 'Mesclada' : 'Excluída'}</span>`;
     else if (res && res.nivel) saude = `<span class="badge ${TOM[res.nivel]}" title="${esc(res.probs.map(p => NIVEL[p.nivel] + ': ' + p.texto).join('\n'))}">${icNivel(res.nivel)}${NIVEL[res.nivel]}</span>`;
-    let tds = `<td class="select-col sticky-col" style="left:0" data-a="nada"><input type="checkbox" data-ch="sel" data-id="${r.id}" aria-label="Selecionar linha ${r.linha}"${sel ? ' checked' : ''}></td><td class="sticky-col" style="left:${L0}px">${saude}</td><td class="sticky-col tabular${vis.length ? '' : ' last'}" style="left:${L1}px">${r.conf ? `<span class="conf" title="Conferida">${ic('check', 13)}</span>` : ''}${r.linha}</td>`;
+    let tds = `<td class="select-col sticky-col" style="left:0" data-a="nada"><input type="checkbox" data-ch="sel" data-id="${r.id}" aria-label="Selecionar linha ${r.linha}"${sel ? ' checked' : ''}></td><td class="sticky-col" style="left:${L0}px">${saude}</td><td class="sticky-col conf-col${!D.verLinha && nFix === 0 ? ' last' : ''}" style="left:${L1}px">${r.conf ? `<span class="conf" title="Conferida" aria-label="Conferida">${ic('check', 13)}</span>` : ''}</td>${D.verLinha ? `<td class="sticky-col tabular${nFix === 0 ? ' last' : ''}" style="left:${LL}px">${r.linha}</td>` : ''}`;
     vis.forEach((c, i) => tds += celula(r, c, res, toks, esq[i], i === nFix - 1));
     return `<tr class="${r.del ? 'row-deleted' : ''}${S.gaveta === r.id ? ' row-current' : ''}"${sel ? ' aria-selected="true"' : ''} tabindex="0" data-a="abrir" data-id="${r.id}">${tds}</tr>`;
   }).join('');
@@ -5110,7 +5114,7 @@ function htmlPop() {
     const item = c => `<div class="menu-item sortable" draggable="true" data-col="${esc(c.key)}"><span class="drag-handle" title="Arraste para mudar a ordem (ou Alt e setas)">${ic('arrastar')}</span><input type="checkbox" id="pc-${esc(c.key)}" data-ch="pcVis" data-k="${esc(c.key)}"${D.ocultas.has(c.key) ? '' : ' checked'}><label class="menu-label" for="pc-${esc(c.key)}">${esc(c.label)}</label><button type="button" class="btn icon xs ghost" data-a="pcFixar" data-k="${esc(c.key)}" aria-pressed="${fxs.has(c.key)}" aria-label="${fxs.has(c.key) ? 'Soltar' : 'Fixar'} ${esc(c.label)} à esquerda" data-tooltip="${fxs.has(c.key) ? 'Soltar' : 'Fixar à esquerda'}">${ic('fixar', 14)}</button></div>`;
     const grupo = (t, cs) => cs.length ? `<div class="menu-header">${t}</div>${cs.map(item).join('')}` : '';
     const vistas = todas.filter(c => !q || norm(c.label).includes(q));
-    return caixa(`<div class="menu-header row"><b>Colunas</b><span class="spacer"></span><button type="button" class="link" data-a="pcRestaurar">Restaurar</button></div>${busca ? `<input class="input sm" id="pc-q" placeholder="Buscar coluna" value="${esc(p.q || '')}" data-in="popQ" autocomplete="off">` : ''}<div class="menu-list" role="group" aria-label="Colunas: arraste ou use Alt e setas para mudar a ordem">${grupo('Fixas', vistas.filter(c => fxs.has(c.key)))}${grupo('Outras', vistas.filter(c => !fxs.has(c.key)))}${vistas.length ? '' : '<div class="sub small" style="padding:6px 8px">Nenhuma coluna com esse nome.</div>'}</div>${faltam.length ? `<div class="menu-separator" role="separator"></div><div class="sub small" style="padding:0 4px">Adicionar campo do modelo (coluna vazia)</div><div class="menu-list" style="max-height:180px">${faltam.map(f => `<button type="button" class="menu-item" data-a="addCampo" data-k="${f.key}">${ic('mais', 14)}<span class="menu-label">${esc(f.label)}</span></button>`).join('')}</div>` : ''}`);
+    return caixa(`<div class="menu-header row"><b>Colunas</b><span class="spacer"></span><button type="button" class="link" data-a="pcRestaurar">Restaurar</button></div>${busca ? `<input class="input sm" id="pc-q" placeholder="Buscar coluna" value="${esc(p.q || '')}" data-in="popQ" autocomplete="off">` : ''}<div class="menu-list" role="group" aria-label="Colunas: arraste ou use Alt e setas para mudar a ordem">${q ? '' : `<label class="menu-item"><span class="drag-handle" aria-hidden="true"></span><input type="checkbox" id="pc-linha" data-ch="pcLinha"${D.verLinha ? ' checked' : ''}><span class="menu-label" title="O número de cada linha na planilha original">Linha da planilha</span></label>`}${grupo('Fixas', vistas.filter(c => fxs.has(c.key)))}${grupo('Outras', vistas.filter(c => !fxs.has(c.key)))}${vistas.length ? '' : '<div class="sub small" style="padding:6px 8px">Nenhuma coluna com esse nome.</div>'}</div>${faltam.length ? `<div class="menu-separator" role="separator"></div><div class="sub small" style="padding:0 4px">Adicionar campo do modelo (coluna vazia)</div><div class="menu-list" style="max-height:180px">${faltam.map(f => `<button type="button" class="menu-item" data-a="addCampo" data-k="${f.key}">${ic('mais', 14)}<span class="menu-label">${esc(f.label)}</span></button>`).join('')}</div>` : ''}`);
   }
   if (p.passo === 'campo') {
     const campos = [{ key: '$saude', label: 'Saúde', hint: 'Nível' }, { key: '$problema', label: 'Problema', hint: 'Tipo' }, { key: '$situacao', label: 'Situação', hint: 'Edição' }, { key: '$conf', label: 'Conferência', hint: 'Revisão' }, ...D.cols.filter(c => !c.soExport).map(c => ({ key: c.key, label: c.label, hint: c.calc ? 'Calculada' : TIPOS[c.tipo] || 'Texto' }))].filter(f => norm(f.label).includes(norm(p.q)));
@@ -5553,7 +5557,7 @@ const AC = { // cliques: data-a="nome"
   colunas: el => abrirPop(el, { tipo: 'colunas' }),
   pcRestaurar: () => { // ordem, colunas visíveis e fixas como na importação
     if (D.ordem0) { const pos = new Map(D.ordem0.map((k, i) => [k, i])); D.cols.sort((a, b) => (pos.get(a.key) ?? 1e9) - (pos.get(b.key) ?? 1e9)); }
-    D.ocultas.clear(); D.fixas = null; fixasDe(D); salvarDepois(); render();
+    D.ocultas.clear(); D.fixas = null; D.verLinha = false; fixasDe(D); salvarDepois(); render();
   },
   pcFixar: el => { const fx = fixasDe(D), k = el.dataset.k; if (fx.has(k)) fx.delete(k); else fx.add(k); S.foco = 'pc-' + k; salvarDepois(); render(); },
   addCampo: el => { adicionarCampo(el.dataset.k); S.pop = null; aviso('Coluna ' + rotuloCol(el.dataset.k) + ' adicionada, vazia.', 'ok'); },
@@ -5618,6 +5622,7 @@ const CH = { // mudanças em campos de formulário: data-ch="nome"
   // menu do nível: "Todos" marca ou desmarca os tipos do nível; cada tipo entra ou sai sozinho. Os outros níveis ficam como estão
   nivelTodos: el => { const ts = tiposDoNivel(el.dataset.n), todos = ts.every(t => S.probs.includes(t)); S.probs = todos ? S.probs.filter(t => !ts.includes(t)) : [...new Set([...S.probs, ...ts])]; mudouVista(); },
   nivelTipo: el => { const t = el.dataset.p; S.probs = S.probs.includes(t) ? S.probs.filter(x => x !== t) : [...S.probs, t]; mudouVista(); },
+  pcLinha: el => { D.verLinha = el.checked; S.foco = 'pc-linha'; salvarDepois(); render(); },
   pcVis: el => { if (el.checked) D.ocultas.delete(el.dataset.k); else D.ocultas.add(el.dataset.k); salvarDepois(); render(); },
 };
 let tBusca = 0;
