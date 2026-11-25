@@ -2,6 +2,11 @@
 
 Formato baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/). Versionamento semântico.
 
+## [1.1.19] - 2026-11-25
+
+### Alterado
+- Grin 2.51. No celular, a Tabela e a Revisão mostram uma linha só acima da tabela: busca, Filtros, Ferramentas e Colunas. O botão Filtros (com a contagem dos ligados) abre a linha das tabelas e dos níveis, os filtros, "Não conferidas" e "Só com problemas". No computador nada muda. O passo do tour sobre os filtros aponta para o botão Filtros no celular.
+
 ## [1.1.18] - 2026-11-25
 
 ### Adicionado

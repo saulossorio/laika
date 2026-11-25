@@ -9,12 +9,12 @@
   Laika: ferramenta para analisar, limpar e exportar tabelas importadas.
   Um único arquivo. Abra no Chrome, Edge, Firefox ou Safari recentes. Funciona sem internet.
   Os dados ficam só neste computador, no armazenamento do navegador, até você fechar a tabela.
-  Visual: Grin 2.50, copiado de https://github.com/saulossorio/grin/releases/tag/v2.50 (dist/grin.inline.css e dist/grin.js).
+  Visual: Grin 2.51, copiado de https://github.com/saulossorio/grin/releases/tag/v2.51 (dist/grin.inline.css e dist/grin.js).
   Regras e listas: as do Canis (docs/regras.md).
 -->
-<!-- Grin 2.50, copiado de https://github.com/saulossorio/grin/releases/tag/v2.50 -->
+<!-- Grin 2.51, copiado de https://github.com/saulossorio/grin/releases/tag/v2.51 -->
 <style>
-/* Grin 2.50 · CSS com as fontes dentro (Geist e Geist Mono, licença SIL OFL 1.1) · https://github.com/saulossorio/grin
+/* Grin 2.51 · CSS com as fontes dentro (Geist e Geist Mono, licença SIL OFL 1.1) · https://github.com/saulossorio/grin
    Gerado por tools/bundle.mjs a partir dos arquivos do repositório. Não edite à mão. */
 /* ---------- styles/fonts.css ---------- */
 /* Grin: fonts. Geist and Geist Mono, variable weight 100 to 900, from the official release
@@ -891,6 +891,16 @@ input:focus-visible, select:focus-visible, textarea:focus-visible { outline: 2px
 .search { position: relative; width: min(320px, 100%); }
 /* in a toolbar the search shrinks to 200 px before the toolbar wraps */
 .toolbar > .search { flex: 10 1 200px; max-width: 320px; }
+/* Filters folded on a phone: inside .filters-fold, the parts marked .filters-extra (the row of choice groups and the
+   filter buttons) hide at 760 px or less, behind the .filters-toggle button (icon, active count, aria-expanded).
+   .filters-fold.open shows them again. Above 760 px the toggle does not show and nothing is folded. */
+.filters-toggle { display: none; }
+@media (max-width: 760px) {
+  .filters-fold .filters-toggle { display: inline-flex; }
+  .filters-fold .toolbar { gap: 8px; }
+  .filters-fold .toolbar > .search { flex-basis: 140px; }
+  .filters-fold:not(.open) .filters-extra { display: none; }
+}
 .search > svg { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); width: 20px; height: 20px; color: var(--muted-foreground); pointer-events: none; }
 .search .input { padding: 0 40px 0 44px; }
 .search .btn { position: absolute; right: 4px; top: 50%; transform: translateY(-50%); }
@@ -1885,11 +1895,11 @@ body.tour-open .menu, body.tour-open .popover { z-index: 125; }
 .page-header .page-description, .start-screen-body .lead { max-width: var(--size-prose); }
 </style>
 <script>
-/* Grin 2.50 · comportamentos em JavaScript; inclua com <script src="grin.js" defer> · https://github.com/saulossorio/grin
+/* Grin 2.51 · comportamentos em JavaScript; inclua com <script src="grin.js" defer> · https://github.com/saulossorio/grin
    Gerado por tools/bundle.mjs a partir dos arquivos do repositório. Não edite à mão. */
 'use strict';
 const Grin = (window.Grin = window.Grin || {});
-Grin.version = '2.50';
+Grin.version = '2.51';
 
 // ---------- scripts/utils.js ----------
 {
@@ -4015,7 +4025,7 @@ let D = null;  // tabela em uso, P.t[S.ent]: { k, modelo, cols, rows, naoDup, oc
 let A = null;  // análise da tabela em uso (seção 7)
 /* Cada linha: { id, t (tabela), linha (no arquivo), v (valores), o (originais do que foi editado), del, mesclada,
    emp (pessoa: id da empresa), var (empresa: outras escritas no arquivo), ok (empresa: escritas já conferidas) } */
-const VERSAO = '1.1.18'; // igual à última versão do CHANGELOG.md
+const VERSAO = '1.1.19'; // igual à última versão do CHANGELOG.md
 let tema = lerLS('laika-tema') || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
 document.documentElement.dataset.theme = tema;
 /* Painel Aparência do Grin: o tema e a densidade escolhidos ali passam a ser os do Laika (a densidade só se muda ali, Grin 2.40).
@@ -4421,7 +4431,7 @@ function htmlInicio() {
     ${s ? `<div class="card resume">${ic('arquivo', 20)}<div style="flex:1;min-width:0"><b>${esc(s.nome)}</b><div class="sub">${esc(s.resumo)}</div><div class="sub">Salva em ${dataHora(s.salvoEm)}</div></div><button type="button" class="btn" data-a="descartarSessao">Descartar</button><button type="button" class="btn primary" data-a="continuarSessao">Continuar</button></div>` : ''}
     <div class="dropzone${S.arrastando ? ' over' : ''}">${ic('importar', 24)}<b>Arraste um arquivo CSV ou XLSX para cá ou</b><button type="button" class="btn${s ? '' : ' primary'}" data-a="escolherArquivo">Escolher arquivo</button><small>ou <button type="button" class="link" data-a="exemplo">abra os dados de exemplo</button></small></div>
     </div>
-    <footer class="app-footer"><span><b>Laika ${VERSAO}</b> · por Saúl Ossorio</span><span>Feito com <a href="https://saulossorio.github.io/grin/">Grin 2.50</a></span></footer>
+    <footer class="app-footer"><span><b>Laika ${VERSAO}</b> · por Saúl Ossorio</span><span>Feito com <a href="https://saulossorio.github.io/grin/">Grin 2.51</a></span></footer>
   </div>`;
 }
 
@@ -4622,17 +4632,20 @@ function htmlLista() {
       return `<button type="button" class="severity ${TOM[n]}" aria-pressed="${sel > 0}" aria-haspopup="menu" aria-expanded="${!!aberto}" data-a="menuNivel" data-i="${n}" data-pop-anchor data-tooltip="${NIVEL[n]}">${icNivel(n, 16)}<span class="btn-text">${NIVEL[n]}</span><span class="severity-count">${fmtInt(A.cont[n])}</span>${sel && sel < ts.length ? `<span>· ${sel} de ${plural(ts.length, 'tipo', 'tipos')}</span>` : ''}${ic('baixo', 14)}</button>`;
     }).join('');
     // primeira linha: tabela e níveis; a segunda é a barra de busca
-    resumo = `<div class="row filtros-rev">${ents}${ents && niveis ? '<span class="divider-v"></span>' : ''}${niveis ? `<div class="severity-group" role="group" aria-label="Filtrar por nível e tipo de problema">${niveis}</div>` : ''}</div>`;
+    resumo = `<div class="row filtros-rev filters-extra">${ents}${ents && niveis ? '<span class="divider-v"></span>' : ''}${niveis ? `<div class="severity-group" role="group" aria-label="Filtrar por nível e tipo de problema">${niveis}</div>` : ''}</div>`;
   }
   const chips = S.filtros.map((f, i) => `<span class="chip"><button type="button" class="chip-label" data-a="editarFiltro" data-i="${i}" data-pop-anchor title="Editar filtro">${esc(rotuloFiltro(f))}</button><button type="button" class="chip-remove" data-a="removerFiltro" data-i="${i}" aria-label="Remover filtro ${esc(rotuloFiltro(f))}">${ic('x', 14)}</button></span>`).join('');
   const nCond = S.filtros.length + (S.q ? 1 : 0) + (S.soProblemas ? 1 : 0) + (S.naoConferidas ? 1 : 0) + (S.verExcluidas ? 1 : 0) + (S.probs.length ? 1 : 0);
+  // no celular os filtros se recolhem atrás do botão Filtros (Grin 2.51, filtros recolhidos); a contagem não inclui a busca
+  const nFiltros = nCond - (S.q ? 1 : 0);
+  const btnFiltros = `<button type="button" class="btn filters-toggle" data-a="dobrarFiltros" aria-expanded="${!!S.filtrosAbertos}" aria-label="Filtros${nFiltros ? ', ' + plural(nFiltros, 'ligado', 'ligados') : ''}">${ic('filtro')}${nFiltros ? `<span class="count-inline">${fmtInt(nFiltros)}</span>` : ''}</button>`;
   const barra = `<div class="toolbar list-toolbar" role="toolbar" aria-label="Busca, filtros e visualização">
     <div class="search">${ic('busca')}<input id="busca" class="input" type="text" role="searchbox" aria-label="Buscar na tabela" placeholder="Buscar na tabela" value="${esc(S.qIn)}" data-in="busca" autocomplete="off">${S.qIn ? `<button type="button" class="btn ghost icon xs" data-a="limparBusca" aria-label="Limpar busca">${ic('x')}</button>` : ''}</div>
-    ${chips}<button type="button" class="btn dashed" data-a="novoFiltro" data-pop-anchor>${ic('mais')}<span class="btn-text">Filtro</span></button>
-    ${!revisao ? `<button type="button" class="btn${S.soProblemas ? '' : ' dashed'}" aria-pressed="${S.soProblemas}" data-a="soProblemas">${S.soProblemas ? ic('check') : ''}<span>Só com problemas</span></button>` : ''}
-    <button type="button" class="btn${S.naoConferidas ? '' : ' dashed'}" aria-pressed="${S.naoConferidas}" data-a="naoConferidas" title="Só as linhas que ainda não foram marcadas como conferidas">${S.naoConferidas ? ic('check') : ''}<span>Não conferidas</span></button>
-    ${excluidas ? `<button type="button" class="btn${S.verExcluidas ? '' : ' dashed'}" aria-pressed="${S.verExcluidas}" data-a="verExcluidas">${S.verExcluidas ? ic('check') : ''}<span>Mostrar excluídas</span></button>` : ''}
-    ${nCond >= 2 ? `<button type="button" class="link" data-a="limparTudo">Limpar tudo</button>` : ''}
+    ${btnFiltros}<span class="filters-extra">${chips}</span><button type="button" class="btn dashed filters-extra" data-a="novoFiltro" data-pop-anchor>${ic('mais')}<span class="btn-text">Filtro</span></button>
+    ${!revisao ? `<button type="button" class="btn${S.soProblemas ? '' : ' dashed'} filters-extra" aria-pressed="${S.soProblemas}" data-a="soProblemas">${S.soProblemas ? ic('check') : ''}<span>Só com problemas</span></button>` : ''}
+    <button type="button" class="btn${S.naoConferidas ? '' : ' dashed'} filters-extra" aria-pressed="${S.naoConferidas}" data-a="naoConferidas" title="Só as linhas que ainda não foram marcadas como conferidas">${S.naoConferidas ? ic('check') : ''}<span>Não conferidas</span></button>
+    ${excluidas ? `<button type="button" class="btn${S.verExcluidas ? '' : ' dashed'} filters-extra" aria-pressed="${S.verExcluidas}" data-a="verExcluidas">${S.verExcluidas ? ic('check') : ''}<span>Mostrar excluídas</span></button>` : ''}
+    ${nCond >= 2 ? `<button type="button" class="link filters-extra" data-a="limparTudo">Limpar tudo</button>` : ''}
     <div class="spacer"></div>
     <button type="button" class="btn icon" data-a="ferramentas" aria-label="Ferramentas de limpeza" data-tooltip="Ferramentas de limpeza">${ic('varinha')}</button>
     <button type="button" class="btn" data-a="colunas" data-pop-anchor data-tooltip="Colunas">${ic('colunas')}<span class="btn-text">Colunas</span></button>
@@ -4668,7 +4681,7 @@ function htmlLista() {
       ${selRows.some(r => !r.del && r.conf) ? `<button type="button" class="btn xs" data-a="loteDesconferir"><span>Desmarcar conferidas</span></button>` : ''}
       ${nVivasSel ? `<button type="button" class="btn xs" data-a="loteEditar">${ic('lapis')}<span>Editar coluna</span></button><button type="button" class="btn xs" data-a="loteExportar">${ic('exportar')}<span>Exportar selecionadas</span></button>` : ''}
       <button type="button" class="btn ghost icon" data-a="limparSel" aria-label="Limpar seleção" title="Limpar seleção">${ic('x')}</button></div>` : '';
-  return `<div class="page-header">${htmlArquivo()}<div class="page-title-row"><div class="page-title"><h1>${esc(revisao ? 'Revisão' : tituloTabela())}</h1><span class="sub" aria-live="polite">${contagem}</span></div><div class="toolbar">${btnsHistorico()}${btnExportar()}</div></div>${resumo}${barra}</div>
+  return `<div class="page-header filters-fold${S.filtrosAbertos ? ' open' : ''}">${htmlArquivo()}<div class="page-title-row"><div class="page-title"><h1>${esc(revisao ? 'Revisão' : tituloTabela())}</h1><span class="sub" aria-live="polite">${contagem}</span></div><div class="toolbar">${btnsHistorico()}${btnExportar()}</div></div>${resumo}${barra}</div>
     ${banner}
     <div class="wrap" data-scroll="tabela"><table class="table${S.densidade === 'compacta' ? ' compact' : ''}" style="width:${largura}px"><thead><tr>${th}</tr></thead><tbody>${corpo}</tbody></table>${pag.length ? '' : `<div class="empty-state laika-empty">${vazioTxt}</div>`}</div>
     ${lote}
@@ -5553,6 +5566,7 @@ const AC = { // cliques: data-a="nome"
     mudouVista();
   },
   colunas: el => abrirPop(el, { tipo: 'colunas' }),
+  dobrarFiltros: () => { S.filtrosAbertos = !S.filtrosAbertos; render(); }, // no celular, mostra ou recolhe os filtros
   pcRestaurar: () => { // ordem, colunas visíveis e fixas como na importação
     if (D.ordem0) { const pos = new Map(D.ordem0.map((k, i) => [k, i])); D.cols.sort((a, b) => (pos.get(a.key) ?? 1e9) - (pos.get(b.key) ?? 1e9)); }
     D.ocultas.clear(); D.fixas = null; D.verLinha = false; fixasDe(D); salvarDepois(); render();
@@ -5789,7 +5803,7 @@ const TOUR = [
     acao: 'Clique em Conferida', alvo: ['#dr-conf'], tarefa: () => { const r = linhaAberta(); return !!r && !!r.conf; } },
   { titulo: 'Fechar a linha', texto: 'A tabela volta com a linha corrigida.', acao: 'Clique no X', alvo: ['#dr-fechar'], tarefa: () => !S.gaveta },
   { titulo: 'Revisão', texto: 'Só as linhas com problema, das mais graves para as mais leves.', acao: 'Clique em Revisão', alvo: ['#lateral [data-tela="revisao"]'], clique: true },
-  { titulo: 'Filtros da revisão', texto: 'Os ícones escolhem a tabela: pessoas ou empresas. Os níveis filtram por gravidade e, no menu de cada um, por tipo de problema.', alvo: ['#app .filtros-rev'] },
+  { titulo: 'Filtros da revisão', texto: 'Os ícones escolhem a tabela: pessoas ou empresas. Os níveis filtram por gravidade e, no menu de cada um, por tipo de problema. No celular, os filtros ficam atrás do botão Filtros.', alvo: ['#app .filtros-rev', '#app .filters-toggle'] },
   { titulo: 'Duplicados', texto: 'Registros que parecem a mesma pessoa ou empresa.', acao: 'Clique em Duplicados', alvo: ['#lateral [data-tela="duplicados"]'], clique: true },
   { titulo: 'Grupo de duplicados', texto: 'As linhas parecidas ficam lado a lado, com o motivo. Comparar e mesclar escolhe o valor de cada campo; Não são duplicados tira o grupo da lista.', alvo: ['#app .dcard'] },
   { titulo: 'Exportar', texto: 'Gera a planilha limpa neste computador, em XLSX ou CSV. Nada é enviado pela internet.', alvo: ['#app [data-a="exportar"]'] },
