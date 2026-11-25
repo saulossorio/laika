@@ -2,6 +2,11 @@
 
 Formato baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/). Versionamento semântico.
 
+## [1.1.10] - 2026-11-24
+
+### Alterado
+- Grin 2.43, a mesma versão do Vezen.
+
 ## [1.1.9] - 2026-11-24
 
 ### Alterado
