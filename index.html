@@ -9,12 +9,12 @@
   Laika: ferramenta para analisar, limpar e exportar tabelas importadas.
   Um único arquivo. Abra no Chrome, Edge, Firefox ou Safari recentes. Funciona sem internet.
   Os dados ficam só neste computador, no armazenamento do navegador, até você fechar a tabela.
-  Visual: Grin 2.46, copiado de https://github.com/saulossorio/grin/releases/tag/v2.46 (dist/grin.inline.css e dist/grin.js).
+  Visual: Grin 2.47, copiado de https://github.com/saulossorio/grin/releases/tag/v2.47 (dist/grin.inline.css e dist/grin.js).
   Regras e listas: as do Canis (docs/regras.md).
 -->
-<!-- Grin 2.46, copiado de https://github.com/saulossorio/grin/releases/tag/v2.46 -->
+<!-- Grin 2.47, copiado de https://github.com/saulossorio/grin/releases/tag/v2.47 -->
 <style>
-/* Grin 2.46 · CSS com as fontes dentro (Geist e Geist Mono, licença SIL OFL 1.1) · https://github.com/saulossorio/grin
+/* Grin 2.47 · CSS com as fontes dentro (Geist e Geist Mono, licença SIL OFL 1.1) · https://github.com/saulossorio/grin
    Gerado por tools/bundle.mjs a partir dos arquivos do repositório. Não edite à mão. */
 /* ---------- styles/fonts.css ---------- */
 /* Grin: fonts. Geist and Geist Mono, variable weight 100 to 900, from the official release
@@ -1307,6 +1307,17 @@ a.tab { text-decoration: none; }
 /* Multiple choice: <label class="menu-item"><input type="checkbox"><span class="menu-label">…</span></label> */
 .menu-item > input[type="checkbox"] { flex: none; }
 
+/* Column settings in a menu: a handle to drag, the checkbox that shows the column and a pin that fixes it on the left.
+   The item being dragged fades, and a line marks where it will land. */
+.menu-item.sortable { gap: 6px; }
+.menu-item .drag-handle { flex: none; display: inline-grid; place-items: center; width: 20px; color: var(--muted-foreground); cursor: grab; }
+.menu-item .drag-handle svg { width: 16px; height: 16px; }
+.menu-item.sortable > .btn { margin-left: auto; }
+.menu-item.sortable > .btn[aria-pressed="false"] { color: var(--muted-foreground); }
+.menu-item.dragging { opacity: .45; }
+.menu-item.drop-before { box-shadow: inset 0 2px 0 var(--primary); }
+.menu-item.drop-after { box-shadow: inset 0 -2px 0 var(--primary); }
+
 /* ---------- components/dialog/dialog.css ---------- */
 /* Grin dialog: short decisions and destructive confirmations. Native <dialog> traps focus and closes with Esc.
    Rises and scales in over a blurred veil. */
@@ -1878,11 +1889,11 @@ body.tour-open .menu, body.tour-open .popover { z-index: 125; }
 .start-screen-body > .dropzone { flex: 1 1 auto; justify-content: center; min-height: 280px; }
 </style>
 <script>
-/* Grin 2.46 · comportamentos em JavaScript; inclua com <script src="grin.js" defer> · https://github.com/saulossorio/grin
+/* Grin 2.47 · comportamentos em JavaScript; inclua com <script src="grin.js" defer> · https://github.com/saulossorio/grin
    Gerado por tools/bundle.mjs a partir dos arquivos do repositório. Não edite à mão. */
 'use strict';
 const Grin = (window.Grin = window.Grin || {});
-Grin.version = '2.46';
+Grin.version = '2.47';
 
 // ---------- scripts/utils.js ----------
 {
@@ -1899,6 +1910,8 @@ const ICONS = {
   'layout-grid': '<rect width="7" height="7" x="3" y="3" rx="1"/><rect width="7" height="7" x="14" y="3" rx="1"/><rect width="7" height="7" x="14" y="14" rx="1"/><rect width="7" height="7" x="3" y="14" rx="1"/>',
   table: '<path d="M12 3v18"/><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M3 9h18"/><path d="M3 15h18"/>',
   columns: '<rect width="18" height="18" x="3" y="3" rx="2"/><path d="M9 3v18"/><path d="M15 3v18"/>',
+  'grip-vertical': '<circle cx="9" cy="12" r="1"/><circle cx="9" cy="5" r="1"/><circle cx="9" cy="19" r="1"/><circle cx="15" cy="12" r="1"/><circle cx="15" cy="5" r="1"/><circle cx="15" cy="19" r="1"/>',
+  pin: '<path d="M12 17v5"/><path d="M9 10.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24V16a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V7a1 1 0 0 1 1-1 2 2 0 0 0 0-4H8a2 2 0 0 0 0 4 1 1 0 0 1 1 1z"/>',
   monitor: '<rect width="20" height="14" x="2" y="3" rx="2"/><line x1="8" x2="16" y1="21" y2="21"/><line x1="12" x2="12" y1="17" y2="21"/>',
   play: '<polygon points="6 3 20 12 6 21 6 3"/>',
   book: '<path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/>',
@@ -3615,6 +3628,8 @@ const ICONES_GRIN = {
   setaBaixo: 'arrow-down',
   ordenar: 'arrow-up-down',
   colunas: 'columns',
+  arrastar: 'grip-vertical',
+  fixar: 'pin',
   linhas: 'rows',
   lixo: 'trash',
   desfazer: 'undo',
@@ -3999,7 +4014,7 @@ let D = null;  // tabela em uso, P.t[S.ent]: { k, modelo, cols, rows, naoDup, oc
 let A = null;  // análise da tabela em uso (seção 7)
 /* Cada linha: { id, t (tabela), linha (no arquivo), v (valores), o (originais do que foi editado), del, mesclada,
    emp (pessoa: id da empresa), var (empresa: outras escritas no arquivo), ok (empresa: escritas já conferidas) } */
-const VERSAO = '1.1.13'; // igual à última versão do CHANGELOG.md
+const VERSAO = '1.1.14'; // igual à última versão do CHANGELOG.md
 let tema = lerLS('laika-tema') || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
 document.documentElement.dataset.theme = tema;
 /* Painel Aparência do Grin: o tema e a densidade escolhidos ali passam a ser os do Laika (a densidade só se muda ali, Grin 2.40).
@@ -4127,7 +4142,7 @@ async function salvar() {
   const pacote = { versao: 2, salvoEm: Date.now(), P };
   try { await BANCO.gravar('sessao', pacote); try { localStorage.removeItem(LS_SESSAO); } catch (e) { } S.salvo = 'ok'; }
   catch (e) {
-    const t = Object.fromEntries(Object.entries(P.t).map(([k, T]) => [k, { ...T, naoDup: [...T.naoDup], ocultas: [...T.ocultas] }]));
+    const t = Object.fromEntries(Object.entries(P.t).map(([k, T]) => [k, { ...T, naoDup: [...T.naoDup], ocultas: [...T.ocultas], fixas: T.fixas ? [...T.fixas] : undefined }]));
     try { localStorage.setItem(LS_SESSAO, JSON.stringify({ ...pacote, P: { ...P, t } })); S.salvo = 'ok'; }
     catch (e2) { console.warn(e, e2); S.salvo = 'erro'; }
   }
@@ -4138,7 +4153,7 @@ async function lerSessao() {
   try { s = await BANCO.pegar('sessao'); } catch (e) { }
   try {
     const l = JSON.parse(localStorage.getItem(LS_SESSAO));
-    if (l && (l.P || l.D) && (!s || l.salvoEm > s.salvoEm)) { for (const T of l.P ? Object.values(l.P.t) : [l.D]) { T.naoDup = new Set(T.naoDup); T.ocultas = new Set(T.ocultas); } s = l; }
+    if (l && (l.P || l.D) && (!s || l.salvoEm > s.salvoEm)) { for (const T of l.P ? Object.values(l.P.t) : [l.D]) { T.naoDup = new Set(T.naoDup); T.ocultas = new Set(T.ocultas); if (T.fixas) T.fixas = new Set(T.fixas); } s = l; }
   } catch (e) { }
   if (s && s.versao === 1 && s.D) s = { versao: 2, salvoEm: s.salvoEm, P: { nome: s.D.nome, planilha: s.D.planilha, combinado: false, t: { tabela: { ...s.D, k: 'tabela' } } } }; // sessão salva pela versão anterior
   if (!s || s.versao !== 2 || !s.P) return null;
@@ -4405,7 +4420,7 @@ function htmlInicio() {
     ${s ? `<div class="card resume">${ic('arquivo', 20)}<div style="flex:1;min-width:0"><b>${esc(s.nome)}</b><div class="sub">${esc(s.resumo)}</div><div class="sub">Salva em ${dataHora(s.salvoEm)}</div></div><button type="button" class="btn" data-a="descartarSessao">Descartar</button><button type="button" class="btn primary" data-a="continuarSessao">Continuar</button></div>` : ''}
     <div class="dropzone${S.arrastando ? ' over' : ''}">${ic('importar', 24)}<b>Arraste um arquivo CSV ou XLSX para cá ou</b><button type="button" class="btn${s ? '' : ' primary'}" data-a="escolherArquivo">Escolher arquivo</button><small>ou <button type="button" class="link" data-a="exemplo">abra os dados de exemplo</button></small></div>
     </div>
-    <footer class="app-footer"><span><b>Laika ${VERSAO}</b> · por Saúl Ossorio</span><span>Feito com <a href="https://saulossorio.github.io/grin/">Grin 2.46</a></span></footer>
+    <footer class="app-footer"><span><b>Laika ${VERSAO}</b> · por Saúl Ossorio</span><span>Feito com <a href="https://saulossorio.github.io/grin/">Grin 2.47</a></span></footer>
   </div>`;
 }
 
@@ -4582,7 +4597,7 @@ const tituloDe = T => MODELOS[T.modelo].titulo || P.nome.replace(/\.[^.]+$/, '')
 const tituloTabela = () => tituloDe(D);
 function abasEnt(n, dica) { // Revisão e Duplicados no modelo combinado: escolher entre Pessoas e Empresas
   if (!P.combinado) return '';
-  // só ícone e contagem: o nome da tabela fica no tooltip, para os filtros caberem em duas linhas (Grin 2.46, Busca e filtros)
+  // só ícone e contagem: o nome da tabela fica no tooltip, para os filtros caberem em duas linhas (Grin 2.47, Busca e filtros)
   return `<div class="types" role="group" aria-label="Tabela">${ordemTabelas().map(k => { const x = n(cache(k).A), nome = MODELOS[k].titulo; return `<button type="button" class="btn" aria-pressed="${S.ent === k}" data-a="ent" data-ent="${k}" aria-label="${nome}, ${plural(x, ...dica)}" data-tooltip="${nome}: ${plural(x, ...dica)}">${ic(k)}<span class="count-inline">${fmtInt(x)}</span></button>`; }).join('')}</div>`;
 }
 function htmlLista() {
@@ -4623,18 +4638,20 @@ function htmlLista() {
     
   </div>`;
   // tabela
-  const vis = D.cols.filter(c => !D.ocultas.has(c.key) && !c.soExport), L0 = 52, L1 = 52 + 132, L2 = 52 + 132 + 88;
+  // colunas fixas primeiro, na ordem da tabela; cada uma presa à esquerda depois de Saúde e Linha (Grin 2.47, Configurar colunas)
+  const fx = fixasDe(D), vis = colsNaOrdem(D).filter(c => !D.ocultas.has(c.key)), L0 = 52, L1 = 52 + 132, L2 = 52 + 132 + 88;
+  const nFix = vis.filter(c => fx.has(c.key)).length, esq = []; vis.reduce((a, c, i) => { esq[i] = i < nFix ? a : null; return a + (i < nFix ? c.w : 0); }, L2);
   const todasPag = pag.length > 0 && pag.every(r => S.sel.has(r.id)), algumaPag = pag.some(r => S.sel.has(r.id));
   let th = `<th class="select-col sticky-col" style="left:0;width:52px"><input type="checkbox" id="sel-pagina" data-ch="selPagina" aria-label="Selecionar as linhas desta página"${todasPag ? ' checked' : ''} data-ind="${algumaPag && !todasPag ? 1 : 0}"></th>`;
-  th += thCol('$saude', 'Saúde', 132, L0) + thCol('$linha', 'Linha', 88, L1, vis.length === 0);
-  vis.forEach((c, i) => { const cc = A.colCont[c.key]; th += thCol(c.key, c.label, c.w, i === 0 ? L2 : null, i === 0, cc ? `<button type="button" class="badge ${TOM[cc.nivel]} hcount" data-a="filtroColuna" data-k="${esc(c.key)}" title="${plural(cc.n, 'linha com problema', 'linhas com problemas')} nesta coluna. Clique para filtrar.">${fmtInt(cc.n)}</button>` : ''); });
+  th += thCol('$saude', 'Saúde', 132, L0) + thCol('$linha', 'Linha', 88, L1, nFix === 0);
+  vis.forEach((c, i) => { const cc = A.colCont[c.key]; th += thCol(c.key, c.label, c.w, esq[i], i === nFix - 1, cc ? `<button type="button" class="badge ${TOM[cc.nivel]} hcount" data-a="filtroColuna" data-k="${esc(c.key)}" title="${plural(cc.n, 'linha com problema', 'linhas com problemas')} nesta coluna. Clique para filtrar.">${fmtInt(cc.n)}</button>` : ''); });
   const corpo = pag.map(r => {
     const res = resDe(r), sel = S.sel.has(r.id);
     let saude = '';
     if (r.del) saude = `<span class="badge" title="${r.mesclada ? 'Mesclada na linha ' + linhaDe(r.mesclada) : 'Excluída'}">${ic(r.mesclada ? 'mesclar' : 'lixo', 13)}${r.mesclada ? 'Mesclada' : 'Excluída'}</span>`;
     else if (res && res.nivel) saude = `<span class="badge ${TOM[res.nivel]}" title="${esc(res.probs.map(p => NIVEL[p.nivel] + ': ' + p.texto).join('\n'))}">${icNivel(res.nivel)}${NIVEL[res.nivel]}</span>`;
     let tds = `<td class="select-col sticky-col" style="left:0" data-a="nada"><input type="checkbox" data-ch="sel" data-id="${r.id}" aria-label="Selecionar linha ${r.linha}"${sel ? ' checked' : ''}></td><td class="sticky-col" style="left:${L0}px">${saude}</td><td class="sticky-col tabular${vis.length ? '' : ' last'}" style="left:${L1}px">${r.conf ? `<span class="conf" title="Conferida">${ic('check', 13)}</span>` : ''}${r.linha}</td>`;
-    vis.forEach((c, i) => tds += celula(r, c, res, toks, i === 0 ? L2 : null));
+    vis.forEach((c, i) => tds += celula(r, c, res, toks, esq[i], i === nFix - 1));
     return `<tr class="${r.del ? 'row-deleted' : ''}${S.gaveta === r.id ? ' row-current' : ''}"${sel ? ' aria-selected="true"' : ''} tabindex="0" data-a="abrir" data-id="${r.id}">${tds}</tr>`;
   }).join('');
   const largura = 52 + 132 + 88 + vis.reduce((s, c) => s + c.w, 0);
@@ -4655,14 +4672,26 @@ function htmlLista() {
     ${lote}
     <div class="pagination"><span class="tabular">${total ? fmtInt(ini + 1) + '–' + fmtInt(ini + pag.length) + ' de ' + fmtInt(total) : '0 resultados'}</span><div class="row" style="gap:10px"><label class="rows-per-page">Linhas por página <select class="select" id="tamanho" data-ch="tamanho">${[25, 50, 100, 200].map(n => `<option${n === S.tamanho ? ' selected' : ''}>${n}</option>`).join('')}</select></label><span class="tabular">Página ${S.pagina} de ${paginas}</span><button type="button" class="btn icon" data-a="pagina" data-d="-1" aria-label="Página anterior"${S.pagina > 1 ? '' : ' disabled'}>${ic('esq')}</button><button type="button" class="btn icon" data-a="pagina" data-d="1" aria-label="Próxima página"${S.pagina < paginas ? '' : ' disabled'}>${ic('dir')}</button></div></div>`;
 }
+const fixasDe = T => T.fixas || (T.fixas = new Set(T.cols.filter(c => !c.soExport).slice(0, 1).map(c => c.key))); // padrão: a primeira coluna
+const colsNaOrdem = T => { const fx = fixasDe(T), cs = T.cols.filter(c => !c.soExport); return [...cs.filter(c => fx.has(c.key)), ...cs.filter(c => !fx.has(c.key))]; };
+// move a coluna k para antes (ou depois) de alvo; soltar no grupo das fixas fixa a coluna, no outro grupo a solta
+function moverColuna(k, alvo, depois) {
+  if (k === alvo) return;
+  const fx = fixasDe(D);
+  if (!D.ordem0) D.ordem0 = D.cols.map(c => c.key);
+  if (fx.has(alvo)) fx.add(k); else fx.delete(k);
+  const [c] = D.cols.splice(D.cols.findIndex(x => x.key === k), 1);
+  D.cols.splice(D.cols.findIndex(x => x.key === alvo) + (depois ? 1 : 0), 0, c);
+  salvarDepois();
+}
 function thCol(key, label, w, left, sombra, extra = '') {
   const o = S.ord.find(x => x.key === key), oi = S.ord.indexOf(o), col = key[0] !== '$' && D.cols.find(x => x.key === key);
   const campo = col && col.campo && norm(col.campo) !== norm(col.label) ? 'Campo do Canis: ' + col.campo + '. ' : ''; // a coluna pode ter outro nome
   return `<th scope="col"${o ? ` aria-sort="${o.dir === 'asc' ? 'ascending' : 'descending'}"` : ''} class="${left != null ? 'sticky-col' : ''}${sombra ? ' last' : ''}" style="width:${w}px;min-width:${w}px;max-width:${w}px${left != null ? ';left:' + left + 'px' : ''}"><div class="thw"><button type="button" data-a="ordenar" data-k="${esc(key)}" title="${esc(campo)}Ordenar por ${esc(label)}. Shift+clique soma uma ordenação."><span class="tl">${esc(label)}</span>${ic(o ? 'setaCima' : 'ordenar', 14)}${o && S.ord.length > 1 ? `<span class="on-n">${oi + 1}</span>` : ''}</button>${extra}${key[0] !== '$' ? `<span class="col-resize" data-resize="${esc(key)}" role="separator" aria-orientation="vertical" aria-label="Redimensionar coluna ${esc(label)}"></span>` : ''}</div></th>`;
 }
-function celula(r, c, res, toks, left) {
+function celula(r, c, res, toks, left, ultimaFixa) {
   const v = String(r.v[c.key] ?? ''), cel = res && res.cells[c.key], ed = c.key in r.o;
-  const cls = ['dado']; if (left != null) cls.push('sticky-col', 'last'); if (cel) cls.push({ critico: 'cell-crit', atencao: 'cell-warn', info: 'cell-info' }[cel.nivel]); if (ed) cls.push('cell-edited'); if (c.derivado || c.calc) cls.push('cell-derived');
+  const cls = ['dado']; if (left != null) cls.push('sticky-col'); if (ultimaFixa) cls.push('last'); if (cel) cls.push({ critico: 'cell-crit', atencao: 'cell-warn', info: 'cell-info' }[cel.nivel]); if (ed) cls.push('cell-edited'); if (c.derivado || c.calc) cls.push('cell-derived');
   const dica = [cel ? cel.msgs.join('\n') : '', ed ? 'Editado. Original: ' + (r.o[c.key] === '' ? '(vazio)' : r.o[c.key]) : '', c.derivado ? (v ? v + '\n' : '') + 'Vem da empresa ligada. Para mudar, abra a empresa.' : '', c.calc ? 'Pessoas ligadas a esta empresa. Não sai na exportação.' : ''].filter(Boolean).join('\n') || v;
   const txt = v === '' ? (cel && cel.nivel === 'critico' ? '<span class="cell-empty">vazio</span>' : '') : realce(v, toks);
   return `<td class="${cls.join(' ')}"${left != null ? ` style="left:${left}px"` : ''} data-k="${esc(c.key)}" title="${esc(dica)}">${txt}</td>`;
@@ -4750,7 +4779,7 @@ function acoesPorTipo() {
   for (const e of P.log || []) { const t = TIPOS_ACAO.find(([, re]) => re.test(e.acao)), c = t ? t[0] : 'Ferramentas de limpeza'; if (c) n.set(c, (n.get(c) || 0) + 1); }
   return [...TIPOS_ACAO.map(t => t[0]), 'Ferramentas de limpeza'].filter(c => n.has(c)).map(c => [c, n.get(c)]);
 }
-/* Resumo da limpeza: seções na largura da página, uma por assunto (Grin 2.46, Resumo). As tabelas do arquivo
+/* Resumo da limpeza: seções na largura da página, uma por assunto (Grin 2.47, Resumo). As tabelas do arquivo
    aparecem lado a lado só onde os números são os mesmos para todas: conferidas e alterações */
 function htmlResumo() {
   const log = P.log || [], carga = log.find(e => /^Arquivo carregado: /.test(e.acao)), ultima = [...log].reverse().find(e => e.itens.length);
@@ -5069,7 +5098,7 @@ function dlgConfirmar() {
 /* Popovers: filtro e colunas */
 function htmlPop() {
   if (!S.pop || !D) return '';
-  const p = S.pop, w = p.tipo === 'filtro' ? 320 : 300, x = Math.max(8, Math.min(p.x, innerWidth - w - 8));
+  const p = S.pop, w = p.tipo === 'filtro' ? 320 : p.tipo === 'colunas' ? 340 : 300, x = Math.max(8, Math.min(p.x, innerWidth - w - 8));
   const caixa = conteudo => `<div class="menu laika-pop" style="left:${x}px;top:${p.y}px;width:${w}px;max-height:calc(100vh - ${p.y + 12}px)">${conteudo}</div>`;
   if (p.tipo === 'nivel') {
     const ts = tiposDoNivel(p.n), sel = ts.filter(t => S.probs.includes(t)).length;
@@ -5077,7 +5106,11 @@ function htmlPop() {
   }
   if (p.tipo === 'colunas') {
     const faltam = D.modelo === 'livre' ? [] : MODELOS[D.modelo].campos.filter(f => !temCol(f.key) && !(P.combinado && D.k === 'pessoas' && (f.key in VINCULO || f.key === 'afiliacao'))); // o vínculo vem da empresa
-    return caixa(`<div class="menu-header row"><b>Colunas</b><span class="spacer"></span><button type="button" class="link" data-a="pcTodas">Mostrar todas</button></div><div class="menu-list">${D.cols.filter(c => !c.soExport).map(c => `<label class="menu-item"><input type="checkbox" id="pc-${esc(c.key)}" data-ch="pcVis" data-k="${esc(c.key)}"${D.ocultas.has(c.key) ? '' : ' checked'}><span class="menu-label">${esc(c.label)}</span></label>`).join('')}</div>${faltam.length ? `<div class="menu-separator" role="separator"></div><div class="sub small" style="padding:0 4px">Adicionar campo do modelo (coluna vazia)</div><div class="menu-list" style="max-height:180px">${faltam.map(f => `<button type="button" class="menu-item" data-a="addCampo" data-k="${f.key}">${ic('mais', 14)}<span class="menu-label">${esc(f.label)}</span></button>`).join('')}</div>` : ''}`);
+    const fxs = fixasDe(D), q = norm(p.q || ''), todas = colsNaOrdem(D), busca = todas.length > 12;
+    const item = c => `<div class="menu-item sortable" draggable="true" data-col="${esc(c.key)}"><span class="drag-handle" title="Arraste para mudar a ordem (ou Alt e setas)">${ic('arrastar')}</span><input type="checkbox" id="pc-${esc(c.key)}" data-ch="pcVis" data-k="${esc(c.key)}"${D.ocultas.has(c.key) ? '' : ' checked'}><label class="menu-label" for="pc-${esc(c.key)}">${esc(c.label)}</label><button type="button" class="btn icon xs ghost" data-a="pcFixar" data-k="${esc(c.key)}" aria-pressed="${fxs.has(c.key)}" aria-label="${fxs.has(c.key) ? 'Soltar' : 'Fixar'} ${esc(c.label)} à esquerda" data-tooltip="${fxs.has(c.key) ? 'Soltar' : 'Fixar à esquerda'}">${ic('fixar', 14)}</button></div>`;
+    const grupo = (t, cs) => cs.length ? `<div class="menu-header">${t}</div>${cs.map(item).join('')}` : '';
+    const vistas = todas.filter(c => !q || norm(c.label).includes(q));
+    return caixa(`<div class="menu-header row"><b>Colunas</b><span class="spacer"></span><button type="button" class="link" data-a="pcRestaurar">Restaurar</button></div>${busca ? `<input class="input sm" id="pc-q" placeholder="Buscar coluna" value="${esc(p.q || '')}" data-in="popQ" autocomplete="off">` : ''}<div class="menu-list" role="group" aria-label="Colunas: arraste ou use Alt e setas para mudar a ordem">${grupo('Fixas', vistas.filter(c => fxs.has(c.key)))}${grupo('Outras', vistas.filter(c => !fxs.has(c.key)))}${vistas.length ? '' : '<div class="sub small" style="padding:6px 8px">Nenhuma coluna com esse nome.</div>'}</div>${faltam.length ? `<div class="menu-separator" role="separator"></div><div class="sub small" style="padding:0 4px">Adicionar campo do modelo (coluna vazia)</div><div class="menu-list" style="max-height:180px">${faltam.map(f => `<button type="button" class="menu-item" data-a="addCampo" data-k="${f.key}">${ic('mais', 14)}<span class="menu-label">${esc(f.label)}</span></button>`).join('')}</div>` : ''}`);
   }
   if (p.passo === 'campo') {
     const campos = [{ key: '$saude', label: 'Saúde', hint: 'Nível' }, { key: '$problema', label: 'Problema', hint: 'Tipo' }, { key: '$situacao', label: 'Situação', hint: 'Edição' }, { key: '$conf', label: 'Conferência', hint: 'Revisão' }, ...D.cols.filter(c => !c.soExport).map(c => ({ key: c.key, label: c.label, hint: c.calc ? 'Calculada' : TIPOS[c.tipo] || 'Texto' }))].filter(f => norm(f.label).includes(norm(p.q)));
@@ -5518,7 +5551,11 @@ const AC = { // cliques: data-a="nome"
     mudouVista();
   },
   colunas: el => abrirPop(el, { tipo: 'colunas' }),
-  pcTodas: () => { D.ocultas.clear(); salvarDepois(); render(); },
+  pcRestaurar: () => { // ordem, colunas visíveis e fixas como na importação
+    if (D.ordem0) { const pos = new Map(D.ordem0.map((k, i) => [k, i])); D.cols.sort((a, b) => (pos.get(a.key) ?? 1e9) - (pos.get(b.key) ?? 1e9)); }
+    D.ocultas.clear(); D.fixas = null; fixasDe(D); salvarDepois(); render();
+  },
+  pcFixar: el => { const fx = fixasDe(D), k = el.dataset.k; if (fx.has(k)) fx.delete(k); else fx.add(k); S.foco = 'pc-' + k; salvarDepois(); render(); },
   addCampo: el => { adicionarCampo(el.dataset.k); S.pop = null; aviso('Coluna ' + rotuloCol(el.dataset.k) + ' adicionada, vazia.', 'ok'); },
   ferramentas: () => abrirFerramentas(),
   pagina: el => { S.pagina += +el.dataset.d; S.topo = true; render(); },
@@ -5622,6 +5659,14 @@ document.addEventListener('keydown', e => {
   const tag = e.target.tagName, digitando = tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT', mod = e.ctrlKey || e.metaKey;
   if (e.key === 'Escape') { if (document.querySelector('.sidebar.open')) return; if (S.pop) S.pop = null; else if (S.dlg) S.dlg = null; else if (S.gaveta) { S.gaveta = null; S.trocando = null; } else return; e.preventDefault(); render(); return; }
   if (mod && e.key === 'Enter' && S.dlg) { e.preventDefault(); confirmarDlg(); return; }
+  const itemCol = e.altKey && (e.key === 'ArrowDown' || e.key === 'ArrowUp') && e.target.closest && e.target.closest('.laika-pop [data-col]');
+  if (itemCol) { // Alt e setas no menu Colunas: move a coluna um lugar
+    e.preventDefault();
+    const L = colsNaOrdem(D), k = itemCol.dataset.col, i = L.findIndex(c => c.key === k), n = L[i + (e.key === 'ArrowDown' ? 1 : -1)], fx = fixasDe(D);
+    // no mesmo grupo troca de lugar com a vizinha; na divisa entre Fixas e Outras, muda de grupo sem pular a vizinha
+    if (n) moverColuna(k, n.key, (fx.has(n.key) === fx.has(k)) === (e.key === 'ArrowDown'));
+    S.foco = 'pc-' + k; render(); return;
+  }
   if (S.gaveta && e.altKey && (e.key === 'ArrowDown' || e.key === 'ArrowUp')) { e.preventDefault(); moverGaveta(e.key === 'ArrowDown' ? 1 : -1); return; }
   if (S.gaveta && !S.dlg && e.altKey && e.key === 'Enter') { e.preventDefault(); commitAtivo(); AC.conferirProxima(); return; } // confere e vai para a próxima
   if (D && !digitando && mod && e.key.toLowerCase() === 'z') { e.preventDefault(); if (e.shiftKey) refazer(); else desfazer(); return; }
@@ -5629,8 +5674,23 @@ document.addEventListener('keydown', e => {
   if (e.key === 'Enter' && e.target.tagName === 'TR' && e.target.dataset.a) { e.preventDefault(); AC.abrir(e.target, e); }
 });
 $('#arquivo').addEventListener('change', e => { const f = e.target.files[0]; e.target.value = ''; if (f) importar(f); });
-addEventListener('dragover', e => { e.preventDefault(); if (!S.arrastando) { S.arrastando = true; render(); } });
-addEventListener('dragleave', e => { if (!e.relatedTarget) { S.arrastando = false; render(); } });
+// arrastar colunas no menu Colunas: o item esmaece e uma linha marca o destino (Grin 2.47); a tela só é redesenhada ao soltar
+let colArr = null;
+const limparMarcas = () => document.querySelectorAll('.laika-pop .drop-before, .laika-pop .drop-after').forEach(x => x.classList.remove('drop-before', 'drop-after'));
+document.addEventListener('dragstart', e => { const it = e.target.closest && e.target.closest('.laika-pop [data-col]'); if (!it) return; colArr = it.dataset.col; it.classList.add('dragging'); e.dataTransfer.effectAllowed = 'move'; e.dataTransfer.setData('text/plain', colArr); });
+document.addEventListener('dragover', e => {
+  if (!colArr) return; const it = e.target.closest && e.target.closest('.laika-pop [data-col]'); e.preventDefault(); limparMarcas();
+  if (it && it.dataset.col !== colArr) { const r = it.getBoundingClientRect(); it.classList.add(e.clientY > r.top + r.height / 2 ? 'drop-after' : 'drop-before'); }
+});
+document.addEventListener('drop', e => {
+  if (!colArr) return; e.preventDefault(); e.stopPropagation();
+  const it = e.target.closest && e.target.closest('.laika-pop [data-col]'), k = colArr; colArr = null;
+  if (it && it.dataset.col !== k) { const r = it.getBoundingClientRect(); moverColuna(k, it.dataset.col, e.clientY > r.top + r.height / 2); }
+  render();
+}, true);
+document.addEventListener('dragend', () => { if (!colArr) return; colArr = null; limparMarcas(); render(); });
+addEventListener('dragover', e => { if (colArr) return; e.preventDefault(); if (!S.arrastando) { S.arrastando = true; render(); } });
+addEventListener('dragleave', e => { if (colArr) return; if (!e.relatedTarget) { S.arrastando = false; render(); } });
 addEventListener('drop', e => {
   e.preventDefault(); S.arrastando = false; const f = e.dataTransfer.files[0];
   if (f) importar(f); else render();

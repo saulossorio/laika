@@ -2,6 +2,11 @@
 
 Formato baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/). Versionamento semântico.
 
+## [1.1.14] - 2026-11-25
+
+### Adicionado
+- Menu Colunas com a ordem e as colunas fixas, como em Configurar colunas do Grin 2.47. Cada coluna tem uma alça para arrastar (ou Alt e setas), a caixa que mostra ou esconde e um alfinete que fixa a coluna à esquerda. As fixas ficam num grupo no topo. "Restaurar" volta à ordem e às colunas da importação. Com mais de 12 colunas, o menu tem busca. A ordem e as fixas ficam salvas com a sessão.
+
 ## [1.1.13] - 2026-11-25
 
 ### Alterado
