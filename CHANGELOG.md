@@ -2,6 +2,11 @@
 
 Formato baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/). Versionamento semântico.
 
+## [1.1.22] - 2026-11-25
+
+### Alterado
+- Grin 2.52. O tour começa com uma janela de boas-vindas, maior e no centro, com o logo: conta o problema que o Laika resolve e lista o que a pessoa faz no tour. Os passos seguintes ficaram mais curtos e falam com a pessoa ("você").
+
 ## [1.1.21] - 2026-11-25
 
 ### Adicionado
