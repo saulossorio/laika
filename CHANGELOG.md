@@ -2,6 +2,11 @@
 
 Formato baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/). Versionamento semântico.
 
+## [1.1.25] - 2026-11-25
+
+### Corrigido
+- Grin 2.54. No tour, depois de abrir uma linha, o destaque da linha não atravessa mais a gaveta aberta por cima.
+
 ## [1.1.24] - 2026-11-25
 
 ### Alterado
