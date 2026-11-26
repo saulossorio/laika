@@ -2,6 +2,11 @@
 
 Formato baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/). Versionamento semântico.
 
+## [1.1.23] - 2026-11-25
+
+### Corrigido
+- O README citava o Grin 2.51. `tools/atualizar-grin.cjs` agora avisa quando um documento não cita a versão nova.
+
 ## [1.1.22] - 2026-11-25
 
 ### Alterado
