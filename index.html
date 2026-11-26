@@ -9,12 +9,12 @@
   Laika: ferramenta para analisar, limpar e exportar tabelas importadas.
   Um único arquivo. Abra no Chrome, Edge, Firefox ou Safari recentes. Funciona sem internet.
   Os dados ficam só neste computador, no armazenamento do navegador, até você fechar a tabela.
-  Visual: Grin 2.52, copiado de https://github.com/saulossorio/grin/releases/tag/v2.52 (dist/grin.inline.css e dist/grin.js).
+  Visual: Grin 2.53, copiado de https://github.com/saulossorio/grin/releases/tag/v2.53 (dist/grin.inline.css e dist/grin.js).
   Regras e listas: as do Canis (docs/regras.md).
 -->
-<!-- Grin 2.52, copiado de https://github.com/saulossorio/grin/releases/tag/v2.52 -->
+<!-- Grin 2.53, copiado de https://github.com/saulossorio/grin/releases/tag/v2.53 -->
 <style>
-/* Grin 2.52 · CSS com as fontes dentro (Geist e Geist Mono, licença SIL OFL 1.1) · https://github.com/saulossorio/grin
+/* Grin 2.53 · CSS com as fontes dentro (Geist e Geist Mono, licença SIL OFL 1.1) · https://github.com/saulossorio/grin
    Gerado por tools/bundle.mjs a partir dos arquivos do repositório. Não edite à mão. */
 /* ---------- styles/fonts.css ---------- */
 /* Grin: fonts. Geist and Geist Mono, variable weight 100 to 900, from the official release
@@ -1909,11 +1909,11 @@ body.tour-open .menu, body.tour-open .popover { z-index: 125; }
 .page-header .page-description, .start-screen-body .lead { max-width: var(--size-prose); }
 </style>
 <script>
-/* Grin 2.52 · comportamentos em JavaScript; inclua com <script src="grin.js" defer> · https://github.com/saulossorio/grin
+/* Grin 2.53 · comportamentos em JavaScript; inclua com <script src="grin.js" defer> · https://github.com/saulossorio/grin
    Gerado por tools/bundle.mjs a partir dos arquivos do repositório. Não edite à mão. */
 'use strict';
 const Grin = (window.Grin = window.Grin || {});
-Grin.version = '2.52';
+Grin.version = '2.53';
 
 // ---------- scripts/utils.js ----------
 {
@@ -4048,7 +4048,7 @@ let D = null;  // tabela em uso, P.t[S.ent]: { k, modelo, cols, rows, naoDup, oc
 let A = null;  // análise da tabela em uso (seção 7)
 /* Cada linha: { id, t (tabela), linha (no arquivo), v (valores), o (originais do que foi editado), del, mesclada,
    emp (pessoa: id da empresa), var (empresa: outras escritas no arquivo), ok (empresa: escritas já conferidas) } */
-const VERSAO = '1.1.23'; // igual à última versão do CHANGELOG.md
+const VERSAO = '1.1.24'; // igual à última versão do CHANGELOG.md
 let tema = lerLS('laika-tema') || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
 document.documentElement.dataset.theme = tema;
 /* Painel Aparência do Grin: o tema e a densidade escolhidos ali passam a ser os do Laika (a densidade só se muda ali, Grin 2.40).
@@ -4455,7 +4455,7 @@ function htmlInicio() {
     ${s ? `<div class="card resume">${ic('arquivo', 20)}<div style="flex:1;min-width:0"><b>${esc(s.nome)}</b><div class="sub">${esc(s.resumo)}</div><div class="sub">Salva em ${dataHora(s.salvoEm)}</div></div><button type="button" class="btn" data-a="descartarSessao">Descartar</button><button type="button" class="btn primary" data-a="continuarSessao">Continuar</button></div>` : ''}
     <div class="dropzone${S.arrastando ? ' over' : ''}">${ic('importar', 24)}<b>Arraste um arquivo CSV ou XLSX para cá ou</b><button type="button" class="btn${s ? '' : ' primary'}" data-a="escolherArquivo">Escolher arquivo</button><small>ou <button type="button" class="link" data-a="exemplo">abra os dados de exemplo</button></small></div>
     </div>
-    <footer class="app-footer"><span><b>Laika ${VERSAO}</b> · por Saúl Ossorio</span><span>Feito com <a href="https://saulossorio.github.io/grin/">Grin 2.52</a></span></footer>
+    <footer class="app-footer"><span><b>Laika ${VERSAO}</b> · por Saúl Ossorio</span><span>Feito com <a href="https://saulossorio.github.io/grin/">Grin 2.53</a></span></footer>
   </div>`;
 }
 
@@ -5815,26 +5815,25 @@ const TOUR_CHAVE = 'laika-tour';
 const linhaAberta = () => S.gaveta && D ? linhaPorId(S.gaveta) : null;
 const TOUR = [
   { titulo: 'Boas-vindas ao Laika', marca: true,
-    texto: ['Planilhas de contatos costumam chegar com pequenos erros: e-mails inválidos, nomes em maiúsculas, a mesma pessoa repetida. O Laika encontra esses problemas e ajuda você a corrigir antes de importar no Canis.',
-      'Neste tour, você limpa uma lista de exemplo do começo ao fim. Leva poucos minutos.'],
-    lista: ['Encontra os erros mais graves', 'Corrige uma linha e marca como conferida', 'Vê a revisão e os duplicados', 'Descobre como exportar a planilha pronta'] },
-  { titulo: 'Dados de exemplo', texto: 'Uma lista de inscritos com os erros mais comuns, para você praticar.',
+    texto: ['O Laika revisa planilhas de pessoas e empresas antes da importação no Canis. Ele aponta erros, duplicados e campos fora do padrão, e ajuda a corrigir.',
+      'Quer conhecer o básico? O tour leva poucos minutos e usa uma planilha de exemplo.'] },
+  { titulo: 'Dados de exemplo', texto: 'Uma lista de inscritos com os erros mais comuns.',
     acao: 'Clique em abra os dados de exemplo', alvo: ['#app [data-a="exemplo"]'], tarefa: () => !!P && S.tela !== 'inicio' && S.tela !== 'mapear' },
-  { titulo: 'Tabela', texto: 'Cada linha é um registro. Vermelho é crítico; amarelo, atenção.', alvo: ['#app .wrap'] },
-  { titulo: 'Saúde', texto: 'O problema mais grave de cada linha. O ✓ ao lado marca as que você já conferiu.', alvo: ['#app .wrap thead th:nth-child(2)'] },
+  { titulo: 'Tabela', texto: 'Cada linha é um registro. Vermelho indica problema crítico; amarelo, atenção.', alvo: ['#app .wrap'] },
+  { titulo: 'Saúde', texto: 'O problema mais grave de cada linha. O ✓ ao lado marca as linhas já conferidas.', alvo: ['#app .wrap thead th:nth-child(2)'] },
   { titulo: 'Abrir uma linha', texto: 'Os problemas da linha aparecem junto de cada campo.',
     acao: 'Clique numa linha com problema crítico', alvo: [() => $('#app .wrap tbody tr:has(.cell-crit)'), '#app .wrap tbody tr'], tarefa: () => !!linhaAberta() },
-  { titulo: 'Corrigir', texto: 'Tudo o que você muda fica no histórico e pode ser desfeito.',
+  { titulo: 'Corrigir', texto: 'Toda mudança fica no histórico e pode ser desfeita.',
     acao: 'Corrija um dos campos marcados', alvo: ['.laika-drawer .drawer-body'], tarefa: () => { const r = linhaAberta(); return !!r && Object.keys(r.o).length > 0; } },
-  { titulo: 'Conferida', texto: 'Marque a linha quando terminar. O filtro Não conferidas mostra o que falta.',
+  { titulo: 'Conferida', texto: 'Marca a linha como revisada. O filtro Não conferidas mostra o que falta.',
     acao: 'Clique em Conferida', alvo: ['#dr-conf'], tarefa: () => { const r = linhaAberta(); return !!r && !!r.conf; } },
   { titulo: 'Fechar a linha', texto: 'A tabela volta com a linha corrigida.', acao: 'Clique no X', alvo: ['#dr-fechar'], tarefa: () => !S.gaveta },
   { titulo: 'Revisão', texto: 'Só as linhas com problema, das mais graves às mais leves.', acao: 'Clique em Revisão', alvo: ['#lateral [data-tela="revisao"]'], clique: true },
-  { titulo: 'Filtros', texto: 'Escolha a tabela pelos ícones e o nível pelos botões coloridos. No celular, eles ficam em Filtros.', alvo: ['#app .filtros-rev', '#app .filters-toggle'] },
+  { titulo: 'Filtros', texto: 'Os ícones escolhem a tabela, e os botões coloridos, o nível do problema. No celular, ficam em Filtros.', alvo: ['#app .filtros-rev', '#app .filters-toggle'] },
   { titulo: 'Duplicados', texto: 'Registros que parecem a mesma pessoa ou empresa.', acao: 'Clique em Duplicados', alvo: ['#lateral [data-tela="duplicados"]'], clique: true },
-  { titulo: 'Grupo de duplicados', texto: 'Compare as linhas lado a lado e, em Comparar e mesclar, escolha o valor de cada campo.', alvo: ['#app .dcard'] },
-  { titulo: 'Exportar', texto: 'Baixe a planilha limpa em XLSX ou CSV, pronta para o Canis.', alvo: ['#app [data-a="exportar"]'] },
-  { titulo: 'Fim do tour', texto: 'Você pode repetir o tour por aqui quando quiser.', alvo: ['#lateral [data-a="tour"]'] }
+  { titulo: 'Grupo de duplicados', texto: 'As linhas parecidas aparecem lado a lado. Em Comparar e mesclar, dá para escolher o valor de cada campo.', alvo: ['#app .dcard'] },
+  { titulo: 'Exportar', texto: 'Baixa a planilha limpa em XLSX ou CSV, pronta para o Canis.', alvo: ['#app [data-a="exportar"]'] },
+  { titulo: 'Fim do tour', texto: 'O tour pode ser repetido por aqui.', alvo: ['#lateral [data-a="tour"]'] }
 ];
 let tourAtual = null;
 function abrirTour(i = 0) {

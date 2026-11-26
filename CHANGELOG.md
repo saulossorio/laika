@@ -2,6 +2,11 @@
 
 Formato baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/). Versionamento semântico.
 
+## [1.1.24] - 2026-11-25
+
+### Alterado
+- Grin 2.53. Novo texto da boas-vindas do tour, em dois parágrafos: o que o Laika faz e a oferta do tour. Os passos não falam mais com a pessoa em segunda pessoa.
+
 ## [1.1.23] - 2026-11-25
 
 ### Corrigido
