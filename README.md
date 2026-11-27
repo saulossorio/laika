@@ -16,7 +16,7 @@ Para experimentar sem dados reais, use o link "abra os dados de exemplo" na tela
 
 ## Na tela
 
-- **Tour guiado:** abre sozinho na primeira visita e fica na barra lateral. É um exercício com os dados de exemplo: abrir uma linha com problema, corrigir, marcar como conferida, ver a Revisão, os Duplicados e a exportação. Feita cada ação, o tour espera o Próximo.
+- **Tour guiado:** abre sozinho na primeira visita e fica em **Ajuda**, na barra lateral, junto com a versão. É um exercício com os dados de exemplo: abrir uma linha com problema, corrigir, marcar como conferida, ver a Revisão, os Duplicados e a exportação. Feita cada ação, o tour espera o Próximo.
 - **Tabela:** a coluna Saúde mostra o problema mais grave da linha; a coluna estreita ao lado marca as linhas conferidas. O número da linha na planilha original fica escondido e se liga em Colunas, "Linha da planilha".
 - **Colunas:** o menu mostra ou esconde cada coluna, muda a ordem (arrastar pela alça ou Alt e setas) e fixa colunas à esquerda. "Restaurar" volta à ordem da importação. Tudo fica salvo com a sessão.
 - **Revisão:** só as linhas com problema, com os filtros em até duas linhas: as tabelas em ícones (o nome no tooltip) e os níveis Crítico, Atenção e Informação, cada um com o menu dos tipos de problema. No celular, os filtros se recolhem atrás do botão Filtros (com a contagem dos ligados), e fica uma linha só: busca, Filtros, Ferramentas e Colunas.
@@ -43,7 +43,7 @@ Cada problema tem um nível de severidade. A lista completa, com exemplos e a fu
 
 | Caminho | O que é |
 |---|---|
-| `index.html` | O Laika inteiro: o Grin 2.54 (estilos e scripts, copiados da release), as regras (`<script id="regras">`) e a tela |
+| `index.html` | O Laika inteiro: o Grin 2.55 (estilos e scripts, copiados da release), as regras (`<script id="regras">`) e a tela |
 | `docs/regras.md` | Todas as regras, agrupadas por severidade |
 | `docs/formato-sirius.md` | Como é o relatório do Sirius e como o Laika o lê |
 | `docs/decisoes.md` | Por que o Laika é assim, e de onde vêm os IDs (`RN-*`, `D-*`) |
